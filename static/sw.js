@@ -1,5 +1,5 @@
 
-const CACHE_NAME = 'tbag-cache-v1';
+const CACHE_NAME = 'tbag-cache-v2';
 const URLS = [
     '/',
     '/static/styles.css',

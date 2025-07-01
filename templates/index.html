@@ -5,26 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Thermal Battery Assembly Guidance</title>
     <link rel="manifest" href="/static/manifest.json" />
-    <!-- External stylesheet with corporate palette -->
     <link rel="stylesheet" href="/static/styles.css" />
 </head>
 <body>
-    <!-- ───────── Header with branding ───────── -->
+    <!-- ───────── Header / Company branding ───────── -->
     <header class="appbar">
         <img src="/static/logo.png" alt="Renewable Energy Systems Limited" />
-        <h1>Renewable Energy Systems Limited</h1>
+        <h1>Renewable Energy Systems Limited yooo</h1>
     </header>
 
     <!-- ───────── Main action card ───────── -->
     <main class="content">
         <section class="card">
-            <h2>Thermal Battery Assembly Guidance</h2>
+            {% if session.get('run') %}
+            <p class="session-meta" style="margin:0 0 0.75rem 0;font-weight:600;color:var(--primary-dark)">
+                Project: {{ session['run']['project'] }} –
+                Stack: {{ session['run']['stack_id'] }} –
+                Operator: {{ session['run']['operator'] }}
+            </p>
+            {% endif %}
+            <h2>Thermal Battery Assembly Guidance hhhhhhhh</h2>
             <button id="nextBtn" class="btn">Next&nbsp;Step</button>
             <p id="status" class="status">Ready.</p>
         </section>
     </main>
 
-    <!-- JS (offline-cached) -->
     <script src="/static/script.js"></script>
 </body>
 </html>

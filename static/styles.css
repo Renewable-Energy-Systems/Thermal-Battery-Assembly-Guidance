@@ -103,3 +103,14 @@ html,body {
     font-size: 0.95rem;
     color: #333;
 }
+/* ───── Form helpers ───── */
+.form-group  { text-align:left; margin-bottom:1rem; }
+.form-label  { display:block; font-weight:600; margin-bottom:4px; }
+.form-field  { width:100%; padding:0.65rem 0.75rem; font-size:1rem;
+               border:1px solid #bbb; border-radius:6px;
+               transition:border-color 120ms; }
+.form-field:focus { outline:none; border-color:var(--primary-light);
+                    box-shadow:0 0 0 3px rgba(50,51,122,0.15); }
+.form-field.invalid { border-color:#d32f2f; }
+.error       { color:#d32f2f; font-size:0.85rem; margin-top:4px;
+               display:block; min-height:1em; }

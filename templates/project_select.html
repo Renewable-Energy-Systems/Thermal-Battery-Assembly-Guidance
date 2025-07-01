@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Operation Setup · RES</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <!-- ───────── Company App-bar ───────── -->
+    <header class="appbar">
+        <img src="/static/logo.png" alt="Renewable Energy Systems Limited logo">
+        <h1>Renewable Energy Systems Limited</h1>
+    </header>
+
+    <!-- ───────── Wizard Card ───────── -->
+    <main class="content">
+        <section class="card setup-card" style="min-width:340px">
+            <h2>Operation Setup</h2>
+            <form id="setupForm" novalidate>
+                <div class="form-group">
+                    <label for="project" class="form-label">Battery&nbsp;Project</label>
+                    <select id="project" name="project" required class="form-field">
+                        <option value="" disabled selected>Select project…</option>
+                        {% for p in projects %}
+                        <option value="{{ p.id }}">{{ p.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <span class="error" id="err-project"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="stack_id" class="form-label">Stack&nbsp;ID</label>
+                    <input id="stack_id" name="stack_id" type="text" pattern="[A-Za-z0-9\-]{3,20}" placeholder="e.g. STK-0429" required class="form-field">
+                    <span class="error" id="err-stack"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="operator" class="form-label">Operator&nbsp;Name</label>
+                    <input id="operator" name="operator" type="text" minlength="2" maxlength="40" placeholder="Your name" required class="form-field">
+                    <span class="error" id="err-operator"></span>
+                </div>
+
+                <!-- Hidden ISO timestamp -->
+                <input type="hidden" id="timestamp" name="timestamp">
+
+                <button type="submit" class="btn" style="width:100%;margin-top:0.75rem">Start&nbsp;Session</button>
+            </form>
+        </section>
+    </main>
+
+    <script>
+    // ─── Helper to show inline errors ─────────────────────────────
+    function showError(id, msg) {
+        const span = document.getElementById(id);
+        span.textContent = msg;
+    }
+    function clearErrors() {
+        document.querySelectorAll('.error').forEach(e => e.textContent = '');
+        document.querySelectorAll('.form-field').forEach(f => f.classList.remove('invalid'));
+    }
+
+    // ─── Client-side validation & submit ─────────────────────────
+    const form = document.getElementById('setupForm');
+    document.getElementById('timestamp').value = new Date().toISOString();
+
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        clearErrors();
+        let valid = true;
+        const project   = form.project.value;
+        const stack_id  = form.stack_id.value.trim();
+        const operator  = form.operator.value.trim();
+
+        if (!project) {
+            valid = false;
+            showError('err-project', 'Please select a project');
+            form.project.classList.add('invalid');
+        }
+        if (!stack_id) {
+            valid = false;
+            showError('err-stack', 'Stack ID required');
+            form.stack_id.classList.add('invalid');
+        }
+        if (!operator) {
+            valid = false;
+            showError('err-operator', 'Operator name required');
+            form.operator.classList.add('invalid');
+        }
+        if (valid) {
+            // construct FormData and POST using fetch so we stay SPA-ish
+            const fd = new FormData(form);
+            fetch('/start', { method: 'POST', body: fd })
+                .then(res => {
+                    if (res.redirected) {
+                        window.location.href = res.url;
+                    }
+                });
+        }
+    });
+    </script>
+</body>
+</html>
