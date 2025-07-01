@@ -1,0 +1,10 @@
+{
+    "name": "Thermal Battery Assembly Guidance",
+    "short_name": "TBAG",
+    "start_url": "/",
+    "scope": "/",
+    "display": "standalone",
+    "background_color": "#FFFFFF",
+    "description": "Offline-first guidance for thermal-battery assembly",
+    "icons": []
+}
