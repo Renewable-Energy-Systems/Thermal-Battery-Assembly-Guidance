@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Assembly Logs · RES</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+  <style>
+    table { width:100%; border-collapse:collapse; font-size:0.9rem; }
+    th,td { padding:0.45rem 0.75rem; }
+    thead { background:var(--surface-variant); }
+    tbody tr:nth-child(even){background:#f7f8ff;}
+  </style>
+</head>
+<body>
+  <header class="appbar">
+    <img src="/static/logo.png" alt="logo">
+    <h1>Assembly Logs</h1>
+  </header>
+
+  <main class="content">
+    <section class="card" style="width:100%;max-width:820px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h2 style="margin:0">Recent Events</h2>
+        <a href="/admin" class="btn" style="padding:0.4rem 1rem;font-size:0.85rem">← Back</a>
+      </div>
+
+      <table style="margin-top:1rem">
+        <thead><tr><th>Timestamp</th><th>Event</th></tr></thead>
+        <tbody>
+          {% for r in rows %}
+            <tr><td>{{ r.ts }}</td><td>{{ r.event }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>

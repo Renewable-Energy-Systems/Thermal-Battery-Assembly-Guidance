@@ -1,145 +1,235 @@
 #!/usr/bin/env python3
-"""Offline‑first Flask app for Thermal‑Battery Assembly Guidance"""
+"""
+Offline-first Flask app for Thermal-Battery Assembly Guidance
+──────────────────────────────────────────────────────────────
+Key routes
+/select              → choose project / stack / operator
+/start   (POST)      → begin a run, store session, log start
+/        (GET)       → guidance screen (plays sequence)
+/next    (POST)      → toggle LED, log step advance
+/finish  (POST)      → log session end, clear session, reply OK
+/admin               → admin dashboard
+/projects[...]       → project CRUD
+/logs                → 500 most-recent events (for admins)
+"""
 
-# ── Standard library ─────────────────────────────────────────────────────────
+# ── std-lib ────────────────────────────────────────────────────────────────
 import os, sys, json, uuid, datetime, sqlite3, pathlib
+from typing import List, Dict, Optional
+import werkzeug.datastructures
 
-# ── Flask ────────────────────────────────────────────────────────────────────
+# ── Flask ──────────────────────────────────────────────────────────────────
 from flask import (
-    Flask,
-    render_template,
-    jsonify,
-    redirect,
-    request,
-    session,
+    Flask, render_template, request, redirect, session,
+    jsonify, send_from_directory
 )
 
-# ── GPIOZero with automatic mock fallback for dev PCs ───────────────────────
+# ── GPIOZero safe import (mock on dev PCs) ────────────────────────────────
 try:
     from gpiozero import LED, Button, Device
 
-    # Switch to mock backend automatically on non‑Pi hosts
     if not (sys.platform.startswith("linux") and os.path.exists("/proc/cpuinfo")):
         from gpiozero.pins.mock import MockFactory
 
-        Device.pin_factory = MockFactory()
-except ImportError:  # gpiozero not installed on this host
-
-    class _Dummy:  # minimal stand‑in so code runs on any OS
-        def __init__(self, *_, **__):
-            pass
-
-        def on(self):
-            pass
-
-        def off(self):
-            pass
-
-        def toggle(self):
-            pass
-
-        @property
-        def is_active(self):
-            return False
-
+        Device.pin_factory = MockFactory()          # desktop → mock pins
+except ImportError:
+    class _Dummy:                                  # no-op stand-in
+        def __getattr__(self, *_): return lambda *a, **k: None
+        is_active = False
     LED = Button = _Dummy  # type: ignore
 
-# ── Paths & constants ────────────────────────────────────────────────────────
-BASE_DIR = pathlib.Path(__file__).parent
-DB_PATH = BASE_DIR / "events.db"
-PROJECTS_DIR = BASE_DIR / "projects"
+# ── paths & Flask init ─────────────────────────────────────────────────────
+BASE      = pathlib.Path(__file__).parent
+PROJECTS  = BASE / "projects"; PROJECTS.mkdir(exist_ok=True)
+DB_FILE   = BASE / "events.db"
 
-# ── Flask app instance ───────────────────────────────────────────────────────
-app = Flask(__name__)
-app.secret_key = "change‑me‑to‑a‑secure‑random‑string"
-
-# Disable template & static‑file caching during dev so edits appear instantly
-app.config.update(
-    TEMPLATES_AUTO_RELOAD=True,
-    SEND_FILE_MAX_AGE_DEFAULT=0,   # static files
-)
+app = Flask(__name__, template_folder=str(BASE / "templates"))
+app.secret_key = "change-me"              # ⚠ set a real secret in prod
+app.config.update(TEMPLATES_AUTO_RELOAD=True, SEND_FILE_MAX_AGE_DEFAULT=0)
 app.jinja_env.auto_reload = True
 
-# ── Hardware wiring (BCM numbers) ────────────────────────────────────────────
-red_led = LED(17)
-pedal = Button(27)
+red_led, pedal = LED(17), Button(27)      # BCM pins
 
-# ── SQLite bootstrap ─────────────────────────────────────────────────────────
-
+# ── SQLite helpers ─────────────────────────────────────────────────────────
 def init_db() -> None:
-    with sqlite3.connect(DB_PATH) as conn:
-        conn.execute(
-            """CREATE TABLE IF NOT EXISTS events (
-                   ts    TEXT,
-                   event TEXT
-               )"""
-        )
-
-
+    with sqlite3.connect(DB_FILE) as c:
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS events (
+                ts    TEXT,
+                event TEXT
+            )""")
 def log(event: str) -> None:
-    with sqlite3.connect(DB_PATH) as conn:
-        conn.execute(
-            "INSERT INTO events VALUES (?, ?)",
+    with sqlite3.connect(DB_FILE) as c:
+        c.execute(
+            "INSERT INTO events VALUES (?,?)",
             (datetime.datetime.now().isoformat(timespec="seconds"), event),
         )
 
-
 init_db()
 
-# ── Helper: enumerate available projects ─────────────────────────────────────
+# ── project helpers ────────────────────────────────────────────────────────
+def projects_list() -> List[pathlib.Path]:
+    return sorted((d for d in PROJECTS.iterdir() if d.is_dir()),
+                  key=lambda p: p.name.lower())
 
-def load_projects():
-    projects = []
-    for cfg in PROJECTS_DIR.glob("*/config.json"):
-        with cfg.open() as f:
-            meta = json.load(f)
-        projects.append(
-            {"id": cfg.parent.name, "name": meta.get("name", cfg.parent.name)}
-        )
-    return sorted(projects, key=lambda p: p["name"].lower())
+def load_config(pid: str) -> Optional[Dict]:
+    cfg = PROJECTS / pid / "config.json"
+    return json.load(cfg.open()) if cfg.exists() else None
 
+def save_config(pid: str, data: Dict) -> None:
+    d = PROJECTS / pid
+    (d / "images").mkdir(parents=True, exist_ok=True)
+    with (d / "config.json").open("w") as f:
+        json.dump(data, f, indent=2)
 
-# ── Routes ───────────────────────────────────────────────────────────────────
-
-@app.route("/select")
-def select_project():
-    return render_template("project_select.html", projects=load_projects())
-
-
-@app.post("/start")
-def start_session():
-    data = {
-        "session_id": str(uuid.uuid4())[:8],
-        "project": request.form["project"],
-        "stack_id": request.form["stack_id"],
-        "operator": request.form["operator"],
-        "timestamp": request.form["timestamp"],
-    }
-    session["run"] = data
-    log(f"session_start::{json.dumps(data)}")
-    return redirect("/")
-
-
+# ── runtime routes ─────────────────────────────────────────────────────────
 @app.route("/")
 def index():
     if "run" not in session:
         return redirect("/select")
-    return render_template("index.html")
 
+    pid = session["run"]["project"]
+    cfg = load_config(pid) or {"sequence": []}
+    return render_template(
+        "index.html",
+        sequence=cfg["sequence"],
+        meta=session["run"],
+    )
 
-@app.route("/next", methods=["POST"])
+@app.route("/select")
+def select_project():
+    projs = [{"id": d.name, "name": load_config(d.name)["name"]}
+             for d in projects_list()]
+    return render_template("project_select.html", projects=projs)
+
+@app.post("/start")
+def start_session():
+    data = {k: request.form[k] for k in ("project", "stack_id", "operator")}
+    data.update(session_id=uuid.uuid4().hex[:8],
+                timestamp=request.form["timestamp"])
+    session["run"] = data
+    log(f"session_start::{json.dumps(data)}")
+    return redirect("/")
+
+@app.post("/next")
 def next_step():
     red_led.toggle()
     log("next_pressed")
     return jsonify(status="ok")
 
+# ── finish & abort ──────────────────────────────────────────────────────────
+@app.post("/finish")
+def finish_session():
+    if "run" in session:
+        data = session["run"]
+        log(f"session_end::{json.dumps(data)}")
+        session["last"] = data          # keep for summary
+        session.pop("run", None)
+    return jsonify(status="finished")
 
-@app.route("/pedal")
+@app.post("/abort")
+def abort_session():
+    if "run" in session:
+        step_idx = request.json.get("step", -1)
+        payload  = {**session["run"], "interrupted_at": step_idx}
+        log(f"session_abort::{json.dumps(payload)}")
+        session["last"] = payload
+        session.pop("run", None)
+    return jsonify(status="aborted")
+
+# ── summary ─────────────────────────────────────────────────────────────────
+@app.get("/summary")
+def summary():
+    if "last" not in session:
+        return redirect("/select")
+    details = session.pop("last")
+    return render_template("summary.html", info=details)
+
+
+# ── pedal status ───────────────────────────────────────────────────────────
+@app.get("/pedal")
 def pedal_status():
-    return jsonify(pressed=pedal.is_active)
+    return jsonify(pressed=bool(getattr(pedal, "is_active", False)))
 
+# ── admin & project CRUD ────────────────────────────────────────────────────
+@app.get("/admin")
+def admin_dash():
+    return render_template("admin_dashboard.html")
 
-# ── Dev entry‑point ──────────────────────────────────────────────────────────
+@app.get("/projects")
+def list_projects():
+    projs = [{"id": d.name, "name": load_config(d.name)["name"]}
+             for d in projects_list()]
+    return render_template("project_list.html", projects=projs)
+
+@app.route("/projects/new", methods=["GET", "POST"])
+def new_project():
+    if request.method == "POST":
+        name = request.form["proj_name"].strip()
+        # duplicate check
+        clash = [p for p in projects_list()
+                 if load_config(p.name)["name"].lower() == name.lower()]
+        if clash:
+            err = f'Project "{name}" already exists. Please EDIT or DELETE it.'
+            return render_template("project_new.html", error=err)
+
+        pid = name.replace(" ", "_").lower()[:40] or uuid.uuid4().hex[:6]
+        save_config(pid, {"name": name, "sequence": []})
+        return redirect(f"/projects/{pid}/edit")
+
+    return render_template("project_new.html", error=None)
+
+@app.route("/projects/<pid>/edit", methods=["GET", "POST"])
+def edit_project(pid):
+    cfg = load_config(pid)
+    if not cfg:
+        return "Project not found", 404
+
+    if request.method == "POST":
+        seq: List[Dict] = []
+        idx = 0
+        while True:
+            lbl = request.form.get(f"label_{idx}")
+            if lbl is None:
+                break
+
+            img_fs: werkzeug.datastructures.FileStorage | None = \
+                request.files.get(f"img_{idx}")
+            img_name = cfg["sequence"][idx]["img"] \
+                if idx < len(cfg["sequence"]) else None
+
+            if img_fs and img_fs.filename:
+                img_name = (
+                    f"step{idx}_{uuid.uuid4().hex[:6]}"
+                    f"{pathlib.Path(img_fs.filename).suffix}"
+                )
+                img_fs.save(PROJECTS / pid / "images" / img_name)
+
+            seq.append({"label": lbl, "img": img_name})
+            idx += 1
+
+        cfg["sequence"] = seq
+        save_config(pid, cfg)
+        return redirect("/projects")
+
+    return render_template("project_edit.html",
+                           project=cfg, sequence=cfg["sequence"])
+
+@app.get("/proj_assets/<pid>/<path:fname>")
+def proj_assets(pid, fname):
+    return send_from_directory(PROJECTS / pid / "images", fname)
+
+# ── logs viewer ─────────────────────────────────────────────────────────────
+@app.get("/logs")
+def view_logs():
+    rows: List[Dict] = []
+    with sqlite3.connect(DB_FILE) as c:
+        for ts, ev in c.execute(
+            "SELECT ts,event FROM events ORDER BY ts DESC LIMIT 500"
+        ):
+            rows.append({"ts": ts, "event": ev})
+    return render_template("logs.html", rows=rows)
+
+# ── run ─────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    # debug=True enables Flask reloader so code edits auto‑reload server
-    app.run(host="0.0.0.0", port=8000, debug=True, use_reloader=True)
+    app.run(port=8000, debug=True, use_reloader=True)

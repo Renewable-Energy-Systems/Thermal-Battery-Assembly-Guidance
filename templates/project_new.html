@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Create New Project · RES</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <!-- ─── App‑bar ─── -->
+  <header class="appbar">
+    <img src="/static/logo.png" alt="RES logo" />
+    <h1>Create New Project</h1>
+  </header>
+
+  <!-- ─── Form card ─── -->
+  <main class="content">
+    <section class="card" style="min-width:340px">
+      <h2 style="margin-top:0">Project Details</h2>
+      {% if error %}
+  <p class="error" style="color:#d32f2f;margin-bottom:0.6rem">
+      {{ error }}
+  </p>
+{% endif %}
+      <form id="newProjForm" method="post" novalidate>
+        <label for="proj_name" class="form-label">Project&nbsp;Name</label>
+        <input id="proj_name" name="proj_name" type="text" minlength="3" maxlength="40" placeholder="e.g. Guru‑III" required class="form-field" />
+        <span class="error" id="err-name"></span>
+
+        <button type="submit" class="btn" style="width:100%;margin-top:0.75rem">Create Project</button>
+      </form>
+    </section>
+  </main>
+
+<script>
+function showError(msg){ document.getElementById('err-name').textContent = msg; }
+function clearErr(){ showError(''); document.getElementById('proj_name').classList.remove('invalid'); }
+
+const form = document.getElementById('newProjForm');
+form.addEventListener('submit', e => {
+  const name = form.proj_name.value.trim();
+  if(!name){ e.preventDefault(); showError('Please enter a name'); form.proj_name.classList.add('invalid'); }
+});
+form.proj_name.addEventListener('input', clearErr);
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "guru",
+  "sequence": [
+    {
+      "label": "add heat pellet",
+      "img": "step0_594470.jpg"
+    },
+    {
+      "label": "remove hp",
+      "img": "step1_f4c886.png"
+    }
+  ]
+}
