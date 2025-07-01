@@ -8,6 +8,10 @@
     {
       "label": "remove hp",
       "img": "step1_f4c886.png"
+    },
+    {
+      "label": "kuch nai",
+      "img": null
     }
   ]
 }

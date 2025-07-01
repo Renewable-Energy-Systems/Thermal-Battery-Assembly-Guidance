@@ -17,6 +17,7 @@ Key routes
 import os, sys, json, uuid, datetime, sqlite3, pathlib
 from typing import List, Dict, Optional
 import werkzeug.datastructures
+import hashlib
 
 # ── Flask ──────────────────────────────────────────────────────────────────
 from flask import (
@@ -220,15 +221,60 @@ def proj_assets(pid, fname):
     return send_from_directory(PROJECTS / pid / "images", fname)
 
 # ── logs viewer ─────────────────────────────────────────────────────────────
+# ── LOGS: overview  &  per-run drill-down ──────────────────────────────────
 @app.get("/logs")
-def view_logs():
-    rows: List[Dict] = []
+def logs_overview():
+    """One row per finished / aborted session, newest first."""
+    rows = []
     with sqlite3.connect(DB_FILE) as c:
         for ts, ev in c.execute(
-            "SELECT ts,event FROM events ORDER BY ts DESC LIMIT 500"
+            "SELECT ts,event FROM events "
+            "WHERE event LIKE 'session_%' ORDER BY ts DESC"
         ):
-            rows.append({"ts": ts, "event": ev})
-    return render_template("logs.html", rows=rows)
+            kind, payload = ev.split("::", 1)
+            if kind == "session_start":
+                continue                 # skip starts
+            data = json.loads(payload)
+
+            # deterministic colour per project (0-359 hue)
+            hue = int(hashlib.md5(data["project"].encode())
+                       .hexdigest()[:2], 16) * 360 // 255
+
+            rows.append({
+                "ts": ts, "kind": kind.replace("session_", ""),
+                "project": data["project"], "stack_id": data["stack_id"],
+                "operator": data["operator"], "session_id": data["session_id"],
+                "step": data.get("interrupted_at"),
+                "hue": hue,
+            })
+    return render_template("logs_overview.html", rows=rows)
+
+
+@app.get("/logs/<sid>")
+def log_detail(sid):
+    """Pretty timeline for one session"""
+    events = []
+    with sqlite3.connect(DB_FILE) as c:
+        for ts, raw in c.execute(
+            "SELECT ts,event FROM events "
+            "WHERE event LIKE ? ORDER BY ts",
+            (f"%{sid}%",),
+        ):
+            if "::" in raw:
+                kind, payload = raw.split("::", 1)
+                payload = json.loads(payload)
+            else:
+                kind, payload = raw, {}
+            events.append({
+                "ts": ts,
+                "kind": kind,
+                "payload": payload,
+            })
+    if not events:
+        return f"No logs for session {sid}", 404
+    return render_template("log_detail.html", events=events, sid=sid)
+
+
 
 # ── run ─────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
