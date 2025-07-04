@@ -22,17 +22,16 @@ from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
 import werkzeug.datastructures
 
-# ── GPIOZero safe import (mocks on non-Pi dev machine) ─────────────────────
+# ── GPIOZero: force mock factory (dev mode) ────────────────────────────────
 try:
     from gpiozero import LED, Button, Device
-    if not (sys.platform.startswith("linux") and os.path.exists("/proc/cpuinfo")):
-        from gpiozero.pins.mock import MockFactory
-        Device.pin_factory = MockFactory()
-except ImportError:          # dev PC w/out gpiozero
+    from gpiozero.pins.mock import MockFactory
+    Device.pin_factory = MockFactory()  # ← force mock GPIO for dev/testing
+except ImportError:
     class _Dummy:
         def __getattr__(self, *_): return lambda *a, **k: None
         is_active = False
-    LED = Button = _Dummy     # type: ignore
+    LED = Button = _Dummy  # type: ignore
 
 # ── paths & Flask init ─────────────────────────────────────────────────────
 BASE      = pathlib.Path(__file__).parent
