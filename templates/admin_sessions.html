@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Session Queue · RES</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <style>
+    table { width:100%; border-collapse:collapse }
+    th,td { padding:.55rem .7rem; text-align:left }
+    tr:nth-child(even){background:var(--surface)}
+    .stat-pending  {color:#d97706;font-weight:600}
+    .stat-active   {color:#2563eb;font-weight:600}
+    .stat-finished {color:#16a34a;font-weight:600}
+    .stat-aborted  {color:#dc2626;font-weight:600}
+  </style>
+</head>
+<body>
+<header class="appbar">
+  <img src="/static/logo.png" alt="logo"><h1>Session Queue</h1>
+</header>
+
+<main class="content">
+
+<section class="card" style="max-width:960px">
+  <h2 style="margin-top:0">Create New Session</h2>
+  <form action="/admin/sessions/new" method="post" class="grid-3">
+    <select name="project" required>
+      <option value="" disabled selected>Select project…</option>
+      {% for p in projects %}<option value="{{p.id}}">{{p.name}}</option>{% endfor %}
+    </select>
+    <input  name="stack_id"  placeholder="Stack ID"   required>
+    <input  name="operator"  placeholder="Operator"   required>
+    <button class="btn" style="grid-column:1/4">Add Session</button>
+  </form>
+</section>
+
+<section class="card" style="margin-top:1.5rem;max-width:960px">
+  <h2 style="margin-top:0">Pending / Active Runs</h2>
+  {% if rows %}
+  <table>
+    <thead><tr>
+      <th>Created</th><th>Project</th><th>Stack</th><th>Operator</th>
+      <th>Status</th><th></th>
+    </tr></thead>
+    <tbody>
+    {% for r in rows %}
+      <tr>
+        <td>{{r.ts_created[:19]}}</td>
+        <td>{{r.project}}</td>
+        <td>{{r.stack_id}}</td>
+        <td>{{r.operator}}</td>
+        <td class="stat-{{r.status}}">{{r.status}}</td>
+        <td>
+          {% if r.status=='pending' %}
+          <form action="/admin/sessions/{{r.session_id}}/delete" method="post"
+                onsubmit="return confirm('Delete this pending session?')">
+            <button class="btn btn-secondary" style="padding:.25rem .6rem">✕</button>
+          </form>{% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+     <p>No sessions yet.</p>
+  {% endif %}
+</section>
+
+</main>
+</body>
+</html>

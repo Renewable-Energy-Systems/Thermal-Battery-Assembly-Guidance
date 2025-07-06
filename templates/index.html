@@ -1,19 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Battery Assembly Guidance</title>
+<title>TBAG · Assembly Guidance</title>
 <link rel="stylesheet" href="/static/styles.css">
 <style>
-  .step-img   { max-width:380px; max-height:260px; object-fit:contain;
-                margin-bottom:1rem; border:1px solid #ccc; border-radius:8px; }
-  .step-label { font-size:1.15rem; margin-bottom:1.2rem; font-weight:600; }
-  .btn-secondary { background:var(--primary-light); }
-  .btn-secondary:disabled { opacity:.5; }
+/* step-by-step UI */
+.step-img   {max-width:380px;max-height:260px;object-fit:contain;
+             margin-bottom:1rem;border:1px solid #ccc;border-radius:8px}
+.step-label {font-size:1.15rem;margin-bottom:1.2rem;font-weight:600}
+/* waiting spinner */
+.spinner{width:90px;height:90px;border:12px solid #333;border-top-color:#38f;
+         border-radius:50%;animation:spin 1s linear infinite;margin:1.8rem auto}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
-</head>
-<body>
+</head><body>
 
 <header class="appbar">
   <img src="/static/logo.png" alt="logo">
@@ -21,25 +22,95 @@
 </header>
 
 <main class="content">
-  <section class="card" style="text-align:center;max-width:520px">
-      <!-- project id is stored in data-pid -->
-      <p class="meta" data-pid="{{ meta.project }}">
-        Project: {{ meta.project }} – Stack: {{ meta.stack_id }} – Operator: {{ meta.operator }}
-      </p>
 
+  <!-- WAITING  -->
+  <section id="waitPane" class="card" style="text-align:center;max-width:520px">
+    <h2 style="margin-top:0">Waiting for next session…</h2>
+    <div class="spinner"></div>
+  </section>
+
+  <!-- ACTIVE RUN  -->
+  <section id="runPane" class="card" style="text-align:center;max-width:520px;display:none">
+      <p class="meta" id="metaLine"></p>
       <img id="stepImg" class="step-img" src="" alt="" style="display:none">
       <div id="stepLabel" class="step-label"></div>
 
-      <div style="display:flex;gap:0.75rem;justify-content:center">
-        <button id="nextBtn" class="btn" style="min-width:160px">Next Step</button>
-        <button id="stopBtn" class="btn btn-secondary">Force Stop</button>
+      <div style="display:flex;gap:.75rem;justify-content:center">
+        <button id="nextBtn"  class="btn"            style="min-width:160px">Next Step</button>
+        <button id="stopBtn"  class="btn btn-secondary">Force Stop</button>
       </div>
       <p id="status" style="margin-top:0.9rem;">Ready.</p>
   </section>
+
 </main>
 
-<!-- sequence injected by Flask -->
-<script> window.sequence = {{ sequence|tojson }}; </script>
-<script src="/static/script.js"></script>
-</body>
-</html>
+<script>
+let sequence     = [];          // will be filled after /api/claim
+let meta         = null;
+let currentStep  = -1;
+const waitPane   = document.getElementById('waitPane');
+const runPane    = document.getElementById('runPane');
+const stepImg    = document.getElementById('stepImg');
+const stepLabel  = document.getElementById('stepLabel');
+const nextBtn    = document.getElementById('nextBtn');
+const stopBtn    = document.getElementById('stopBtn');
+const statusP    = document.getElementById('status');
+const metaLine   = document.getElementById('metaLine');
+
+function renderStep(){
+    if(currentStep < 0 || currentStep >= sequence.length) return;
+    const step = sequence[currentStep];
+    stepLabel.textContent = `(${currentStep+1}/${sequence.length})  ` + step.label;
+    if(step.img){
+        stepImg.src = `/proj_assets/${meta.project}/${step.img}`;
+        stepImg.style.display='block';
+    }else{
+        stepImg.style.display='none';
+    }
+}
+
+async function pedalNext(){
+    currentStep++;
+    if(currentStep >= sequence.length){
+        await fetch('/api/progress',{method:'POST',headers:{'Content-Type':'application/json'},
+               body:JSON.stringify({session_id:meta.session_id,action:'finish'})});
+        statusP.textContent='Finished ✓';
+        await new Promise(r=>setTimeout(r,2500));
+        location.reload();       // back to waiting
+        return;
+    }
+    await fetch('/api/progress',{method:'POST',headers:{'Content-Type':'application/json'},
+           body:JSON.stringify({session_id:meta.session_id,action:'next'})});
+    renderStep();
+}
+
+async function forceStop(){
+    if(!confirm('Force-stop this run?')) return;
+    await fetch('/api/progress',{method:'POST',headers:{'Content-Type':'application/json'},
+           body:JSON.stringify({session_id:meta.session_id,action:'abort',step:currentStep})});
+    location.reload();
+}
+
+nextBtn.onclick = pedalNext;
+stopBtn.onclick = forceStop;
+
+// ── polling for a session to claim ───────────────────────────
+async function poll(){
+    const r = await fetch('/api/claim',{method:'POST'});
+    const j = await r.json();
+    if(j.status==='claimed'){
+        meta      = j.session;
+        sequence  = j.sequence;
+        waitPane.style.display='none';
+        runPane .style.display='';
+        metaLine.textContent =
+          `Project: ${meta.project} | Stack: ${meta.stack_id} | Operator: ${meta.operator}`;
+        currentStep=-1;
+        pedalNext();
+    }else{
+        setTimeout(poll, 3000);
+    }
+}
+poll();
+</script>
+</body></html>

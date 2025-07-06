@@ -7,6 +7,22 @@ const imgEl    = document.getElementById('stepImg');
 const labelEl  = document.getElementById('stepLabel');
 const statusEl = document.getElementById('status');
 
+// -------- poll for queued job -------------------------------------------
+async function awaitJob () {
+  while (true) {
+    const r = await fetch('/kiosk/poll').then(r=>r.json());
+    if (r.pending) return r.job;            // got one – exit loop
+    await new Promise(res=>setTimeout(res, 2000));   // wait 2 s
+  }
+}
+
+if (!window.sequence) {           // means page loaded with no session
+  document.querySelector('.meta').textContent = 'Waiting for supervisor…';
+  awaitJob().then(job => location.reload()); // reload => / will render
+  throw 'waiting';                // stop script below from executing
+}
+
+
 let idx = -1;                       // start before first
 const pid = document.querySelector('.meta').dataset.pid;   // folder name
 

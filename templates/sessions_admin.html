@@ -1,0 +1,58 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Session Queue · RES</title>
+<link rel="stylesheet" href="/static/styles.css">
+<style>
+  table {width:100%;border-collapse:collapse}
+  th,td{padding:.5rem .75rem;text-align:left}
+  tr:nth-child(even){background:#f6f8ff}
+  form.inline{display:inline}
+</style>
+</head><body>
+<header class="appbar">
+  <img src="/static/logo.png" alt="">
+  <h1>Session Queue</h1>
+</header>
+
+<main class="content">
+
+<section class="card" style="max-width:760px">
+
+  <h2 style="margin-top:0">Create Session</h2>
+  <form method="post">
+    <label>Project
+      <select name="project" required>
+        <option value="" hidden>Select…</option>
+        {% for p in projects %}
+        <option value="{{p.id}}">{{p.name}}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Stack ID <input name="stack_id" required></label>
+    <label>Operator  <input name="operator"  required></label>
+    <button class="btn">Add to queue</button>
+  </form>
+
+  <h2 style="margin:1.5rem 0 .5rem">Pending</h2>
+  {% if not queue %}
+    <p><em>No sessions waiting.</em></p>
+  {% else %}
+  <table>
+    <thead><tr><th>Time</th><th>Project</th><th>Stack</th><th>Operator</th><th></th></tr></thead>
+    <tbody>
+      {% for s in queue %}
+      <tr>
+        <td>{{s.created}}</td><td>{{s.project}}</td><td>{{s.stack_id}}</td><td>{{s.operator}}</td>
+        <td>
+          <form class="inline" method="post" action="/admin/sessions/{{s.id}}/delete">
+            <button class="btn btn-flat">🗑</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</section>
+
+</main></body></html>
