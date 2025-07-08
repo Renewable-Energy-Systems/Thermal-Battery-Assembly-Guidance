@@ -1,0 +1,73 @@
+###############################################################################
+#  ____ _ _            _        _              _   _            _             #
+# |  _ (_) | ___ _   _| |_ __ _| |__   ___  __| | | | ___   ___| | _____ _ __ #
+# | |_) | | |/ __| | | | __/ _` | '_ \ / _ \/ _` | | |/ _ \ / __| |/ / _ \ '__|
+# |  __/| | | (__| |_| | || (_| | |_) |  __/ (_| | | | (_) | (__|   <  __/ |   #
+# |_|   |_|_|\___|\__,_|\__\__,_|_.__/ \___|\__,_| |_|\___/ \___|_|\_\___|_|   #
+###############################################################################
+
+# ── Python ────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.dylib
+
+# ── Virtual-env / Conda / Poetry ───────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+*/conda-meta/
+*.egg-info/
+.installed.cfg
+*.egg
+pip-wheel-metadata/
+sitecustomize.py
+poetry.lock
+
+# ── Build / distribution ──────────────────────────────────────────────────
+build/
+dist/
+wheelhouse/
+*.whl
+*.tar.gz
+*.zip
+.eggs/
+
+# ── Jupyter notebooks ─────────────────────────────────────────────────────
+.ipynb_checkpoints/
+
+# ── Logs, DBs, sockets, runtime ───────────────────────────────────────────
+*.log
+*.pid
+*.sqlite*
+*.db
+*.sock
+
+# ── Unit-test / coverage artefacts ────────────────────────────────────────
+htmlcov/
+.coverage
+.tox/
+.nox/
+pytest_cache/
+
+# ── IDE / editor cruft ────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.sublime-workspace
+*.swp
+*.swo
+*~
+.DS_Store
+
+# ── Local overrides / secrets ─────────────────────────────────────────────
+.env
+.env.*
+config/local_settings.py
+instance/
+
+# ── Admin-generated project assets (created in prod) ──────────────────────
+tbag/projects/
+###############################################################################
