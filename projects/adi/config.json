@@ -2,12 +2,12 @@
   "name": "adi",
   "sequence": [
     {
-      "label": "ff",
-      "img": null
+      "comp": "anode",
+      "label": "Add anode"
     },
     {
-      "label": "gg",
-      "img": null
+      "comp": "cathode",
+      "label": "Add cathode"
     }
   ]
 }

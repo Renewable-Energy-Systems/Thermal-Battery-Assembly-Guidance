@@ -1,97 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Edit Project · RES</title>
-    <link rel="stylesheet" href="/static/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Edit Project · RES</title>
+  <link rel="stylesheet" href="/static/styles.css">
 
-    <!-- page-specific tweaks -->
-    <style>
-      .step-row {
-          display:flex; align-items:center; gap:0.6rem;
-          margin-bottom:0.8rem; border:1px solid #ddd;
-          padding:0.6rem; border-radius:8px; background:#fafafa;
-      }
-      .step-row input[type=text] { flex:1; }
-      .drag-handle   { cursor:grab; font-size:1.25rem; user-select:none; }
-      .del-btn       { padding:0.35rem 0.8rem; font-size:0.85rem;
-                       background:#d32f2f; color:#fff; }
-    </style>
+  <style>
+    .step-row{
+      display:flex;align-items:center;gap:.6rem;
+      margin-bottom:.8rem;padding:.6rem;
+      border:1px solid #ddd;border-radius:8px;background:#fafafa;
+    }
+    .step-row select,.step-row input[type=text]{flex:1}
+    .drag-handle{cursor:grab;font-size:1.25rem;user-select:none}
+    .del-btn{padding:.35rem .8rem;font-size:.85rem;background:#d32f2f;color:#fff}
+  </style>
 </head>
 <body>
-    <!-- ───── App-bar ───── -->
-    <header class="appbar">
-        <img src="/static/logo.png" alt="RES logo">
-        <h1>Edit Project – {{ project.name }}</h1>
-    </header>
 
-    <!-- ───── Main card ───── -->
-    <main class="content">
-        <section class="card" style="width:100%;max-width:660px">
-            <h2>Assembly Sequence</h2>
+<header class="appbar">
+  <img src="/static/logo.png" alt="RES logo">
+  <h1>Edit Project – {{ project.name }}</h1>
+</header>
 
-            <form id="seqForm" method="post" enctype="multipart/form-data">
-                <!-- dynamic rows land here -->
-                <div id="stepsContainer"></div>
+<main class="content">
+  <section class="card" style="width:100%;max-width:660px">
+    <h2>Assembly Sequence</h2>
 
-                <button type="button" id="addStepBtn" class="btn"
-                        style="margin-top:0.5rem">+ Add Step</button>
+    <form id="seqForm" method="post">
+      <div id="stepsContainer"></div>
 
-                <button type="submit" class="btn"
-                        style="width:100%;margin-top:1rem">Save Project</button>
-            </form>
-        </section>
-    </main>
+      <button type="button" id="addStepBtn" class="btn"
+              style="margin-top:.5rem">+ Add Step</button>
+
+      <button type="submit" class="btn"
+              style="width:100%;margin-top:1rem">Save Project</button>
+    </form>
+  </section>
+</main>
 
 <script>
-/* ——— Initial sequence from Flask ——— */
-const stepsData = {{ sequence|tojson }};   // [{label:'', img:'file.png'}, …]
-const container = document.getElementById('stepsContainer');
-let stepIdx = 0;
+/* ---- data from Flask ---- */
+const components   = {{ components|tojson }};   // [{id,name,label,img}, …]
+const stepsData    = {{ sequence|tojson }};     // [{comp:'',label:''}, …]
+const container    = document.getElementById('stepsContainer');
+let   stepIdx      = 0;
 
-/* ——— Build one row ——— */
-function createStepRow(data = {label:'', img:null}) {
+/* ---- helper to build <select> options ---- */
+function compOptions(selected){
+  return `
+    <option value="" disabled ${!selected?'selected':''}>Component…</option>
+    ${components.map(c=>`
+      <option value="${c.id}" ${selected===c.id?'selected':''}>
+        ${c.name}
+      </option>`).join('')}
+  `;
+}
+
+/* ---- build one editable row ---- */
+function createStepRow(data={comp:'',label:''}){
   const idx = stepIdx++;
   const row = document.createElement('div');
-  row.className = 'step-row';
-  row.dataset.idx = idx;
-  row.setAttribute('draggable','true');
+  row.className='step-row'; row.dataset.idx=idx; row.draggable=true;
 
   row.innerHTML = `
     <span class="drag-handle">☰</span>
-    <input type="text"  name="label_${idx}"
-           value="${data.label ?? ''}" placeholder="Step label"
-           class="form-field" required>
 
-    <input type="file" name="img_${idx}" accept="image/*">
-    ${data.img ? `<img src="/proj_assets/{{ project.name }}/${data.img}"
-                     alt="" style="height:40px">` : ''}
+    <select name="comp_${idx}" class="form-field" required>
+      ${compOptions(data.comp)}
+    </select>
+
+    <input type="text" name="label_${idx}" placeholder="Instruction / note"
+           value="${data.label??''}" class="form-field">
 
     <button type="button" class="del-btn" title="Remove step">✕</button>
   `;
 
-  /* remove button */
-  row.querySelector('.del-btn').onclick = () => row.remove();
+  /* delete */
+  row.querySelector('.del-btn').onclick = ()=>row.remove();
 
   /* drag-n-drop reorder */
-  row.addEventListener('dragstart',   e => e.dataTransfer.setData('text', idx));
-  row.addEventListener('dragover',    e => e.preventDefault());
-  row.addEventListener('drop',        e => {
-      e.preventDefault();
-      const srcIdx = e.dataTransfer.getData('text');
-      const srcEl  = [...container.children].find(r => r.dataset.idx === srcIdx);
-      container.insertBefore(srcEl, row);
+  row.addEventListener('dragstart', e=>e.dataTransfer.setData('text',idx));
+  row.addEventListener('dragover',  e=>e.preventDefault());
+  row.addEventListener('drop',      e=>{
+    e.preventDefault();
+    const srcIdx = e.dataTransfer.getData('text');
+    const srcEl  = [...container.children].find(r=>r.dataset.idx===srcIdx);
+    container.insertBefore(srcEl, row);
   });
 
   container.appendChild(row);
 }
 
-/* ——— Populate existing sequence ——— */
+/* ---- populate existing sequence ---- */
 stepsData.forEach(createStepRow);
 
-/* ——— Add-step button ——— */
-document.getElementById('addStepBtn').onclick = () => createStepRow();
+/* ---- “Add Step” button ---- */
+document.getElementById('addStepBtn').onclick = ()=>createStepRow();
 </script>
 </body>
 </html>

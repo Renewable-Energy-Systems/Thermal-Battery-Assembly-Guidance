@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Edit Component · RES</title>
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<header class="appbar"><img src="/static/logo.png"><h1>Edit Component – {{ comp.name }}</h1></header>
+
+<main class="content">
+<section class="card" style="min-width:340px">
+  <h2 style="margin-top:0">Properties</h2>
+  <form method="post" enctype="multipart/form-data" novalidate>
+    <label class="form-label" for="comp_name">Name</label>
+    <input class="form-field" id="comp_name" name="comp_name" required maxlength="40"
+           value="{{ comp.name }}">
+
+    <label class="form-label" for="comp_img" style="margin-top:0.8rem">Preview Image (replace)</label>
+    <input type="file" id="comp_img" name="comp_img" accept="image/*">
+
+    {% if comp.image %}
+      <img src="/comp_assets/{{ cid }}/{{ comp.image }}" alt="" style="height:60px;margin-top:0.6rem">
+    {% endif %}
+
+    <button class="btn" style="width:100%;margin-top:1rem">Save</button>
+  </form>
+</section>
+</main>
+</body>
+</html>

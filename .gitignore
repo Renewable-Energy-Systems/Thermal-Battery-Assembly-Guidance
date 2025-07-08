@@ -70,4 +70,5 @@ instance/
 
 # ── Admin-generated project assets (created in prod) ──────────────────────
 tbag/projects/
+tbag/components/
 ###############################################################################

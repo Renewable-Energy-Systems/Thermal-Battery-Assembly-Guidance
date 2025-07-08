@@ -1,89 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Admin Dashboard · RES</title>
-    <link rel="stylesheet" href="/static/styles.css" />
-    <style>
-      .tile-grid {
-        display: grid;
-        gap: 1.25rem;
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      }
-      .tile {
-        background: var(--surface);
-        border-radius: 12px;
-        box-shadow: var(--elev-1);
-        padding: 1.5rem 1rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        transition: transform 0.15s;
-      }
-      .tile:hover {
-        transform: translateY(-4px);
-        box-shadow: var(--elev-2);
-      }
-      .tile svg {
-        width: 40px;
-        height: 40px;
-        margin-bottom: 0.75rem;
-        fill: var(--primary);
-      }
-      .tile span {
-        font-weight: 600;
-      }
-    </style>
-  </head>
-  <body>
-    <!-- ───── App-bar ───── -->
-    <header class="appbar">
-      <img src="/static/logo.png" alt="RES logo" />
-      <h1>Admin Dashboard</h1>
-    </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Dashboard · RES</title>
 
-    <!-- ───── Main content ───── -->
-    <main class="content">
-      <section class="card" style="width: 100%; max-width: 780px">
-        <h2 style="margin-top: 0">Quick Actions</h2>
-        <div class="tile-grid" style="margin-top: 1.25rem">
-          <!-- New Project -->
-          <a class="tile" href="/projects/new">
-            <svg viewBox="0 0 24 24">
-              <path d="M19 11H13V5h-2v6H5v2h6v6h2v-6h6z" />
-            </svg>
-            <span>New&nbsp;Project</span>
-          </a>
+  <!-- shared design tokens -->
+  <link rel="stylesheet" href="/static/styles.css" />
 
-          <!-- Manage Projects -->
-          <a class="tile" href="/projects">
-            <svg viewBox="0 0 24 24"><path d="M10 4H2v16h20V6H12l-2-2z" /></svg>
-            <span>Manage&nbsp;Projects</span>
-          </a>
+  <style>
+    /* ── tile layout ─────────────────────────────────────────────── */
+    .tile-grid{
+      display:grid;
+      gap:1.25rem;
+      grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+    }
+    .tile{
+      background:var(--surface);
+      border-radius:12px;
+      box-shadow:var(--elev-1);
+      padding:1.5rem 1rem;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      text-align:center;
+      transition:transform .15s, box-shadow .15s;
+    }
+    .tile:hover{
+      transform:translateY(-4px);
+      box-shadow:var(--elev-2);
+    }
+    .tile svg{
+      width:40px;height:40px;
+      margin-bottom:.75rem;
+      fill:var(--primary);
+    }
+    .tile span{font-weight:600}
+  </style>
+</head>
+<body>
 
-          <!--  🔹 THIS IS THE NEW TILE  🔹  -->
-          <a class="tile" href="/admin/sessions">
-            <svg viewBox="0 0 24 24">
-              <path
-                d="M4 4h16v2H4V4m0 4h16v2H4V8m0 4h16v2H4v-2m0 4h16v2H4v-2z"
-              />
-            </svg>
-            <span>Session&nbsp;Queue</span>
-          </a>
+<!-- ───── App-bar ───── -->
+<header class="appbar">
+  <img src="/static/logo.png" alt="RES logo">
+  <h1>Admin Dashboard</h1>
+</header>
 
-          <!-- Logs -->
-          <a class="tile" href="/logs">
-            <svg viewBox="0 0 24 24">
-              <path
-                d="M3 3h18v2H3V3m0 4h18v2H3V7m0 4h11v2H3v-2m0 4h18v2H3v-2z"
-              />
-            </svg>
-            <span>Logs</span>
-          </a>
-        </div>
-      </section>
-    </main>
-  </body>
+<!-- ───── Main content ───── -->
+<main class="content">
+  <section class="card" style="width:100%;max-width:780px">
+    <h2 style="margin-top:0">Quick Actions</h2>
+
+    <div class="tile-grid" style="margin-top:1.25rem">
+
+      <!-- New Project -->
+      <a class="tile" href="/projects/new">
+        <svg viewBox="0 0 24 24"><path d="M19 11H13V5h-2v6H5v2h6v6h2v-6h6z"/></svg>
+        <span>New&nbsp;Project</span>
+      </a>
+
+      <!-- Manage Projects -->
+      <a class="tile" href="/projects">
+        <svg viewBox="0 0 24 24"><path d="M10 4H2v16h20V6H12l-2-2z"/></svg>
+        <span>Manage&nbsp;Projects</span>
+      </a>
+
+      <!-- Component Library (NEW) -->
+      <a class="tile" href="/components">
+        <svg viewBox="0 0 24 24">
+          <path d="M4 4h6v6H4V4m0 10h6v6H4v-6M14 4h6v6h-6V4m0 10h6v6h-6v-6Z"/>
+        </svg>
+        <span>Component&nbsp;Library</span>
+      </a>
+
+      <!-- Session Queue -->
+      <a class="tile" href="/admin/sessions">
+        <svg viewBox="0 0 24 24">
+          <path d="M4 4h16v2H4V4m0 4h16v2H4V8m0 4h16v2H4v-2m0 4h16v2H4v-2z"/>
+        </svg>
+        <span>Session&nbsp;Queue</span>
+      </a>
+
+      <!-- Logs -->
+      <a class="tile" href="/logs">
+        <svg viewBox="0 0 24 24">
+          <path d="M3 3h18v2H3V3m0 4h18v2H3V7m0 4h11v2H3v-2m0 4h18v2H3v-2z"/>
+        </svg>
+        <span>Logs</span>
+      </a>
+
+    </div>
+  </section>
+</main>
+
+</body>
 </html>
