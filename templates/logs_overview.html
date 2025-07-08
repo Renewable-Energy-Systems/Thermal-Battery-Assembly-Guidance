@@ -1,38 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Run Logs · RES</title>
-<link rel="stylesheet" href="/static/styles.css">
-<style>
-  table { width:100%; border-collapse:collapse }
-  th,td{ padding:0.55rem 0.8rem; text-align:left }
-  tr:nth-child(even){ background:#f5f6ff }
-  tbody tr{ cursor:pointer; transition:background .12s }
-  tbody tr:hover{ background:#eef0ff }
-  .fail{ color:#d32f2f; font-weight:600 }
-  .chip{ display:inline-flex;align-items:center;gap:4px;padding:2px 8px;
-         border-radius:16px;font-weight:600;font-size:0.85rem }
-  .end{ background:#e5f5e9;color:#2e7d32 }
-  .abort{ background:#ffebee;color:#c62828 }
-  .chip svg{ width:14px;height:14px }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Run Logs · RES</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <!-- auto-refresh every 2 s so status flips without F5 -->
+  <meta http-equiv="refresh" content="2">
+  <style>
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:.55rem .8rem;text-align:left}
+    tbody tr:nth-child(even){background:#f5f6ff}
+    tbody tr{cursor:pointer;transition:background .12s}
+    tbody tr:hover{background:#eef0ff}
+    .chip{display:inline-flex;align-items:center;gap:4px;
+          padding:2px 8px;border-radius:16px;font-size:.8rem;font-weight:600}
+    .end{background:#e5f5e9;color:#2e7d32}
+    .abort{background:#ffebee;color:#c62828}
+    .chip svg{width:14px;height:14px}
+  </style>
 </head>
 <body>
 <header class="appbar">
-  <img src="/static/logo.png" alt="logo"><h1>Operation Logs</h1>
+  <img src="/static/logo.png" alt="logo">
+  <h1>Operation Logs</h1>
 </header>
 
 <main class="content">
 <section class="card" style="max-width:1040px">
-<div style="display:flex;justify-content:space-between;align-items:center">
-  <h2 style="margin:0">Recent Sessions</h2>
-  <div style="display:flex;gap:.6rem">
-    <a href="/logs/export" class="btn btn-secondary" title="Download as Excel">⬇︎ Excel</a>
-    <a href="/admin" class="btn btn-secondary">Back to Admin</a>
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <h2 style="margin:0">Recent Sessions</h2>
+    <div style="display:flex;gap:.6rem">
+      <a href="/logs/export" class="btn btn-secondary">⬇︎ Excel</a>
+      <a href="/admin"        class="btn btn-secondary">Back to Admin</a>
+    </div>
   </div>
-</div>
-
 
   <div style="overflow-x:auto;margin-top:1.2rem">
     <table>
@@ -53,15 +55,9 @@
           <td>{{ r.operator }}</td>
           <td>
             {% if r.kind == 'end' %}
-              <span class="chip end">
-                <svg viewBox="0 0 24 24"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41Z"/></svg>
-                finished
-              </span>
+              <span class="chip end">✔︎ finished</span>
             {% else %}
-              <span class="chip abort">
-                <svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21Zm12-3h-2v-2h2v2Zm0-4h-2v-4h2v4Z"/></svg>
-                aborted
-              </span>
+              <span class="chip abort">⚠ aborted</span>
             {% endif %}
           </td>
           <td style="text-align:center">

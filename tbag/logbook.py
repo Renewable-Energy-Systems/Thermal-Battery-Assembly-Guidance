@@ -2,6 +2,7 @@
 Shared log/timeline helpers + XLSX export.
 """
 import json, hashlib, io
+import sqlite3
 from typing import List, Dict
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
@@ -11,18 +12,32 @@ from .projects_helpers import load as load_project
 def _hue(name:str)->int:
     return int(hashlib.md5(name.encode()).hexdigest()[:2],16)*360//255
 
-def overview_rows()->List[Dict]:
-    rows=[]
+def overview_rows() -> list[dict]:
+    """
+    One dict per run, newest first.
+    Data comes directly from the `runs` table, not from the events table.
+    """
+    rows: list[dict] = []
     with connect() as c:
-        for ts,ev in c.execute(
-            "SELECT ts,event FROM events WHERE event LIKE 'session_%' ORDER BY ts DESC"):
-            kind,payload=ev.split("::",1)
-            if kind=="session_start": continue
-            d=json.loads(payload)
-            rows.append({"ts":ts,"kind":kind.replace('session_',''),
-                         "project":d.get("project"),"stack":d.get("stack_id"),
-                         "operator":d.get("operator"),"session":d["session_id"],
-                         "step":d.get("interrupted_at"),"hue":_hue(d.get("project",""))})
+        c.row_factory = sqlite3.Row
+        for r in c.execute(
+            "SELECT ts_created, project, stack_id, operator, status, "
+            "       interrupted_at, session_id "
+            "FROM runs ORDER BY ts_created DESC"
+        ).fetchall():
+
+            # map DB → fields expected by the template
+            kind = "end" if r["status"] == "finished" else "abort"
+            rows.append({
+                "ts":        r["ts_created"],
+                "project":   r["project"],
+                "stack_id":  r["stack_id"],
+                "operator":  r["operator"],
+                "kind":      kind,
+                "step":      r["interrupted_at"],
+                "session_id":r["session_id"],
+                "hue":       _hue(r["project"]),
+            })
     return rows
 
 def timeline(sid:str)->List[Dict]:

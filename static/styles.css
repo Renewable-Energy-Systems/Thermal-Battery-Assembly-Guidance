@@ -114,3 +114,20 @@ html,body {
 .form-field.invalid { border-color:#d32f2f; }
 .error       { color:#d32f2f; font-size:0.85rem; margin-top:4px;
                display:block; min-height:1em; }
+
+               /* ---- generic layout helpers (append to styles.css) -------------------- */
+body{margin:0;font-family:Inter,system-ui,sans-serif}
+.appbar{display:flex;align-items:center;padding:.6rem 1rem;
+        background:#27286f;color:#fff;gap:.6rem}
+.appbar img{height:30px}
+.content{padding:2.2rem;max-width:1600px;margin-inline:auto}
+.flex-row{display:flex;align-items:center}
+input,select{padding:.55rem .75rem;border:1px solid #ccc;
+             border-radius:6px;font-size:1rem}
+input:focus,select:focus{outline:2px solid #27286f66;border-color:#27286f66}
+
+/* ───── Status indicators ───── */
+.status-finished { color: #2e7d32; }   /* green */
+.status-aborted  { color: #d32f2f; }   /* red   */
+.status-active   { color: #1e88e5; }   /* blue  */
+.status-pending  { color: #f57c00; }   /* amber */

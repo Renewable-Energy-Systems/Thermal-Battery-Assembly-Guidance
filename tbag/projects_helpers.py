@@ -4,7 +4,7 @@ Pure helpers – no Flask import here.
 import json, uuid
 from pathlib import Path
 from typing import Dict, List, Optional
-from .config import PROJECTS
+from tbag.config import PROJECTS
 
 def all_dirs() -> List[Path]:
     return sorted((d for d in PROJECTS.iterdir() if d.is_dir()),

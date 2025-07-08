@@ -1,36 +1,43 @@
-import sqlite3, datetime
-from .config import DB_FILE
+"""DB initialisation & small helpers."""
+import sqlite3, datetime, json
+from tbag.config import DB_FILE          # path comes from config.py
 
-_SCHEMA = """
-CREATE TABLE IF NOT EXISTS events(
-  ts    TEXT,
-  event TEXT
-);
-CREATE TABLE IF NOT EXISTS runs(
-  session_id     TEXT PRIMARY KEY,
-  project        TEXT,
-  stack_id       TEXT,
-  operator       TEXT,
-  ts_created     TEXT,
-  ts_started     TEXT,
-  ts_finished    TEXT,
-  status         TEXT CHECK(status IN
-               ('pending','active','finished','aborted')),
-  interrupted_at INTEGER,
-  device         TEXT
-);
-"""
+# ── bootstrap ────────────────────────────────────────────────────────────
+def init() -> None:
+    with sqlite3.connect(DB_FILE) as c:
+        c.executescript("""
+        CREATE TABLE IF NOT EXISTS events(
+          ts    TEXT,
+          event TEXT
+        );
+        CREATE TABLE IF NOT EXISTS runs(
+          session_id     TEXT PRIMARY KEY,
+          project        TEXT,
+          stack_id       TEXT,
+          operator       TEXT,
+          ts_created     TEXT,
+          ts_started     TEXT,
+          ts_finished    TEXT,
+          status         TEXT CHECK(status IN
+                        ('pending','active','finished','aborted')),
+          interrupted_at INTEGER,
+          device         TEXT
+        );
+        """)
 
+# ── public helpers ───────────────────────────────────────────────────────
 def connect() -> sqlite3.Connection:
-    conn = sqlite3.connect(DB_FILE)
-    conn.row_factory = sqlite3.Row
-    return conn
+    """Return a *new* connection to the TBAG SQLite DB."""
+    return sqlite3.connect(DB_FILE)
 
-def migrate() -> None:
+def log(event: str, payload: dict | None = None) -> None:
+    """Append a row to the `events` table."""
+    blob = event if payload is None else f"{event}::{json.dumps(payload)}"
     with connect() as c:
-        c.executescript(_SCHEMA)
+        c.execute(
+            "INSERT INTO events VALUES(?,?)",
+            (datetime.datetime.now().isoformat(timespec="seconds"), blob)
+        )
 
-def log(event:str) -> None:
-    ts = datetime.datetime.now().isoformat(timespec="seconds")
-    with connect() as c:
-        c.execute("INSERT INTO events VALUES(?,?)", (ts, event))
+# run bootstrap once on import
+init()

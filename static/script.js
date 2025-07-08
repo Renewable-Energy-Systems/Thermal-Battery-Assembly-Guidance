@@ -1,98 +1,101 @@
-/* Guidance-step runtime logic (v3) */
+/*  static/script.js – kiosk runtime (v4.5)  */
 
-const seq      = window.sequence || [];
+const controls = document.getElementById('controls');
 const nextBtn  = document.getElementById('nextBtn');
 const stopBtn  = document.getElementById('stopBtn');
 const imgEl    = document.getElementById('stepImg');
 const labelEl  = document.getElementById('stepLabel');
 const statusEl = document.getElementById('status');
 
-// -------- poll for queued job -------------------------------------------
-async function awaitJob () {
+let session = null;          // filled after /api/claim
+let seq     = [];            // project steps
+let idx     = -1;            // current step index
+
+/* ---------- helpers --------------------------------------------------- */
+const sleep  = ms => new Promise(r => setTimeout(r, ms));
+const jFetch = (url, data) =>
+  fetch(url, {
+    method : 'POST',
+    headers: { 'Content-Type':'application/json' },
+    body   : JSON.stringify(data)
+  });
+
+async function waitForJob () {
   while (true) {
-    const r = await fetch('/kiosk/poll').then(r=>r.json());
-    if (r.pending) return r.job;            // got one – exit loop
-    await new Promise(res=>setTimeout(res, 2000));   // wait 2 s
+    const queue = await fetch('/api/pending').then(r => r.json());
+    if (queue.length) {
+      const sid  = queue[0].session_id;            // oldest pending
+      const resp = await jFetch('/api/claim', { session_id: sid });
+      if (resp.ok) return resp.json();             // success!
+    }
+    await sleep(2000);
   }
 }
-
-if (!window.sequence) {           // means page loaded with no session
-  document.querySelector('.meta').textContent = 'Waiting for supervisor…';
-  awaitJob().then(job => location.reload()); // reload => / will render
-  throw 'waiting';                // stop script below from executing
-}
-
-
-let idx = -1;                       // start before first
-const pid = document.querySelector('.meta').dataset.pid;   // folder name
 
 function showStep(i) {
-  const step = seq[i];
-  labelEl.textContent = step?.label ?? '';
+  const step = seq[i] ?? {};
+  labelEl.textContent  = step.label ?? '';
+  statusEl.textContent = `Step ${i + 1} / ${seq.length}`;
 
-  if (step?.img) {
-    imgEl.src = `/proj_assets/${pid}/${step.img}`;
-    imgEl.style.display = 'block';
+  if (step.img) {
+    imgEl.src    = `/proj_assets/${session.project}/${step.img}`;
+    imgEl.hidden = false;
   } else {
-    imgEl.style.display = 'none';
+    imgEl.hidden = true;
   }
-  statusEl.textContent = `Step ${i + 1} of ${seq.length}`;
+  nextBtn.textContent = (i === seq.length - 1) ? 'Review' : 'Next Step';
 }
 
-/* normal advance */
-function advance() {
+function send(action, extra = {}) {
+  return jFetch('/api/progress', {
+    action,
+    session_id: session.session_id,
+    ...extra                      // e.g. {step: idx} for “abort”
+  });
+}
+
+/* ---------- flow ------------------------------------------------------ */
+async function advance() {
   idx += 1;
 
-  if (idx < seq.length) {
+  if (idx < seq.length) {               // still inside sequence
     showStep(idx);
-    fetch('/next', { method: 'POST' });
-    if (idx === seq.length - 1) nextBtn.textContent = 'Finish';
-  } else {
-    finishSequence();
+    await send('next');
+  } else {                              // last step done → review page
+    nextBtn.disabled = stopBtn.disabled = true;
+    statusEl.textContent = 'Preparing summary…';
+    await send('next');                 // record final step
+    await sleep(200);
+    location.href = `/session/${session.session_id}`;
   }
 }
 
-/* finish */
-function finishSequence() {
-  statusEl.textContent = 'Sequence complete.';
-  nextBtn.disabled = true;
-  stopBtn.disabled = true;
-  imgEl.style.display = 'none';
-  fetch('/finish', { method: 'POST' })
-      .then(() => window.location.href = '/select');
-}
-
-/* abort */
-function abortSequence() {
-  if (!confirm('Interrupt this assembly? Progress will be logged.')) return;
-
-  nextBtn.disabled = true;
-  stopBtn.disabled = true;
-  statusEl.textContent = 'Aborting…';
-
-  fetch('/abort', {
-      method : 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body   : JSON.stringify({ step: idx })
-  }).then(() => window.location.href = '/select');
-}
-
-/* event hooks */
-nextBtn.addEventListener('click', advance);
-stopBtn.addEventListener('click', abortSequence);
-
-/* auto-start or block if empty */
-if (seq.length === 0) {
-  statusEl.textContent = 'No sequence configured for this project.';
+async function abort() {
+  if (!confirm('Interrupt this assembly?')) return;
   nextBtn.disabled = stopBtn.disabled = true;
-} else {
+  statusEl.textContent = 'Aborting…';
+  await send('abort', { step: idx });
+  await sleep(300);
+  location.reload();
+}
+
+/* ---------- bootstrap ------------------------------------------------- */
+(async () => {
+  // 1) wait until supervisor enqueues something
+  const data = await waitForJob();
+  session = data.session;
+  seq     = data.sequence;
+
+  // 2) fill header & show controls
+  document.querySelector('.meta').textContent =
+        `Project ${session.project} | `
+      + `Stack ${session.stack_id} | `
+      + `Operator ${session.operator}`;
+
+  controls.style.display = 'flex';       // show buttons
+  nextBtn.addEventListener('click', advance);
+  stopBtn.addEventListener('click', abort);
+
+  // 3) kick off first step
   advance();
-}
-function finishSequence() {
-  statusEl.textContent = 'Sequence complete.';
-  nextBtn.disabled = true;
-  stopBtn.disabled = true;
-  imgEl.style.display = 'none';
-  fetch('/finish', { method: 'POST' })
-      .then(() => window.location.href = '/summary');   // ← was /select
-}
+})();

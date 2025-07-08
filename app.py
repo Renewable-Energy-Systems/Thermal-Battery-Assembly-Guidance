@@ -7,7 +7,7 @@ from flask import Flask
 from tbag import config, db
 from tbag.blueprints import kiosk, admin, projects, logs
 
-db.migrate()                             # ensure tables exist
+db.init()                             # ensure tables exist
 
 app = Flask(__name__,
             template_folder="templates",

@@ -1,44 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Session Complete · RES</title>
+<title>Assembly Review – Session {{ run.session_id }}</title>
+
 <link rel="stylesheet" href="/static/styles.css">
+
 <style>
-  .list { text-align:left; margin:1rem 0 1.25rem 0; }
-  .list dt { font-weight:600; display:inline-block; width:120px; }
-  .list dd { display:inline; margin:0 0 0.75rem 0; }
+  .summary-list {list-style:none;padding:0;margin:.5rem 0}
+  .summary-list li {margin:.25rem 0}
+  #finishBtn {min-width:160px;margin-top:1.2rem}
 </style>
 </head>
 <body>
-
 <header class="appbar">
   <img src="/static/logo.png" alt="logo">
-  <h1>Assembly Session Summary</h1>
+  <h1>Review &amp; Finish</h1>
 </header>
 
 <main class="content">
-  <section class="card" style="min-width:360px;text-align:center">
-    <h2 style="margin-top:0">Success!</h2>
-    <p>Sequence log saved to database.</p>
+  <section class="card" style="max-width:520px">
+    <h2 style="margin-top:0">Session Overview</h2>
+    <ul class="summary-list">
+      <li><strong>Project:</strong> {{ run.project }}</li>
+      <li><strong>Stack ID:</strong> {{ run.stack_id }}</li>
+      <li><strong>Operator:</strong> {{ run.operator }}</li>
+      <li><strong>Started:</strong> {{ run.ts_started or '—' }}</li>
+      <li><strong>Steps Completed:</strong> {{ total_steps }}</li>
+    </ul>
 
-    <dl class="list">
-      <dt>Project:</dt>   <dd>{{ info.project }}</dd><br>
-      <dt>Stack&nbsp;ID:</dt> <dd>{{ info.stack_id }}</dd><br>
-      <dt>Operator:</dt>  <dd>{{ info.operator }}</dd><br>
-      <dt>Session&nbsp;ID:</dt><dd>{{ info.session_id }}</dd><br>
-      <dt>Started:</dt>   <dd>{{ info.timestamp }}</dd><br>
-      {% if info.get('interrupted_at') is not none %}
-      <dt>Status:</dt>    <dd style="color:#d32f2f">Interrupted at step {{ info.interrupted_at + 1 }}</dd><br>
-      {% else %}
-      <dt>Status:</dt>    <dd>Completed</dd><br>
-      {% endif %}
-    </dl>
-
-    <a href="/select" class="btn" style="width:100%">Start New Session</a>
+    <button id="finishBtn" class="btn">Finish Session</button>
+    <p id="finalStatus" style="margin-top:.8rem"></p>
   </section>
 </main>
 
+<script>
+  const finishBtn   = document.getElementById('finishBtn');
+  const finalStatus = document.getElementById('finalStatus');
+
+  finishBtn.addEventListener('click', async () => {
+    finishBtn.disabled = true;
+    finalStatus.textContent = 'Finalising…';
+    const res = await fetch('/api/progress', {
+      method : 'POST',
+      headers: {'Content-Type':'application/json'},
+      body   : JSON.stringify({
+                 action    : 'finish',
+                 session_id: '{{ run.session_id }}'
+               })
+    });
+    if (res.ok) {
+      location.href = '/';
+    } else {
+      finalStatus.textContent = 'Could not finish – please try again.';
+      finishBtn.disabled = false;
+    }
+  });
+</script>
 </body>
 </html>

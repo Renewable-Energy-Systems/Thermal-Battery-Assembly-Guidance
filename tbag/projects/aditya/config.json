@@ -1,0 +1,13 @@
+{
+  "name": "aditya",
+  "sequence": [
+    {
+      "label": "add heat pellet",
+      "img": null
+    },
+    {
+      "label": "remove hp",
+      "img": null
+    }
+  ]
+}
