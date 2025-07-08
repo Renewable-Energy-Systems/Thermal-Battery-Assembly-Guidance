@@ -1,63 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Battery Projects · RES</title>
-    <link rel="stylesheet" href="/static/styles.css" />
-    <style>
-      .tbl          { width:100%; border-collapse:collapse; font-size:0.95rem; }
-      .tbl th, .tbl td { padding:0.55rem 0.8rem; }
-      .tbl thead     { background:var(--surface-variant); }
-      .tbl tbody tr:nth-child(even){ background:#f7f8ff; }
-      .action-btn    { padding:0.35rem 0.9rem; font-size:0.85rem; }
-      .topbar        { display:flex; justify-content:space-between; align-items:center; }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Battery Projects · RES</title>
+<link rel="stylesheet" href="/static/styles.css" />
+<style>
+  .tbl               { width:100%; border-collapse:collapse; font-size:0.95rem; }
+  .tbl th, .tbl td   { padding:0.55rem 0.8rem; }
+  .tbl thead         { background:var(--surface-variant); }
+  .tbl tbody tr:nth-child(even){ background:#f7f8ff; }
+
+  .action-btn        { padding:0.35rem 0.9rem; font-size:0.85rem; }
+  .del-btn           { background:#d32f2f; color:#fff; }
+  .topbar            { display:flex; justify-content:space-between; align-items:center; }
+</style>
 </head>
 <body>
-    <!-- ───── App-bar ───── -->
-    <header class="appbar">
-        <img src="/static/logo.png" alt="RES logo" />
-        <h1>Battery Projects</h1>
-    </header>
+<!-- ───── App-bar ───── -->
+<header class="appbar">
+  <img src="/static/logo.png" alt="RES logo" />
+  <h1>Battery Projects</h1>
+</header>
 
-    <main class="content">
-        <section class="card" style="min-width:420px">
-            <div class="topbar">
-                <h2 style="margin:0">Project Library</h2>
-                <div style="display:flex;gap:0.5rem">
-                    <a href="/admin"          class="btn" style="padding:0.5rem 1rem;font-size:0.9rem;background:var(--primary-light)">← Back</a>
-                    <a href="/projects/new"  class="btn" style="padding:0.5rem 1rem;font-size:0.9rem">+ New</a>
-                </div>
-            </div>
+<main class="content">
+<section class="card" style="min-width:420px">
+  <div class="topbar">
+    <h2 style="margin:0">Project Library</h2>
+    <div style="display:flex;gap:0.5rem">
+      <a href="/admin"         class="btn" style="padding:0.5rem 1rem;font-size:0.9rem;background:var(--primary-light)">← Back</a>
+      <a href="/projects/new"  class="btn" style="padding:0.5rem 1rem;font-size:0.9rem">+ New</a>
+    </div>
+  </div>
 
-            {% if projects %}
-            <table class="tbl" style="margin-top:1rem">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th style="text-align:center">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for p in projects %}
-                    <tr>
-                        <td>{{ loop.index }}</td>
-                        <td>{{ p.id }}</td>
-                        <td>{{ p.name }}</td>
-                        <td style="text-align:center">
-                            <a href="/projects/{{ p.id }}/edit" class="btn action-btn">Edit</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            {% else %}
-            <p style="margin-top:1.5rem">No projects found. Click <strong>+ New</strong> to create one.</p>
-            {% endif %}
-        </section>
-    </main>
+  {% if projects %}
+  <table class="tbl" style="margin-top:1rem">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>ID</th>
+        <th>Name</th>
+        <th style="text-align:center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for p in projects %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ p.id }}</td>
+        <td>{{ p.name }}</td>
+        <td style="text-align:center">
+          <a href="/projects/{{ p.id }}/edit" class="btn action-btn">Edit</a>
+
+          <!-- Delete (POST) -->
+          <form action="/projects/{{ p.id }}/delete" method="post"
+                class="del-form" style="display:inline">
+            <button type="submit" class="btn action-btn del-btn">Delete</button>
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+    <p style="margin-top:1.5rem">No projects found. Click <strong>+ New</strong> to create one.</p>
+  {% endif %}
+</section>
+</main>
+
+<script>
+/* confirm-before-delete guard */
+document.querySelectorAll('.del-form').forEach(frm => {
+  frm.addEventListener('submit', e => {
+    if(!confirm('Delete this project and all its images?\nThis cannot be undone.')){
+      e.preventDefault();
+    }
+  });
+});
+</script>
 </body>
 </html>
