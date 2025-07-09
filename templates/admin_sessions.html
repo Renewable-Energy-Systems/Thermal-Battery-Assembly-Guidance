@@ -5,7 +5,7 @@
 <title>Session Queue · TBAG</title>
 <link rel="stylesheet" href="/static/styles.css">
 <style>
-/* ---- page-specific rules (material-ish) -------------------------------- */
+/* ---- page-specific rules --------------------------------------------- */
 :root{
   --card-bg:#fff; --e1:0 2px 6px rgba(0,0,0,.08);
   --e2:0 4px 12px rgba(0,0,0,.12); --gap:1.8rem;
@@ -37,24 +37,22 @@ tr:not(:last-child) td{border-bottom:1px solid #eee}
 <main class="content">
 <div class="grid">
 
-  <!-- create form -->
+  <!-- ── create-form ─────────────────────────────────────────────────── -->
   <section class="card" style="padding:2.2rem">
     <h2>Create New Session</h2>
     <form action="/admin/sessions/new" method="post"
           class="flex-row" style="gap:.6rem;margin-top:1.4rem">
-      <select name="project" required>
+      <select id="projectSel" name="project" required>
         <option value="" disabled selected>Select project…</option>
-        {% for p in projects %}
-          <option value="{{p.id}}">{{p.name}}</option>
-        {% endfor %}
       </select>
+
       <input name="stack_id" placeholder="Stack ID" required>
       <input name="operator" placeholder="Operator" required>
       <button class="btn">Add Session</button>
     </form>
   </section>
 
-  <!-- live table -->
+  <!-- ── live-table ──────────────────────────────────────────────────── -->
   <section class="card" style="padding:2.2rem">
     <h2>Pending / Active Runs</h2>
     <div style="overflow-x:auto;margin-top:1rem">
@@ -69,6 +67,22 @@ tr:not(:last-child) td{border-bottom:1px solid #eee}
 </main>
 
 <script>
+/* --------------------- populate project <select> ---------------------- */
+async function loadProjects(){
+  const sel  = document.getElementById('projectSel');
+  const keep = sel.value;                       // preserve current choice
+  const list = await fetch('/projects/json').then(r=>r.json());
+
+  sel.innerHTML =
+    '<option value="" disabled>Select project…</option>' +
+    list.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+
+  if (keep) sel.value = keep;                   // keep selection if possible
+}
+loadProjects();                     // initial fill
+setInterval(loadProjects, 5000);    // refresh every 5 s
+
+/* --------------------- live-update session table ---------------------- */
 const tbody = document.querySelector('#sessTbl tbody');
 
 function rowMarkup(r){
@@ -89,7 +103,7 @@ async function refresh(){
   const rows = await fetch('/admin/sessions/json').then(r=>r.json());
   tbody.innerHTML = rows.map(rowMarkup).join('');
 }
-refresh(); setInterval(refresh, 2500);      // ← refresh every 2.5 s
+refresh(); setInterval(refresh, 2500);
 </script>
 </body>
 </html>
