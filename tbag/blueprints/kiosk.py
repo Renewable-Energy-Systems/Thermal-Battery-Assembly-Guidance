@@ -1,32 +1,26 @@
 # ─── tbag/blueprints/kiosk.py ────────────────────────────────────────────
 from __future__ import annotations
-import sqlite3, datetime, threading, time
+
+import sqlite3
+import datetime
 from flask import Blueprint, jsonify, render_template, request, abort
 
-from ..helpers.projects   import load_config
-from ..helpers.components import load_component
-from ..db   import DB_FILE, log
+from ..helpers.projects import load_config
+from ..db     import DB_FILE, log
 from ..config import DEVICE_ID
-from ..gpio  import LED, Button     # safe wrapper – mocks on PC
+from ..gpio   import LED, Button
 
 bp = Blueprint("kiosk", __name__)
+red_led, pedal = LED(17), Button(27)
 
-# cache LED objects so we only claim a pin once
-_led_cache: dict[int, LED] = {}
-def _led(pin: int) -> LED:
-    if pin not in _led_cache:
-        _led_cache[pin] = LED(pin)
-    return _led_cache[pin]
 
-# leave foot-pedal on 20/21 for later
-pedal = Button(20) if hasattr(Button, "__call__") else Button()
-
-# ───────────────────────── UI pages ────────────────────────
+# ── root page -----------------------------------------------------------
 @bp.route("/")
 def index():
     return render_template("index.html")
 
-# ───────────────────────── queue feed ──────────────────────
+
+# ── queue API -----------------------------------------------------------
 @bp.get("/api/pending")
 def pending():
     with sqlite3.connect(DB_FILE) as c:
@@ -37,7 +31,7 @@ def pending():
         ).fetchall()
     return jsonify([dict(r) for r in rows])
 
-# ───────────────────────── claim session ───────────────────
+
 @bp.post("/api/claim")
 def claim():
     data = request.json or {}
@@ -70,32 +64,25 @@ def claim():
                    session=dict(run),
                    sequence=cfg["sequence"])
 
-# ───────────────────────── progress / finish / abort ───────
+
+# ── progress / finish / abort ------------------------------------------
 @bp.post("/api/progress")
 def progress():
     """
-    Expects JSON: {session_id, action, step?, component?}
-    For “next” we blink the component’s LED once (0.3 s).
+    Handles 'next', 'finish', 'abort'.
+    We first complete the UPDATE on 'runs', commit it, THEN call log() so the
+    second write happens after the write-lock is released.
     """
     data = request.get_json(force=True)
     sid  = data["session_id"]
     act  = data["action"]
     now  = datetime.datetime.now().isoformat(timespec="seconds")
 
-    # —— NEXT ————————————————————————————————
     if act == "next":
-        comp_id = data.get("component")
-        if comp_id:
-            comp = load_component(comp_id)
-            if comp:
-                led = _led(int(comp["gpio"]))
-                threading.Thread(
-                    target=lambda l=led: (l.on(), time.sleep(0.3), l.off()),
-                    daemon=True).start()
-        log("next_pressed", {"session_id": sid, "component": comp_id})
+        red_led.toggle()
+        log("next_pressed", {"session_id": sid})
         return jsonify(status="ok")
 
-    # —— FINISH / ABORT ——————————————————————————
     with sqlite3.connect(DB_FILE) as conn:
         cur = conn.cursor()
 
@@ -122,8 +109,14 @@ def progress():
                 (now, data.get("step"), sid)
             )
 
-        conn.commit()
+        changed = cur.rowcount
+        conn.commit()               # <── RELEASE write-lock *before* log()
 
+    if changed == 0:
+        print(f"[WARN] progress '{act}' ignored: session {sid!r} not active",
+              flush=True)
+
+    # write to events table *after* the transaction above has finished
     if act == "finish":
         log("session_end",   {"session_id": sid})
     elif act == "abort":
@@ -131,7 +124,26 @@ def progress():
 
     return jsonify(status=act)
 
-# ───────────────────────── pedal helper ─────────────────────
+
+# ── session overview page ----------------------------------------------
+@bp.route("/session/<sid>")
+def session_overview(sid: str):
+    with sqlite3.connect(DB_FILE) as c:
+        c.row_factory = sqlite3.Row
+        run = c.execute("SELECT * FROM runs WHERE session_id = ?", (sid,)).fetchone()
+
+    if run is None:
+        abort(404, "session not found")
+
+    cfg         = load_config(run["project"]) or {"sequence": []}
+    total_steps = len(cfg["sequence"])
+
+    return render_template("summary.html",
+                           run=run,
+                           total_steps=total_steps)
+
+
+# ── tiny helper used by JS ---------------------------------------------
 @bp.get("/pedal")
 def pedal_state():
     return jsonify(pressed=bool(getattr(pedal, "is_active", False)))
