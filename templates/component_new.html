@@ -21,6 +21,18 @@
     <label class="form-label" for="comp_img" style="margin-top:0.8rem">Preview Image&nbsp;(optional)</label>
     <input type="file" id="comp_img" name="comp_img" accept="image/*">
 
+    <label for="gpio">GPIO pin:</label>
+<!-- add inside the Details card, wherever the GPIO selector lives -->
+<label class="form-label fw-medium">GPIO pin:</label>
+<select name="gpio" class="form-select" required>
+  {# ←--- populate dropdown ---→ #}
+  {% for pin in gpio_choices %}
+      <option value="{{ pin }}">{{ pin }}</option>
+  {% endfor %}
+</select>
+
+
+
     <button class="btn" style="width:100%;margin-top:1rem">Create</button>
   </form>
 </section>
