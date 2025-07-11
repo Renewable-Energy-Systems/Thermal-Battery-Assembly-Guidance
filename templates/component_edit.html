@@ -23,15 +23,16 @@
       <img src="/comp_assets/{{ cid }}/{{ comp.image }}" alt="" style="height:60px;margin-top:0.6rem">
     {% endif %}
 
-<label class="form-label fw-medium">GPIO pin:</label>
+<label class="form-label mb-1">GPIO pin:</label>
 <select name="gpio" class="form-select" required>
   {% for pin in gpio_choices %}
-      <option value="{{ pin }}"
-              {% if pin == comp.gpio %}selected{% endif %}>
-          {{ pin }}
-      </option>
+    <option value="{{ pin }}"
+            {% if comp and pin == comp.gpio %}selected{% endif %}>
+        {{ pin }}
+    </option>
   {% endfor %}
 </select>
+
 
 
 
