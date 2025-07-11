@@ -5,16 +5,51 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Thermal Battery Assembly Guidance</title>
 
-<!-- main design tokens / utility classes -->
+<!-- global tokens / utility classes -->
 <link rel="stylesheet" href="/static/styles.css">
 
-<!-- page-specific tweaks only for this screen -->
+<!-- page-specific tweaks -->
 <style>
-  .step-img   {max-width:380px;max-height:260px;object-fit:contain;
-               margin:1rem auto;border:1px solid #ccc;border-radius:8px}
-  .step-label {font-size:1.15rem;margin:.8rem 0;font-weight:600}
-  #controls   {display:none;gap:.75rem;justify-content:center}
-  #status     {margin-top:.9rem}
+  /* centre column */
+  .stage {
+    position: relative;            /* needed for ghost-card Z-stack */
+    display: flex; flex-direction: column;
+    align-items: center; gap: 1.1rem;
+    max-width: 520px; margin: 0 auto;
+  }
+
+  /* ghost cards */
+  .ghost {
+    position: absolute;
+    inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    padding: 2rem 3rem; border-radius: 14px;
+    background: #fff; color: #666;
+    box-shadow: 0 2px 4px rgb(0 0 0 / .08);
+    opacity: .15;      /* faint */
+    transform: scale(.95);         /* a bit smaller */
+    pointer-events: none;
+    user-select: none;
+  }
+  #prevCard { transform: translateX(-7%) scale(.93); }
+  #nextCard { transform: translateX( +7%) scale(.93); }
+
+  /* main card */
+  #pane {
+    position: relative; z-index: 2;   /* sits above ghosts */
+    text-align: center;
+  }
+
+  /* component name vs label */
+  #compName   { font-weight: 600; font-size: 1.3rem; }
+  #stepLabel  { font-size: 1.15rem; margin: .4rem 0 .85rem; }
+
+  .step-img   {
+    max-width: 380px; max-height: 260px; object-fit: contain;
+    margin: .8rem auto; border: 1px solid #ccc; border-radius: 8px;
+  }
+  #controls   { display:none; gap:.75rem; justify-content:center }
+  #status     { margin-top:.9rem }
 </style>
 </head>
 <body>
@@ -25,19 +60,27 @@
 </header>
 
 <main class="content">
-  <section id="pane" class="card" style="text-align:center;max-width:520px">
-    <!-- updated by JS after a session is claimed -->
-    <p class="meta">Loading queue…</p>
+  <section class="stage">
+    <!-- ghost cards -->
+    <div id="prevCard" class="ghost"   style="visibility:hidden"></div>
+    <div id="nextCard" class="ghost"   style="visibility:hidden"></div>
 
-    <img id="stepImg" class="step-img" alt="" style="display:none">
-    <div id="stepLabel" class="step-label"></div>
+    <!-- MAIN CARD ----------------------------------------------------- -->
+    <section id="pane" class="card">
+      <p class="meta">Loading queue…</p>
 
-    <div id="controls">
-      <button id="nextBtn" class="btn" style="min-width:160px">Next Step</button>
-      <button id="stopBtn" class="btn btn-secondary">Force Stop</button>
-    </div>
+      <div id="compName" style="display:none"></div>
+      <div id="stepLabel"></div>
 
-    <p id="status"></p>
+      <img id="stepImg" class="step-img" alt="" hidden>
+
+      <div id="controls">
+        <button id="nextBtn" class="btn" style="min-width:160px">Next Step</button>
+        <button id="stopBtn" class="btn btn-secondary">Force Stop</button>
+      </div>
+
+      <p id="status"></p>
+    </section>
   </section>
 </main>
 

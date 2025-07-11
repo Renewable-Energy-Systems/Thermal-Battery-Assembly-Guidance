@@ -6,7 +6,7 @@ from __future__ import annotations
 
 import uuid
 import pathlib
-from flask import Blueprint, render_template, request, redirect, send_from_directory
+from flask import Blueprint, jsonify, render_template, request, redirect, send_from_directory
 import werkzeug.datastructures as wz
 
 from ..helpers.components import (
@@ -28,6 +28,21 @@ def list_components_route():
         for p in components_list()
     ]
     return render_template("component_list.html", components=comps)
+
+# ── tiny JSON helper (used by kiosk) ───────────────────────────────────
+@bp.get("/components/json")
+def components_json():
+    """Return id, name and optional preview image for every component."""
+    from flask import jsonify
+    return jsonify([
+        {
+            "id":   p.name,
+            "name": cfg.get("name"),
+            "image": cfg.get("image")            # may be None
+        }
+        for p in components_list()
+        if (cfg := load_component(p.name))
+    ])
 
 # ───────────────────────── create ────────────────────────────────────
 @bp.route("/components/new", methods=["GET", "POST"])

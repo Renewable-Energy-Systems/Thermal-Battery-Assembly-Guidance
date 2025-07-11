@@ -1,17 +1,25 @@
-/*  static/script.js – kiosk runtime (v4.5)  */
+/*  static/script.js – kiosk runtime (v6.1)  */
 
-const controls = document.getElementById('controls');
-const nextBtn  = document.getElementById('nextBtn');
-const stopBtn  = document.getElementById('stopBtn');
-const imgEl    = document.getElementById('stepImg');
-const labelEl  = document.getElementById('stepLabel');
-const statusEl = document.getElementById('status');
+/* ---------- DOM refs ------------------------------------------------ */
+const controls  = document.getElementById('controls');
+const nextBtn   = document.getElementById('nextBtn');
+const stopBtn   = document.getElementById('stopBtn');
+const imgEl     = document.getElementById('stepImg');
+const compEl    = document.getElementById('compName');   // <h2> in card
+const labelEl   = document.getElementById('stepLabel');
+const statusEl  = document.getElementById('status');
+const prevGhost = document.getElementById('prevCard');
+const nextGhost = document.getElementById('nextCard');
 
-let session = null;          // filled after /api/claim
-let seq     = [];            // project steps
-let idx     = -1;            // current step index
+/* ---------- runtime state ------------------------------------------ */
+let session = null;
+let seq     = [];
+let idx     = -1;
 
-/* ---------- helpers --------------------------------------------------- */
+const compName = Object.create(null);   // id → human name
+const compImg  = Object.create(null);   // id → preview filename
+
+/* ---------- helpers ------------------------------------------------ */
 const sleep  = ms => new Promise(r => setTimeout(r, ms));
 const jFetch = (url, data) =>
   fetch(url, {
@@ -20,51 +28,96 @@ const jFetch = (url, data) =>
     body   : JSON.stringify(data)
   });
 
-async function waitForJob () {
+function stepId(step) {                 // tolerate old/new field name
+  return step.component ?? step.comp ?? null;
+}
+
+/* ---------- preload component list (names + preview img) ------------ */
+(async () => {
+  try {
+    const list = await fetch('/components/json').then(r => r.json());
+    for (const c of list) {
+      compName[c.id] = c.name;
+      if (c.image) compImg[c.id] = c.image;
+    }
+  } catch { /* optional – page still works without */ }
+})();
+
+/* ---------- queue handling ----------------------------------------- */
+async function waitForJob() {
   while (true) {
     const queue = await fetch('/api/pending').then(r => r.json());
     if (queue.length) {
-      const sid  = queue[0].session_id;            // oldest pending
+      const sid  = queue[0].session_id;
       const resp = await jFetch('/api/claim', { session_id: sid });
-      if (resp.ok) return resp.json();             // success!
+      if (resp.ok) return resp.json();
     }
     await sleep(2000);
   }
 }
 
+/* ---------- display a single step ---------------------------------- */
 function showStep(i) {
+  console.debug('[DBG] compImg map', compImg); 
   const step = seq[i] ?? {};
+
+  /* component name */
+  const cid  = stepId(step);
+  const cname = cid ? (compName[cid] ?? cid) : '';
+  compEl.textContent = cname;
+  compEl.style.display = cname ? 'block' : 'none';
+
+  /* instruction label */
   labelEl.textContent  = step.label ?? '';
   statusEl.textContent = `Step ${i + 1} / ${seq.length}`;
 
+  /* image: project-specific first, else component preview */
+  let src = null;
   if (step.img) {
-    imgEl.src    = `/proj_assets/${session.project}/${step.img}`;
+    src = `/proj_assets/${session.project}/${step.img}`;
+  } else if (cid && compImg[cid]) {
+    src = `/comp_assets/${cid}/${compImg[cid]}`;
+  }
+console.debug('[DBG] chosen image', src);
+  if (src) {
+    imgEl.src = src;
     imgEl.hidden = false;
   } else {
     imgEl.hidden = true;
   }
+
+  /* ghost cards */
+  prevGhost.textContent      = seq[i - 1]?.label ?? '';
+  nextGhost.textContent      = seq[i + 1]?.label ?? '';
+  prevGhost.style.visibility = i > 0              ? 'visible' : 'hidden';
+  nextGhost.style.visibility = i < seq.length - 1 ? 'visible' : 'hidden';
+
   nextBtn.textContent = (i === seq.length - 1) ? 'Review' : 'Next Step';
 }
 
+/* shorthand to talk to backend */
 function send(action, extra = {}) {
   return jFetch('/api/progress', {
     action,
     session_id: session.session_id,
-    ...extra                      // e.g. {step: idx} for “abort”
+    ...extra
   });
 }
 
-/* ---------- flow ------------------------------------------------------ */
+/* ---------- flow --------------------------------------------------- */
 async function advance() {
   idx += 1;
 
-  if (idx < seq.length) {               // still inside sequence
+  if (idx < seq.length) {
+    const step = seq[idx] ?? {};
     showStep(idx);
-    await send('next');
-  } else {                              // last step done → review page
+
+    const cid = stepId(step);
+    await send('next', cid ? { component: cid } : {});
+  } else {
     nextBtn.disabled = stopBtn.disabled = true;
     statusEl.textContent = 'Preparing summary…';
-    await send('next');                 // record final step
+    await send('next');
     await sleep(200);
     location.href = `/session/${session.session_id}`;
   }
@@ -79,23 +132,20 @@ async function abort() {
   location.reload();
 }
 
-/* ---------- bootstrap ------------------------------------------------- */
+/* ---------- bootstrap --------------------------------------------- */
 (async () => {
-  // 1) wait until supervisor enqueues something
   const data = await waitForJob();
   session = data.session;
   seq     = data.sequence;
 
-  // 2) fill header & show controls
   document.querySelector('.meta').textContent =
         `Project ${session.project} | `
       + `Stack ${session.stack_id} | `
       + `Operator ${session.operator}`;
 
-  controls.style.display = 'flex';       // show buttons
+  controls.style.display = 'flex';
   nextBtn.addEventListener('click', advance);
   stopBtn.addEventListener('click', abort);
 
-  // 3) kick off first step
-  advance();
+  advance();           // first step
 })();
