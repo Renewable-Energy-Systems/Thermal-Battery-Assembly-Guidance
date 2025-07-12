@@ -1,52 +1,101 @@
-# ─── tbag/blueprints/kiosk.py ───────────────────────────────────────────
+"""
+tbag.blueprints.kiosk
+─────────────────────
+Shop-floor runtime.
+
+* Claims sessions from the queue and guides the operator step-by-step.
+* Keeps exactly **one** GPIO LED on – the one that belongs to the
+  current component – and turns the previous one off.
+* Frees every line at start / finish / abort so no stale exports linger.
+* Records NEXT / FINISH / ABORT in the database + event-log.
+"""
+
 from __future__ import annotations
 
-import datetime, sqlite3, threading, time
+import datetime
+import sqlite3
+from typing import Dict, Optional
+
 from flask import Blueprint, abort, jsonify, render_template, request
 
-from ..config           import DEVICE_ID
-from ..db               import DB_FILE, log
-from ..gpio             import LED, Button           # mocked automatically on PC
-from ..helpers.projects import load_config
+from ..config import DEVICE_ID
+from ..db     import DB_FILE, log
+from ..gpio   import LED, Button               # mocked on non-Pi hosts
 from ..helpers.components import load_component
+from ..helpers.projects    import load_config
 
-bp = Blueprint("kiosk", __name__)
 
-# ── LED handling ────────────────────────────────────────────────────────
-_led_cache: dict[int, LED] = {}          # 1 LED obj per pin
+# ────────────────────────── GPIO helpers ──────────────────────────────
+_led_cache: Dict[int, LED] = {}      # lazy, 1 LED object per *used* pin
+_current_pin: Optional[int] = None   # LED that is currently ON
+
 
 def _led(pin: int) -> LED:
+    """Return a cached LED object for *pin* (create on first use)."""
     if pin not in _led_cache:
         _led_cache[pin] = LED(pin)
     return _led_cache[pin]
 
-def _blink(pin: int, dur: float = .3):
-    """Switch the pin ON for <dur> seconds in a background thread."""
-    led = _led(pin)
-    threading.Thread(
-        target=lambda l=led: (l.on(), time.sleep(dur), l.off()),
-        daemon=True
-    ).start()
 
-def _reset_all_leds():
-    """Turn **everything** off and release the pins."""
-    for led in _led_cache.values():
+def _activate_led(pin: Optional[int]) -> None:
+    """
+    Switch on *pin* and switch off/close the previously-active LED.
+    Pass ``None`` to simply turn everything off.
+    """
+    global _current_pin
+
+    # nothing to do?
+    if pin == _current_pin:
+        return
+
+    # ── turn previous off ────────────────────────────────────────────
+    if _current_pin is not None:
+        try:
+            _led(_current_pin).off()
+        finally:
+            _led(_current_pin).close()
+            _led_cache.pop(_current_pin, None)
+
+    _current_pin = None  # reset even if new pin fails
+
+    # ── turn new one on ──────────────────────────────────────────────
+    if pin is not None:
+        try:
+            _led(pin).on()
+            _current_pin = pin
+        except Exception as exc:     # never crash the API
+            print(f"[WARN] cannot switch LED on GPIO {pin}: {exc}", flush=True)
+            try:
+                _led(pin).close()
+            finally:
+                _led_cache.pop(pin, None)
+
+
+def _reset_all_leds() -> None:
+    """Turn *every* cached LED off & free the lines."""
+    for p, led in list(_led_cache.items()):
         try:
             led.off()
+        finally:
             led.close()
-        except Exception:
-            pass
-    _led_cache.clear()
+        _led_cache.pop(p, None)
 
-# ── foot pedal (GPIO-21)  – mocked on non-Pi systems ───────────────────
-pedal = Button(21) if hasattr(Button, "__call__") else Button()
+    global _current_pin
+    _current_pin = None
 
-# ── UI root ─────────────────────────────────────────────────────────────
-@bp.get("/")
+
+# ─────────────────────────── Flask BP ─────────────────────────────────
+bp = Blueprint("kiosk", __name__)
+pedal = Button(20) if hasattr(Button, "__call__") else Button()   # mock-safe
+
+
+# ── UI entry point ────────────────────────────────────────────────────
+@bp.route("/")
 def index():
     return render_template("index.html")
 
-# ── queue helpers used by JS  ───────────────────────────────────────────
+
+# ── PENDING QUEUE feed ────────────────────────────────────────────────
 @bp.get("/api/pending")
 def pending():
     with sqlite3.connect(DB_FILE) as c:
@@ -58,6 +107,7 @@ def pending():
     return jsonify([dict(r) for r in rows])
 
 
+# ── CLAIM oldest pending job ──────────────────────────────────────────
 @bp.post("/api/claim")
 def claim():
     sid = (request.json or {}).get("session_id")
@@ -66,7 +116,7 @@ def claim():
 
     with sqlite3.connect(DB_FILE) as c:
         c.row_factory = sqlite3.Row
-        cur = c.execute(
+        run = c.execute(
             """
             UPDATE runs
                SET status     = 'active',
@@ -77,67 +127,79 @@ def claim():
             """,
             (datetime.datetime.now().isoformat(timespec="seconds"),
              DEVICE_ID,
-             sid)
-        )
-        run = cur.fetchone()
+             sid),
+        ).fetchone()
 
     if run is None:
         abort(409, "session already claimed or not found")
 
+    _reset_all_leds()                           # start clean GPIO state
     cfg = load_config(run["project"]) or {"sequence": []}
+
     return jsonify(status="claimed",
                    session=dict(run),
                    sequence=cfg["sequence"])
 
-# ── progress / finish / abort  ──────────────────────────────────────────
+
+# ── PROGRESS / FINISH / ABORT ─────────────────────────────────────────
 @bp.post("/api/progress")
 def progress():
     """
-    Receives JSON { session_id, action, step?, component? }.
-
-    * `"next"`    – blink that component’s LED once
-    * `"finish"`  – mark run finished, turn **all** LEDs off
-    * `"abort"`   – mark run aborted  , turn **all** LEDs off
+    JS calls:
+      • next   → {action:'next',   component:'anode', session_id:…}
+      • finish → {action:'finish', …}
+      • abort  → {action:'abort',  step:4,           …}
     """
     data = request.get_json(force=True)
-    sid, act = data["session_id"], data["action"]
-    now      = datetime.datetime.now().isoformat(timespec="seconds")
+    sid  = data["session_id"]
+    act  = data["action"]
+    now  = datetime.datetime.now().isoformat(timespec="seconds")
 
-    # ---- NEXT  ---------------------------------------------------------
+    # ── NEXT ──────────────────────────────────────────────────────────
     if act == "next":
         comp_id = data.get("component")
-        if comp_id:
+        if comp_id:                             # look-up GPIO pin
             comp = load_component(comp_id)
-            if comp and "gpio" in comp:
-                _blink(int(comp["gpio"]))
+            if comp and comp.get("gpio") not in (None, ""):
+                try:
+                    _activate_led(int(comp["gpio"]))
+                except ValueError:
+                    print(f"[WARN] non-numeric GPIO in {comp_id}", flush=True)
+
         log("next_pressed", {"session_id": sid, "component": comp_id})
         return jsonify(status="ok")
 
-    # ---- FINISH / ABORT  ----------------------------------------------
+    # ── FINISH / ABORT → update DB first ─────────────────────────────
     with sqlite3.connect(DB_FILE) as conn:
         cur = conn.cursor()
 
         if act == "finish":
             cur.execute(
-                """UPDATE runs
-                      SET status='finished', ts_finished=?
-                    WHERE session_id=? AND status='active'""",
-                (now, sid)
+                """
+                UPDATE runs
+                   SET status      = 'finished',
+                       ts_finished = ?
+                 WHERE session_id  = ? AND status = 'active'
+                """,
+                (now, sid),
             )
         elif act == "abort":
             cur.execute(
-                """UPDATE runs
-                      SET status='aborted', ts_finished=?, interrupted_at=?
-                    WHERE session_id=? AND status='active'""",
-                (now, data.get("step"), sid)
+                """
+                UPDATE runs
+                   SET status        = 'aborted',
+                       ts_finished   = ?,
+                       interrupted_at= ?
+                 WHERE session_id    = ? AND status = 'active'
+                """,
+                (now, data.get("step"), sid),
             )
 
         conn.commit()
 
-    # make absolutely sure no LEDs are left on
+    # turn every LED off once the run ends
     _reset_all_leds()
 
-    # log event after tx finished
     if act == "finish":
         log("session_end",   {"session_id": sid})
     elif act == "abort":
@@ -145,8 +207,9 @@ def progress():
 
     return jsonify(status=act)
 
-# ── summary page  ───────────────────────────────────────────────────────
-@bp.get("/session/<sid>")
+
+# ── SUMMARY page ──────────────────────────────────────────────────────
+@bp.route("/session/<sid>")
 def session_overview(sid: str):
     with sqlite3.connect(DB_FILE) as c:
         c.row_factory = sqlite3.Row
@@ -157,16 +220,13 @@ def session_overview(sid: str):
     if run is None:
         abort(404, "session not found")
 
-    cfg         = load_config(run["project"]) or {"sequence": []}
-    total_steps = len(cfg["sequence"])
+    cfg = load_config(run["project"]) or {"sequence": []}
+    return render_template("summary.html",
+                           run=run,
+                           total_steps=len(cfg["sequence"]))
 
-    return render_template(
-        "summary.html",
-        run=run,
-        total_steps=total_steps
-    )
 
-# ── tiny helper for the pedal widget  -----------------------------------
+# ── tiny helper for the foot-pedal ────────────────────────────────────
 @bp.get("/pedal")
 def pedal_state():
     return jsonify(pressed=bool(getattr(pedal, "is_active", False)))
