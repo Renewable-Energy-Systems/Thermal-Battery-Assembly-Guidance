@@ -1,53 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Run Logs · RES</title>
+  <meta charset="utf-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Operation Logs · RES</title>
+
   <link rel="stylesheet" href="/static/styles.css">
-  <!-- auto-refresh every 2 s so status flips without F5 -->
-  <meta http-equiv="refresh" content="2">
+
   <style>
-    table{width:100%;border-collapse:collapse}
-    th,td{padding:.55rem .8rem;text-align:left}
-    tbody tr:nth-child(even){background:#f5f6ff}
-    tbody tr{cursor:pointer;transition:background .12s}
-    tbody tr:hover{background:#eef0ff}
-    .chip{display:inline-flex;align-items:center;gap:4px;
-          padding:2px 8px;border-radius:16px;font-size:.8rem;font-weight:600}
-    .end{background:#e5f5e9;color:#2e7d32}
-    .abort{background:#ffebee;color:#c62828}
+    :root{
+      --stripe  :#f5f7ff;
+      --hover   :#edf1ff;
+      --fin-bg  :#e8f6ea; --fin-txt:#2e7d32;
+      --abo-bg  :#ffebee; --abo-txt:#c62828;
+    }
+    /* table --------------------------- */
+    table{width:100%;border-collapse:collapse;font-size:.9rem}
+    th,td{padding:.55rem .9rem;text-align:left;white-space:nowrap}
+    tbody tr:nth-child(even){background:var(--stripe)}
+    tbody tr:hover{background:var(--hover);cursor:pointer}
+
+    /* chips --------------------------- */
+    .chip{display:inline-flex;align-items:center;gap:.35rem;
+          font-size:.75rem;font-weight:600;
+          padding:.15rem .6rem;border-radius:14px}
     .chip svg{width:14px;height:14px}
+    .finished{background:var(--fin-bg);color:var(--fin-txt)}
+    .aborted {background:var(--abo-bg);color:var(--abo-txt)}
+
+    /* buttons ------------------------- */
+    .btn{display:flex;align-items:center;gap:.45rem;
+         border:none;border-radius:8px;cursor:pointer;
+         padding:.5rem 1.2rem;font-size:.9rem;font-weight:600;
+         background:#27286f;color:#fff;text-decoration:none}
+    .btn:hover{background:#1e1f5a}
+    .btn-alt{background:#e9ecff;color:#27286f}
+    .btn-alt:hover{background:#dfe2ff}
+
+    /* filter bar --------------------- */
+    .filters{display:flex;flex-wrap:wrap;gap:.6rem}
+    .filters input,.filters select{
+      border:1px solid #ccd;border-radius:6px;
+      padding:.45rem .6rem;font-size:.85rem;
+    }
+    .pager{display:flex;gap:.4rem;align-items:center;flex-wrap:wrap;margin-top:1rem}
+    .page-btn{
+      padding:.25rem .85rem;border-radius:6px;cursor:pointer;
+      border:1px solid #d0d3ff;background:#f4f5ff;font-weight:600}
+    .page-btn[disabled]{opacity:.45;cursor:not-allowed}
+    .rows-sel{border:1px solid #ccd;border-radius:6px;padding:.25rem .45rem}
+    @media(max-width:600px){
+      th:nth-child(4),td:nth-child(4){display:none}
+    }
   </style>
 </head>
 <body>
 <header class="appbar">
   <img src="/static/logo.png" alt="logo">
-  <h1>Operation Logs</h1>
+  <h1>Operation&nbsp;Logs</h1>
 </header>
 
 <main class="content">
-<section class="card" style="max-width:1040px">
-  <div style="display:flex;justify-content:space-between;align-items:center">
+<section class="card" style="max-width:1040px;margin:auto">
+
+  <!-- top bar ---------------------------------------------------------- -->
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.9rem">
     <h2 style="margin:0">Recent Sessions</h2>
-    <div style="display:flex;gap:.6rem">
-      <a href="/logs/export" class="btn btn-secondary">⬇︎ Excel</a>
-      <a href="/admin"        class="btn btn-secondary">Back to Admin</a>
+    <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+      <a class="btn-alt btn" id="refreshBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <polyline points="23 4 23 10 17 10"/>
+          <polyline points="1 20 1 14 7 14"/>
+          <path d="M3.51 9a9 9 0 0114.13-3.36L23 10M1 14l5.87 4.36A9 9 0 0020.49 15"/>
+        </svg>Refresh
+      </a>
+      <a class="btn-alt btn" href="/admin">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>Admin
+      </a>
+      <a class="btn" href="/logs/export">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>Export
+      </a>
     </div>
   </div>
 
-  <div style="overflow-x:auto;margin-top:1.2rem">
-    <table>
+  <!-- filter row ------------------------------------------------------- -->
+  <div class="filters" style="margin-top:1rem">
+    <input id="searchInput" placeholder="Search project / stack / operator …" style="flex:1 0 180px">
+    <select id="statusSel">
+      <option value="">All status</option>
+      <option value="finished">Finished</option>
+      <option value="aborted">Aborted</option>
+    </select>
+    <input type="date" id="fromDate">
+    <span style="align-self:center">–</span>
+    <input type="date" id="toDate">
+  </div>
+
+  <!-- table ------------------------------------------------------------ -->
+  <div style="overflow-x:auto;margin-top:1rem">
+    <table id="logTbl">
       <thead>
         <tr>
-          <th style="min-width:138px">Started</th>
+          <th style="min-width:150px">Started</th>
           <th>Project</th><th>Stack</th><th>Operator</th>
           <th>Status</th><th style="text-align:center">Step</th>
         </tr>
       </thead>
       <tbody>
       {% for r in rows %}
-        <tr onclick="location.href='/logs/{{ r.session_id }}'"
+        <tr data-project="{{ r.project|lower }}"
+            data-operator="{{ r.operator|lower }}"
+            data-stack="{{ r.stack_id|lower }}"
+            data-status="{{ 'finished' if r.kind=='end' else 'aborted' }}"
+            data-date="{{ r.ts[:10] }}"
+            onclick="location.href='/logs/{{ r.session_id }}'"
             style="border-left:5px solid hsl({{ r.hue }},65%,55%)">
           <td>{{ r.ts[:19].replace('T',' ') }}</td>
           <td>{{ r.project }}</td>
@@ -55,9 +129,19 @@
           <td>{{ r.operator }}</td>
           <td>
             {% if r.kind == 'end' %}
-              <span class="chip end">✔︎ finished</span>
+              <span class="chip finished">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>finished
+              </span>
             {% else %}
-              <span class="chip abort">⚠ aborted</span>
+              <span class="chip aborted">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M12 9v4"/>
+                  <circle cx="12" cy="17" r="1.2" fill="currentColor"/>
+                  <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                </svg>aborted
+              </span>
             {% endif %}
           </td>
           <td style="text-align:center">
@@ -68,7 +152,79 @@
       </tbody>
     </table>
   </div>
+
+  <!-- pagination ------------------------------------------------------- -->
+  <div class="pager">
+    <button class="page-btn" id="prevBtn">Prev</button>
+    <span id="pageInfo"></span>
+    <button class="page-btn" id="nextBtn">Next</button>
+
+    <span style="margin-left:auto">Rows/page&nbsp;
+      <select id="rowsSel" class="rows-sel">
+        <option selected>10</option><option>25</option><option>50</option><option>100</option>
+      </select>
+    </span>
+  </div>
+
 </section>
 </main>
+
+<script>
+/* collect rows -------------------------------------------------------- */
+const rows = [...document.querySelectorAll('#logTbl tbody tr')];
+const pageInfo=document.getElementById('pageInfo');
+const prevBtn=document.getElementById('prevBtn');
+const nextBtn=document.getElementById('nextBtn');
+const rowsSel=document.getElementById('rowsSel');
+const qInp = document.getElementById('searchInput');
+const statusSel = document.getElementById('statusSel');
+const fromDate = document.getElementById('fromDate');
+const toDate   = document.getElementById('toDate');
+
+let curPage=1, rowsPerPage=+rowsSel.value, filtered=rows.slice();
+
+/* helpers ------------------------------------------------------------- */
+function inRange(dateStr){
+  const d = dateStr;
+  if(fromDate.value && d < fromDate.value) return false;
+  if(toDate.value   && d > toDate.value)   return false;
+  return true;
+}
+
+function filterRows(){
+  const q=qInp.value.trim().toLowerCase();
+  const st=statusSel.value;
+  filtered = rows.filter(r=>{
+    const matchQ = !q || r.dataset.project.includes(q) ||
+                          r.dataset.operator.includes(q) ||
+                          r.dataset.stack.includes(q);
+    const matchSt= !st|| r.dataset.status===st;
+    const matchDt= inRange(r.dataset.date);
+    return matchQ && matchSt && matchDt;
+  });
+  curPage=1; render();
+}
+
+function render(){
+  const max=Math.max(1,Math.ceil(filtered.length/rowsPerPage));
+  curPage=Math.min(curPage,max);
+  rows.forEach(r=>r.style.display='none');
+  filtered.slice((curPage-1)*rowsPerPage,curPage*rowsPerPage)
+          .forEach(r=>r.style.display='');
+  pageInfo.textContent=`${curPage} / ${max}`;
+  prevBtn.disabled=curPage===1;
+  nextBtn.disabled=curPage===max;
+}
+
+/* events -------------------------------------------------------------- */
+[qInp,statusSel,fromDate,toDate].forEach(el=>el.oninput=filterRows);
+prevBtn.onclick=()=>{curPage--;render()};
+nextBtn.onclick=()=>{curPage++;render()};
+rowsSel.onchange=()=>{rowsPerPage=+rowsSel.value;curPage=1;render()};
+document.getElementById('refreshBtn').onclick=e=>{e.preventDefault();location.reload();};
+
+/* init ---------------------------------------------------------------- */
+render();
+</script>
 </body>
 </html>
