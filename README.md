@@ -200,3 +200,9 @@ Implementation: [`static/script.js`](static/script.js) (v4.6).
 ## 📜  License
 
 MIT © Renewable Energy Systems 2025 • Contributions welcome!
+
+---
+
+## Credits
+Developed with ❤️ by [@kiranpranay](https://github.com/kiranpranay).  
+Feel free to contribute or report issues!
