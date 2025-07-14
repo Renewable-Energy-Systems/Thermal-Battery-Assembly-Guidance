@@ -11,6 +11,50 @@ let session = null;          // filled after /api/claim
 let seq     = [];            // project steps
 let idx     = -1;            // current step index
 
+document.addEventListener('DOMContentLoaded', () => {
+  let spacePressStart = null;
+  let spaceHoldTimer  = null;
+
+  document.addEventListener('keydown', e => {
+    if (e.code === 'Space' && spacePressStart === null) {
+      spacePressStart = Date.now();
+
+      // Start hold timer
+      spaceHoldTimer = setTimeout(() => {
+        const stopBtn = document.getElementById('stopBtn');
+        if (stopBtn && !stopBtn.disabled && !stopBtn.hidden) {
+          stopBtn.click();
+          console.debug('[DBG] Space held for 10s → Stop clicked');
+        }
+      }, 10000); // 10 seconds
+    }
+  });
+
+  document.addEventListener('keyup', e => {
+    if (e.code === 'Space') {
+      const heldDuration = Date.now() - spacePressStart;
+      clearTimeout(spaceHoldTimer);
+      spaceHoldTimer = null;
+      spacePressStart = null;
+
+      if (heldDuration < 10000) {
+        const nextBtn   = document.getElementById('nextBtn');
+        const finishBtn = document.getElementById('finishBtn');
+
+        if (nextBtn && !nextBtn.disabled && !nextBtn.hidden) {
+          nextBtn.click();
+          console.debug('[DBG] Space short press → Next clicked');
+        } else if (finishBtn && !finishBtn.disabled && !finishBtn.hidden) {
+          finishBtn.click();
+          console.debug('[DBG] Space short press → Finish clicked');
+        }
+      }
+    }
+  });
+});
+
+
+
 /* ---------- helpers --------------------------------------------------- */
 const sleep  = ms => new Promise(r => setTimeout(r, ms));
 const jFetch = (url, data) =>
@@ -121,3 +165,5 @@ async function abort() {
   // 3) kick off first step
   advance();
 })();
+
+
