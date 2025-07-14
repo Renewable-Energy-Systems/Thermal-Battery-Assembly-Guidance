@@ -35,6 +35,7 @@ wheelhouse/
 *.tar.gz
 *.zip
 .eggs/
+events.db
 
 # ── Jupyter notebooks ─────────────────────────────────────────────────────
 .ipynb_checkpoints/
