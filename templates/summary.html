@@ -5,58 +5,139 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Assembly Review – Session {{ run.session_id }}</title>
 
-<link rel="stylesheet" href="/static/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-  .summary-list {list-style:none;padding:0;margin:.5rem 0}
-  .summary-list li {margin:.25rem 0}
-  #finishBtn {min-width:160px;margin-top:1.2rem}
+    /* ─── 0. Reset & Base ────────────────────────────────────────── */
+    :root {
+        --primary: #3A5BAA; --on-primary: #FFFFFF;
+        --error: #B3261E;
+        --surface: #F8F9FD; --surface-container: #FFFFFF;
+        --on-surface: #1A1C1E; --on-surface-variant: #44474F;
+        --outline: #DDE2EB;
+        --shadow: #000000;
+        --elev-1: 0px 1px 2px rgba(0,0,0,.08), 0px 1px 3px 1px rgba(0,0,0,.05);
+        --elev-2: 0px 1px 2px rgba(0,0,0,.08), 0px 2px 6px 2px rgba(0,0,0,.05);
+        --ripple-color-light: rgba(255, 255, 255, 0.2);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--surface); color: var(--on-surface); display: flex; flex-direction: column; }
+    img { max-width: 100%; display: block; }
+
+    /* ─── 2. Shared Components ───────────────────────────────────── */
+    .appbar { display: flex; align-items: center; gap: .5rem; padding: 1rem 1.5rem; background: var(--surface-container); border-bottom: 1px solid var(--outline); flex-shrink: 0; }
+    .appbar img { height: 32px; margin-left: .5rem; }
+    .appbar h1 { font-size: 1.375rem; font-weight: 500; color: var(--on-surface); }
+    .appbar .icon-btn { display: inline-flex; justify-content: center; align-items: center; width: 40px; height: 40px; border-radius: 50%; transition: background-color .2s; }
+    .appbar .icon-btn:hover { background-color: rgba(0,0,0,0.05); }
+    .appbar .icon-btn svg { width: 24px; height: 24px; fill: var(--on-surface); }
+    
+    .content { flex-grow: 1; display: flex; justify-content: center; align-items: center; padding: 1rem; }
+    .card { background: var(--surface-container); border-radius: 16px; border: 1px solid var(--outline); box-shadow: var(--elev-1); padding: 2.5rem; width: 100%; max-width: 520px; text-align: center; }
+    .card-header { display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+    .card-header svg { width: 48px; height: 48px; color: var(--primary); }
+    .card-header h2 { font-size: 1.75rem; font-weight: 700; color: var(--on-surface); }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; padding: .625rem 1.5rem; border: none; border-radius: 100px; font-family: inherit; font-size: .875rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; cursor: pointer; transition: all .2s; position: relative; overflow: hidden; }
+    .btn-filled { background-color: var(--primary); color: var(--on-primary); box-shadow: var(--elev-1); }
+    .btn-filled:hover { box-shadow: var(--elev-2); }
+    .btn:disabled { background-color: #cac4d0; color: var(--on-surface-variant); box-shadow: none; cursor: not-allowed; }
+    .btn svg { width: 18px; height: 18px; fill: currentColor; }
+    .ripple { position: absolute; border-radius: 50%; transform: scale(0); animation: ripple-effect .6s linear; }
+    @keyframes ripple-effect { to { transform: scale(4); opacity: 0; } }
+
+    /* ─── 3. Page Specific Styles ────────────────────────────────── */
+    .summary-list { list-style: none; padding: 0; margin: 0; text-align: left; border: 1px solid var(--outline); border-radius: 12px; overflow: hidden; }
+    .summary-list li { display: flex; justify-content: space-between; padding: .75rem 1rem; }
+    .summary-list li:not(:last-child) { border-bottom: 1px solid var(--outline); }
+    .summary-list li strong { font-weight: 600; color: var(--on-surface-variant); }
+    
+    #finishBtn { min-width: 200px; margin-top: 2rem; padding: .8rem 1.5rem; font-size: 1rem; }
+    #finalStatus { margin-top: 1rem; font-weight: 500; min-height: 1.25rem; }
+    #finalStatus.error { color: var(--error); }
 </style>
 </head>
 <body>
 <header class="appbar">
-  <img src="/static/logo.png" alt="logo">
-  <h1>Review &amp; Finish</h1>
+    <a href="/" class="icon-btn" aria-label="Back to Home">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    </a>
+    <h1>Review &amp; Finish</h1>
 </header>
 
 <main class="content">
-  <section class="card" style="max-width:520px">
-    <h2 style="margin-top:0">Session Overview</h2>
-    <ul class="summary-list">
-      <li><strong>Project:</strong> {{ run.project }}</li>
-      <li><strong>Stack ID:</strong> {{ run.stack_id }}</li>
-      <li><strong>Operator:</strong> {{ run.operator }}</li>
-      <li><strong>Started:</strong> {{ run.ts_started or '—' }}</li>
-      <li><strong>Steps Completed:</strong> {{ total_steps }}</li>
-    </ul>
+    <section class="card">
+        <div class="card-header">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 3H14.5L13.71 3.79L12 2L10.29 3.79L9.5 3H7.5L8.29 3.79L6.5 5.5L7.29 6.29L6.5 7L7.5 8H9.5L10.29 7.21L12 9L13.71 7.21L14.5 8H16.5L15.71 7.21L17.5 5.5L16.71 4.79L17.5 4H19.5V11.5L18.71 12.29L20.5 14L19.71 14.79L20.5 15.5L19.5 16.5H12V21H4V3H16.5M12 14.5V16.5H17.5V14.5H12M6 19H10V12H6V19M6 5H12V10H6V5Z"/></svg>
+            <h2>Session Overview</h2>
+        </div>
+        
+        <ul class="summary-list">
+            <li><strong>Project:</strong> <span>{{ run.project }}</span></li>
+            <li><strong>Stack ID:</strong> <span>{{ run.stack_id }}</span></li>
+            <li><strong>Operator:</strong> <span>{{ run.operator }}</span></li>
+            <li><strong>Started:</strong> <span>{{ run.ts_started or '—' }}</span></li>
+            <li><strong>Steps Completed:</strong> <span>{{ total_steps }}</span></li>
+        </ul>
 
-    <button id="finishBtn" class="btn">Finish Session</button>
-    <p id="finalStatus" style="margin-top:.8rem"></p>
-  </section>
+        <button id="finishBtn" class="btn btn-filled">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+            <span>Finish Session</span>
+        </button>
+        <p id="finalStatus"></p>
+    </section>
 </main>
 
 <script>
-  const finishBtn   = document.getElementById('finishBtn');
-  const finalStatus = document.getElementById('finalStatus');
+    const finishBtn   = document.getElementById('finishBtn');
+    const finalStatus = document.getElementById('finalStatus');
 
-  finishBtn.addEventListener('click', async () => {
-    finishBtn.disabled = true;
-    finalStatus.textContent = 'Finalising…';
-    const res = await fetch('/api/progress', {
-      method : 'POST',
-      headers: {'Content-Type':'application/json'},
-      body   : JSON.stringify({
-                 action    : 'finish',
-                 session_id: '{{ run.session_id }}'
-               })
+    finishBtn.addEventListener('click', async () => {
+        finishBtn.disabled = true;
+        finalStatus.classList.remove('error');
+        finalStatus.textContent = 'Finalising…';
+        
+        try {
+            const res = await fetch('/api/progress', {
+                method : 'POST',
+                headers: {'Content-Type':'application/json'},
+                body   : JSON.stringify({
+                            action    : 'finish',
+                            session_id: '{{ run.session_id }}'
+                        })
+            });
+            if (res.ok) {
+                finalStatus.textContent = 'Session saved! Redirecting...';
+                location.href = '/';
+            } else {
+                throw new Error('Server responded with an error.');
+            }
+        } catch (error) {
+            finalStatus.textContent = 'Could not finish session. Please try again.';
+            finalStatus.classList.add('error');
+            finishBtn.disabled = false;
+        }
     });
-    if (res.ok) {
-      location.href = '/';
-    } else {
-      finalStatus.textContent = 'Could not finish – please try again.';
-      finishBtn.disabled = false;
+
+    // --- Ripple Effect for Button ---
+    function addRippleEffect(button) {
+        button.addEventListener('click', function(e) {
+            const circle = document.createElement('span');
+            this.appendChild(circle);
+            const d = Math.max(this.clientWidth, this.clientHeight);
+            circle.style.width = circle.style.height = d + 'px';
+            const rect = this.getBoundingClientRect();
+            circle.style.left = e.clientX - rect.left - d / 2 + 'px';
+            circle.style.top = e.clientY - rect.top - d / 2 + 'px';
+            circle.classList.add('ripple');
+            circle.style.backgroundColor = 'var(--ripple-color-light)';
+            setTimeout(() => circle.remove(), 600);
+        });
     }
-  });
+    addRippleEffect(finishBtn);
 </script>
 </body>
 </html>

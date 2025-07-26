@@ -4,44 +4,383 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Create New Project · RES</title>
-  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ─── 0. Reset & Base ────────────────────────────────────────── */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--surface);
+      color: var(--on-surface);
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    img {
+      max-width: 100%;
+      vertical-align: middle;
+    }
+
+    /* ─── 1. Material 3 Color Palette (Derived from RES logo) ──── */
+    :root {
+      --primary: #3A5BAA;
+      --on-primary: #FFFFFF;
+      --primary-container: #D8E2FF;
+      --on-primary-container: #001849;
+      --error: #BA1A1A;
+      --on-error: #FFFFFF;
+      --error-container: #FFDAD6;
+      --on-error-container: #410002;
+      --surface: #FDFBFF;
+      --surface-variant: #E1E2EC;
+      --on-surface: #1A1C1E;
+      --on-surface-variant: #44474F;
+      --outline: #74777F;
+      --shadow: #000000;
+      --elev-1: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      --elev-2: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 2px 6px 2px rgba(0, 0, 0, 0.15);
+      --ripple-color-light: rgba(255, 255, 255, 0.2);
+      --ripple-color-dark: rgba(0, 0, 0, 0.1);
+    }
+
+    /* ─── 2. App Bar ─────────────────────────────────────────────── */
+    .appbar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 1.5rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--surface-variant);
+    }
+    .appbar .icon-btn {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 0.5rem;
+    }
+    .appbar .icon-btn:hover {
+        background-color: rgba(0,0,0,0.05);
+    }
+    .appbar .icon-btn svg {
+        width: 24px;
+        height: 24px;
+        fill: var(--on-surface);
+    }
+    .appbar h1 {
+      font-size: 1.375rem; /* Title Large */
+      font-weight: 500;
+      color: var(--on-surface);
+    }
+
+    /* ─── 3. Main Content Layout ───────────────────────────────── */
+    .content {
+      padding: 1.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    /* ─── 4. Form Card Component ────────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border-radius: 16px;
+      border: 1px solid var(--surface-variant);
+      box-shadow: var(--elev-1);
+      width: 100%;
+      max-width: 800px;
+    }
+    .form-container {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        padding: 2rem;
+    }
+    .form-illustration {
+        flex: 1;
+        min-width: 200px;
+        display: block;
+    }
+    .form-content {
+        flex: 1;
+    }
+    .form-content h2 {
+      font-size: 1.75rem; /* Headline Small */
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: var(--on-surface);
+    }
+
+    /* ─── 5. Material 3 Form Fields ────────────────────────────── */
+    .form-group {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+    .form-field-filled {
+        position: relative;
+        background-color: rgba(0,0,0,0.04);
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+        padding-top: 1.25rem;
+        transition: background-color .2s ease;
+    }
+    .form-field-filled:hover {
+        background-color: rgba(0,0,0,0.08);
+    }
+    .form-field-filled::after { /* Underline */
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background: var(--on-surface-variant);
+        transform: scaleX(1);
+        transition: transform .3s ease, height .3s ease;
+    }
+    .form-field-filled.focused::after {
+        height: 2px;
+        background: var(--primary);
+    }
+    .form-field-filled.invalid::after {
+        height: 2px;
+        background: var(--error);
+    }
+
+    input.form-input {
+        display: block;
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        font-family: inherit;
+        font-size: 1rem;
+        border: none;
+        background: none;
+        outline: none;
+        color: var(--on-surface);
+    }
+
+    label.form-label {
+        position: absolute;
+        left: 0.75rem;
+        top: 1.5rem;
+        color: var(--on-surface-variant);
+        pointer-events: none;
+        transition: top .2s ease, font-size .2s ease, color .2s ease;
+    }
+    /* Floating label animation */
+    .form-field-filled.focused label,
+    input.form-input:not(:placeholder-shown) ~ label {
+        top: 0.4rem;
+        font-size: 0.75rem;
+        color: var(--primary);
+    }
+    .form-field-filled.invalid label {
+        color: var(--error);
+    }
+    /* Keep label floated when there is a value */
+    .form-field-filled.focused input:not(:placeholder-shown) ~ label {
+        color: var(--primary);
+    }
+     .form-field-filled.invalid input:not(:placeholder-shown) ~ label {
+        color: var(--error);
+    }
+
+    .helper-text {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.75rem 0 0.75rem;
+        color: var(--on-surface-variant);
+        min-height: 1.25rem;
+    }
+    .helper-text.error {
+        color: var(--error);
+    }
+
+    /* ─── 6. Button ────────────────────────────────────────────── */
+    .btn-filled {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100%;
+        padding: 0.625rem 1.5rem;
+        border: none;
+        border-radius: 100px;
+        background-color: var(--primary);
+        color: var(--on-primary);
+        font-family: inherit;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        cursor: pointer;
+        box-shadow: var(--elev-1);
+        transition: box-shadow .2s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    .btn-filled:hover {
+        box-shadow: var(--elev-2);
+    }
+    .btn-filled svg {
+        width: 18px;
+        height: 18px;
+        fill: var(--on-primary);
+    }
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--ripple-color-light);
+      transform: scale(0);
+      animation: ripple-effect 0.6s linear;
+    }
+    @keyframes ripple-effect {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+    
+    /* Responsive layout for smaller screens */
+    @media (max-width: 700px) {
+        .form-illustration {
+            display: none;
+        }
+        .form-container {
+            padding: 1.5rem;
+        }
+    }
+
+  </style>
 </head>
 <body>
-  <!-- ─── App‑bar ─── -->
+
   <header class="appbar">
-    <img src="/static/logo.png" alt="RES logo" />
+    <a href="/" class="icon-btn" aria-label="Back to Dashboard">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    </a>
     <h1>Create New Project</h1>
   </header>
 
-  <!-- ─── Form card ─── -->
   <main class="content">
-    <section class="card" style="min-width:340px">
-      <h2 style="margin-top:0">Project Details</h2>
-      {% if error %}
-  <p class="error" style="color:#d32f2f;margin-bottom:0.6rem">
-      {{ error }}
-  </p>
-{% endif %}
-      <form id="newProjForm" method="post" novalidate>
-        <label for="proj_name" class="form-label">Project&nbsp;Name</label>
-        <input id="proj_name" name="proj_name" type="text" minlength="3" maxlength="40" placeholder="e.g. Guru‑III" required class="form-field" />
-        <span class="error" id="err-name"></span>
+    <section class="card">
+        <div class="form-container">
+            <svg class="form-illustration" viewBox="0 0 293 221" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="23.5" y="62.5" width="168" height="130" rx="7.5" fill="#D8E2FF" stroke="#3A5BAA"/>
+                <path d="M192 70H23C18.8579 70 15.5 73.3579 15.5 77.5V185" stroke="#3A5BAA"/>
+                <rect x="23.5" y="103.5" width="168" height="1" fill="#3A5BAA"/>
+                <rect x="15.5" y="27.5" width="168" height="130" rx="7.5" fill="#D8E2FF" stroke="#3A5BAA"/>
+                <rect x="254.5" y="128.5" width="38" height="71" rx="2.5" fill="#DBE2F9" stroke="#575E71"/>
+                <rect x="23" y="165" width="48" height="8" rx="4" fill="#3A5BAA"/>
+                <rect x="135" y="165" width="48" height="8" rx="4" fill="#3A5BAA"/>
+                <rect x="73.5" y="3.5" width="60" height="60" rx="30" fill="#3A5BAA" stroke="white" stroke-width="3"/>
+                <path d="M96 28.5V38.5M101 33.5H91" stroke="white" stroke-width="3" stroke-linecap="round"/>
+                <path d="M246 179L230 179" stroke="#575E71" stroke-width="2" stroke-linecap="round"/>
+                <path d="M238 187L238 203" stroke="#575E71" stroke-width="2" stroke-linecap="round"/>
+                <rect x="0.5" y="199.5" width="292" height="21" fill="#DBE2F9" stroke="#575E71"/>
+            </svg>
 
-        <button type="submit" class="btn" style="width:100%;margin-top:0.75rem">Create Project</button>
-      </form>
+            <div class="form-content">
+                <h2>Project Details</h2>
+                
+                <form id="newProjForm" method="post" novalidate>
+                    {% if error %}
+                    <p class="helper-text error" style="margin-bottom: 1rem; font-weight: 500;">
+                        {{ error }}
+                    </p>
+                    {% endif %}
+                    
+                    <div class="form-group">
+                        <div class="form-field-filled" id="proj_name_container">
+                            <input id="proj_name" name="proj_name" type="text" minlength="3" maxlength="40" placeholder=" " required class="form-input" />
+                            <label for="proj_name" class="form-label">Project Name</label>
+                        </div>
+                        <div class="helper-text" id="err-name">e.g. Guru-III, Agni-V, etc.</div>
+                    </div>
+            
+                    <button type="submit" class="btn-filled">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm2 16H5V5h11.17L19 7.83V19zm-7-7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zM6 6h9v4H6z"/></svg>
+                        <span>Create Project</span>
+                    </button>
+                </form>
+            </div>
+      </div>
     </section>
   </main>
 
 <script>
-function showError(msg){ document.getElementById('err-name').textContent = msg; }
-function clearErr(){ showError(''); document.getElementById('proj_name').classList.remove('invalid'); }
-
+// --- FORM INTERACTION & VALIDATION ---
 const form = document.getElementById('newProjForm');
-form.addEventListener('submit', e => {
-  const name = form.proj_name.value.trim();
-  if(!name){ e.preventDefault(); showError('Please enter a name'); form.proj_name.classList.add('invalid'); }
+const nameInput = document.getElementById('proj_name');
+const nameContainer = document.getElementById('proj_name_container');
+const errorDisplay = document.getElementById('err-name');
+
+// Function to handle focus state for floating label
+nameInput.addEventListener('focus', () => {
+    nameContainer.classList.add('focused');
 });
-form.proj_name.addEventListener('input', clearErr);
+nameInput.addEventListener('blur', () => {
+    nameContainer.classList.remove('focused');
+});
+
+// Function to show/clear error messages
+function showError(msg) { 
+    errorDisplay.textContent = msg; 
+    errorDisplay.classList.add('error');
+    nameContainer.classList.add('invalid');
+}
+function clearError() { 
+    errorDisplay.textContent = 'e.g. Guru-III, Agni-V, etc.';
+    errorDisplay.classList.remove('error');
+    nameContainer.classList.remove('invalid');
+}
+
+// Form submission validation
+form.addEventListener('submit', e => {
+  const name = nameInput.value.trim();
+  if (!name) { 
+    e.preventDefault(); 
+    showError('Please enter a project name.'); 
+  } else {
+    clearError();
+  }
+});
+
+// Clear error on input
+nameInput.addEventListener('input', clearError);
+
+
+// --- RIPPLE EFFECT FOR BUTTON ---
+document.querySelectorAll('.btn-filled').forEach(btn => {
+    btn.addEventListener('click', function (e) {
+      if (this.querySelector('.ripple')) {
+        this.querySelector('.ripple').remove();
+      }
+      const circle = document.createElement('span');
+      const diameter = Math.max(this.clientWidth, this.clientHeight);
+      const radius = diameter / 2;
+      const rect = this.getBoundingClientRect();
+      circle.style.width = circle.style.height = `${diameter}px`;
+      circle.style.left = `${e.clientX - rect.left - radius}px`;
+      circle.style.top = `${e.clientY - rect.top - radius}px`;
+      circle.classList.add('ripple');
+      this.appendChild(circle);
+      setTimeout(() => circle.remove(), 600);
+    });
+});
 </script>
 </body>
 </html>

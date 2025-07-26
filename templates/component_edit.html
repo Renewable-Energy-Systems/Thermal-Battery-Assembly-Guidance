@@ -6,63 +6,170 @@
     <title>Edit Component · RES</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Material+Symbols+Outlined" rel="stylesheet">
-    <link rel="stylesheet" href="static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ─── 0. Reset & Base ────────────────────────────────────────── */
+        :root {
+            --primary: #3A5BAA; --on-primary: #FFFFFF;
+            --primary-container: #D8E2FF; --on-primary-container: #001849;
+            --surface: #F8F9FD; --surface-container: #FFFFFF;
+            --on-surface: #1A1C1E; --on-surface-variant: #44474F;
+            --outline: #74777F;
+            --shadow: #000000;
+            --elev-1: 0px 1px 2px rgba(0,0,0,.08), 0px 1px 3px 1px rgba(0,0,0,.05);
+            --elev-2: 0px 1px 2px rgba(0,0,0,.08), 0px 2px 6px 2px rgba(0,0,0,.05);
+            --ripple-color-light: rgba(255, 255, 255, 0.2);
+            --ripple-color-dark: rgba(0, 0, 0, 0.1);
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { -webkit-font-smoothing: antialiased; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--surface); color: var(--on-surface); }
+        a { text-decoration: none; color: inherit; }
+        img { max-width: 100%; display: block; }
+
+        /* ─── 2. Shared Components ───────────────────────────────────── */
+        .appbar { display: flex; align-items: center; gap: .5rem; padding: 1rem 1.5rem; background: var(--surface-container); border-bottom: 1px solid var(--outline); }
+        .appbar h1 { font-size: 1.375rem; font-weight: 500; color: var(--on-surface); }
+        .appbar .icon-btn { display: inline-flex; justify-content: center; align-items: center; width: 40px; height: 40px; border-radius: 50%; margin-right: .5rem; transition: background-color .2s; }
+        .appbar .icon-btn:hover { background-color: rgba(0,0,0,0.05); }
+        .appbar .icon-btn svg { width: 24px; height: 24px; fill: var(--on-surface); }
+        
+        .content { padding: 1.5rem; max-width: 900px; margin: 0 auto; }
+        .card { background: var(--surface-container); border-radius: 16px; border: 1px solid var(--outline); box-shadow: var(--elev-1); padding: 1.5rem; }
+        .card h2 { font-size: 1.75rem; font-weight: 600; color: var(--on-surface); margin-bottom: 1.5rem; }
+
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; padding: .625rem 1.5rem; border: none; border-radius: 100px; font-family: inherit; font-size: .875rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; cursor: pointer; transition: all .2s; position: relative; overflow: hidden; }
+        .btn-filled { background-color: var(--primary); color: var(--on-primary); box-shadow: var(--elev-1); }
+        .btn-filled:hover { box-shadow: var(--elev-2); }
+        .btn-outlined { background-color: transparent; color: var(--primary); border: 1px solid var(--outline); padding: .625rem 1rem;}
+        .btn-outlined:hover { background-color: rgba(var(--primary-rgb, 58, 91, 170), 0.08); }
+        .btn svg { width: 18px; height: 18px; fill: currentColor; }
+        .ripple { position: absolute; border-radius: 50%; transform: scale(0); animation: ripple-effect .6s linear; }
+        @keyframes ripple-effect { to { transform: scale(4); opacity: 0; } }
+        
+        /* ─── 3. Form Layout & Styles ────────────────────────────────── */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        
+        /* --- M3 Form Fields --- */
+        .form-group { position: relative; margin-bottom: 1.5rem; }
+        .form-field-filled { position: relative; background-color: rgba(0,0,0,0.04); border-top-left-radius: 4px; border-top-right-radius: 4px; padding-top: 1.25rem; }
+        .form-field-filled:hover { background-color: rgba(0,0,0,0.08); }
+        .form-field-filled::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 1px; background: var(--on-surface-variant); }
+        .form-field-filled.focused::after { height: 2px; background: var(--primary); }
+        
+        .form-input { display: block; width: 100%; padding: .5rem .75rem; font-family: inherit; font-size: 1rem; border: none; background: none; outline: none; color: var(--on-surface); }
+        select.form-input { -webkit-appearance: none; -moz-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2344474F' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right .5rem center; background-size: 1.5em; padding-right: 2rem; }
+        .form-label { position: absolute; left: .75rem; top: 1.5rem; font-size: 1rem; color: var(--on-surface-variant); pointer-events: none; transition: all .2s ease; }
+        
+        .form-field-filled.focused label,
+        input.form-input:not(:placeholder-shown) ~ label,
+        select.form-input:valid ~ label { /* :valid handles pre-selected dropdowns */
+            top: .5rem; font-size: .75rem; color: var(--primary);
+        }
+
+        /* --- Image & File Input --- */
+        .image-preview-container { margin-bottom: 1rem; }
+        .image-preview-container p { font-size: .75rem; color: var(--on-surface-variant); font-weight: 500; margin-bottom: .5rem; }
+        .image-preview { border-radius: 8px; border: 1px solid var(--outline); width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; }
+        
+        .file-input-native { width: 0.1px; height: 0.1px; opacity: 0; overflow: hidden; position: absolute; z-index: -1; }
+        .file-input-wrapper .btn-outlined { width: 100%; }
+
+        @media (max-width: 700px) {
+            .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
 
-<header class="app-bar">
-    <img src="/static/logo.png" alt="RES Logo">
-    <h1 class="title-large">Edit Componentoo – {{ comp.name }}</h1>
+<header class="appbar">
+    <a href="/components" class="icon-btn" aria-label="Back to Components">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    </a>
+    <h1>Edit Component – {{ comp.name }}</h1>
 </header>
 
-<main class="content-wrapper">
+<main class="content">
     <section class="card">
-        <h2 class="headline-small">Properties</h2>
-
+        <h2>Properties</h2>
         <form method="post" enctype="multipart/form-data" novalidate>
-            <!-- Component Name -->
-            <div class="form-field-outlined">
-                <input type="text" id="comp_name" name="comp_name" required maxlength="40" value="{{ comp.name }}" placeholder=" ">
-                <label for="comp_name">Component Name</label>
+            <div class="form-grid">
+                
+                <div>
+                    <div class="form-group">
+                        <div class="form-field-filled">
+                            <input type="text" id="comp_name" name="comp_name" required maxlength="40" value="{{ comp.name }}" placeholder=" " class="form-input">
+                            <label for="comp_name" class="form-label">Component Name</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-field-filled">
+                           <select name="gpio" id="gpio" required class="form-input">
+                                {% for pin in gpio_choices %}
+                                    <option value="{{ pin }}" {% if comp and pin == comp.gpio %}selected{% endif %}>
+                                        {{ pin }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <label for="gpio" class="form-label">GPIO Pin</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    {% if comp.image %}
+                    <div class="image-preview-container">
+                        <p>Current Image</p>
+                        <img src="/comp_assets/{{ cid }}/{{ comp.image }}" alt="Current component preview" class="image-preview">
+                    </div>
+                    {% endif %}
+    
+                    <div class="file-input-wrapper">
+                        <input type="file" id="comp_img" name="comp_img" accept="image/*" class="file-input-native">
+                        <label for="comp_img" class="btn btn-outlined">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6zM8 15.01l1.41 1.41L11 14.84V19h2v-4.16l1.59 1.59L16 15.01 12.01 11z"/></svg>
+                            <span id="file-name-display">Replace Preview Image</span>
+                        </label>
+                    </div>
+                </div>
             </div>
 
-            <!-- Current Image Preview -->
-            {% if comp.image %}
-            <div class="image-preview-container">
-                <p class="label-small">Current Image</p>
-                <img src="/comp_assets/{{ cid }}/{{ comp.image }}" alt="Current component preview" class="image-preview">
-            </div>
-            {% endif %}
-
-            <!-- Preview Image Replacement -->
-            <div class="file-input-wrapper">
-                <input type="file" id="comp_img" name="comp_img" accept="image/*" class="file-input-native">
-                <label for="comp_img" class="btn-outlined">
-                    <span class="material-symbols-outlined">upload_file</span>
-                    <span id="file-name-display">Replace Preview Image</span>
-                </label>
-            </div>
-            
-            <!-- GPIO Pins -->
-            <div class="form-field-outlined">
-                 <select name="gpio" id="gpio" required>
-                    {% for pin in gpio_choices %}
-                        <option value="{{ pin }}" {% if comp and pin == comp.gpio %}selected{% endif %}>
-                            {{ pin }}
-                        </option>
-                    {% endfor %}
-                </select>
-                <label for="gpio">GPIO Pin</label>
-            </div>
-
-            <button class="btn-filled" type="submit">Save Changes</button>
+            <button class="btn btn-filled" type="submit" style="margin-top: 1.5rem;">
+                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm2 16H5V5h11.17L19 7.83V19zM12 18c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3-3zM6 6h9v4H6z"/></svg>
+                <span>Save Changes</span>
+            </button>
         </form>
     </section>
 </main>
 
 <script>
-    // Script to update the file input label with the selected filename
+    // --- Ripple Effect ---
+    function addRippleEffect(button) {
+        button.addEventListener('click', function(e) {
+            const circle = document.createElement('span');
+            this.appendChild(circle);
+            const d = Math.max(this.clientWidth, this.clientHeight);
+            circle.style.width = circle.style.height = d + 'px';
+            const rect = this.getBoundingClientRect();
+            circle.style.left = e.clientX - rect.left - d / 2 + 'px';
+            circle.style.top = e.clientY - rect.top - d / 2 + 'px';
+            circle.classList.add('ripple');
+            circle.style.backgroundColor = this.classList.contains('btn-filled') ? 'var(--ripple-color-light)' : 'var(--ripple-color-dark)';
+            setTimeout(() => circle.remove(), 600);
+        });
+    }
+    document.querySelectorAll('.btn').forEach(addRippleEffect);
+
+    // --- Floating Label Interaction ---
+    document.querySelectorAll('.form-input').forEach(input => {
+        const fieldContainer = input.parentElement;
+        input.addEventListener('focus', () => fieldContainer.classList.add('focused'));
+        input.addEventListener('blur', () => fieldContainer.classList.remove('focused'));
+    });
+
+    // --- File Input Label Update ---
     const fileInput = document.getElementById('comp_img');
     const fileNameDisplay = document.getElementById('file-name-display');
     const originalFileText = fileNameDisplay.textContent;
@@ -73,33 +180,6 @@
         } else {
             fileNameDisplay.textContent = originalFileText;
         }
-    });
-
-    // Script to handle floating labels for pre-filled values on page load
-    document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.form-field-outlined input, .form-field-outlined select').forEach(field => {
-            // If the field has a value (e.g., from 'value' or 'selected' attributes)
-            if (field.value) {
-                // Find its label and apply the floated state
-                const label = field.nextElementSibling;
-                if (label && label.tagName === 'LABEL') {
-                    // This logic is now handled by CSS :not(:placeholder-shown) for inputs
-                    // and a :valid check for selects, but we add a class for robustness
-                    // especially for select elements.
-                    if(field.tagName === 'SELECT'){
-                        field.classList.add('has-value');
-                    }
-                }
-            }
-            // Add blur listener to correctly handle state if user clears a field
-            field.addEventListener('blur', () => {
-                if(field.value) {
-                    field.classList.add('has-value');
-                } else {
-                    field.classList.remove('has-value');
-                }
-            });
-        });
     });
 </script>
 

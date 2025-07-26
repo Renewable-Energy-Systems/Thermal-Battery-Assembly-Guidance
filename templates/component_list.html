@@ -4,56 +4,152 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Components · RES</title>
-<link rel="stylesheet" href="/static/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
 <style>
-  .tbl{width:100%;border-collapse:collapse;font-size:0.95rem}
-  .tbl th,.tbl td{padding:0.55rem 0.8rem}
-  .tbl thead{background:var(--surface-variant)}
-  .tbl tbody tr:nth-child(even){background:#f7f8ff}
-  .action-btn{padding:0.35rem 0.9rem;font-size:0.85rem}
-  .topbar{display:flex;justify-content:space-between;align-items:center}
+    /* ─── 0. Reset & Base ────────────────────────────────────────── */
+    :root {
+        --primary: #3A5BAA; --on-primary: #FFFFFF;
+        --error: #BA1A1A; --on-error: #FFFFFF;
+        --surface: #F8F9FD; --surface-container: #FFFFFF;
+        --on-surface: #1A1C1E; --on-surface-variant: #44474F;
+        --surface-variant: #F1F3F9;
+        --outline: #DDE2EB;
+        --shadow: #000000;
+        --elev-1: 0px 1px 2px rgba(0,0,0,.08), 0px 1px 3px 1px rgba(0,0,0,.05);
+        --elev-2: 0px 1px 2px rgba(0,0,0,.08), 0px 2px 6px 2px rgba(0,0,0,.05);
+        --ripple-color-light: rgba(255, 255, 255, 0.2);
+        --ripple-color-dark: rgba(0, 0, 0, 0.1);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--surface); color: var(--on-surface); }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
+
+    /* ─── 2. Shared Components ───────────────────────────────────── */
+    .appbar { display: flex; align-items: center; gap: .5rem; padding: 1rem 1.5rem; background: var(--surface-container); border-bottom: 1px solid var(--outline); }
+    .appbar img { height: 32px; }
+    .appbar h1 { font-size: 1.375rem; font-weight: 500; color: var(--on-surface); }
+    .appbar .icon-btn { display: inline-flex; justify-content: center; align-items: center; width: 40px; height: 40px; border-radius: 50%; margin-right: .5rem; transition: background-color .2s; }
+    .appbar .icon-btn:hover { background-color: rgba(0,0,0,0.05); }
+    .appbar .icon-btn svg { width: 24px; height: 24px; fill: var(--on-surface); }
+    
+    .content { padding: 1.5rem; max-width: 900px; margin: 0 auto; }
+    .card { background: var(--surface-container); border-radius: 16px; border: 1px solid var(--outline); box-shadow: var(--elev-1); }
+    .card-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; }
+    .card-title { font-size: 1.5rem; font-weight: 600; }
+    
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; padding: .625rem 1.5rem; border: none; border-radius: 100px; font-family: inherit; font-size: .875rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; cursor: pointer; transition: box-shadow .2s; position: relative; overflow: hidden; }
+    .btn-filled { background-color: var(--primary); color: var(--on-primary); box-shadow: var(--elev-1); }
+    .btn-filled:hover { box-shadow: var(--elev-2); }
+    .btn svg { width: 18px; height: 18px; fill: currentColor; }
+    .ripple { position: absolute; border-radius: 50%; transform: scale(0); animation: ripple-effect .6s linear; }
+    @keyframes ripple-effect { to { transform: scale(4); opacity: 0; } }
+
+    /* ─── 3. Data Table & List Styles ────────────────────────────── */
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    .data-table thead { text-align: left; }
+    .data-table th { padding: .75rem 1.5rem; color: var(--on-surface-variant); font-weight: 600; border-bottom: 1px solid var(--outline); background-color: var(--surface-variant); }
+    .data-table td { padding: .75rem 1.5rem; border-bottom: 1px solid var(--outline); }
+    .data-table tbody tr:hover { background-color: rgba(0,0,0,0.02); }
+    .data-table tbody tr:last-child td { border-bottom: none; }
+    .data-table .actions-cell { text-align: right; }
+    .data-table .actions-cell .form-actions { display: flex; justify-content: flex-end; align-items: center; gap: 0; }
+    
+    .table-icon-btn { display: inline-flex; justify-content: center; align-items: center; width: 40px; height: 40px; padding: 0; border: none; border-radius: 50%; background: none; cursor: pointer; color: var(--on-surface-variant); transition: background-color .2s; position: relative; overflow: hidden; }
+    .table-icon-btn:hover { background-color: rgba(0,0,0,0.05); }
+    .table-icon-btn.delete:hover { background-color: rgba(var(--error-rgb, 186, 26, 26), 0.08); color: var(--error); }
+    .table-icon-btn svg { width: 20px; height: 20px; fill: currentColor; }
+
+    .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 3rem 1rem; color: var(--on-surface-variant); }
+    .empty-state svg { width: 48px; height: 48px; margin-bottom: 1rem; color: var(--outline); }
+    .empty-state h3 { font-size: 1.25rem; font-weight: 600; color: var(--on-surface); }
+
 </style>
 </head>
 <body>
 <header class="appbar">
-  <img src="/static/logo.png" alt="logo">
-  <h1>Component Library</h1>
+    <a href="/" class="icon-btn" aria-label="Back to Dashboard">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    </a>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAbFBMVEX///8AQJcANpQAPJYAPZYAN5UANJTg4uQAN5UAO5gAPZcANpT3+PgAM5Lq7O7s7/IAKZAAK5EAOZjAxckAOJfV2NsALpAAHpDHyMsAKpDGysoAMZIAAIsAFo7S1tjy9PMAH4/k5+cAF45wkJ0sV6VvAAAAB3RSTlMA+JD38GZ/mXk5xgAAA3RJREFUeNrt2k1yqzAUBuAjgopTFFFEwYIu//+X9gCqoq1Gta1T2syZc76nZ05gSkkSknp1AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACYM9Ielz1lI61VvG0tS1g7K5e+N8u2g20vK4a2R9Ie95z/bE4hbfm81K/rJ71VfG3157T67tLqBum18s/a14Z0V+2t0d8mP9+2N8+09Rbtx5cEwzUvXb37fDk9yFkjdR8N/vS/N12V8S/p+S/X8v5H0n7X3P+RzJ+Y3P643L2/kLST9b6h+T85tL+8+f3b+U9O8M5++f1k18nL233f0z733/u389/f+yP2+7/j/Q/3/f3X1I2xvy8l3rYm9bE3vbn3b7zP7d/sH8A73+A9n9ge/8hvf+Q9h/Y/v8hvf+A7f+A9f9ge/+x//8C2/9z//81tv8X2P5/Yfs/sP3/A9v/A2z/h2z/D2z/D9j+v8T2/2P9/x22/2/b/6/b/7/f/t/v/u+b/T9M5v8g83+S+X9Zf3L/Tf2fSvvv2P57+n8z7X+Z7L9k/i/y/4b8303+b+L/ivxfYv4vMP+X5/9l+X9Z/i+P/8vj/yLwL+J/kfhXhL8S/Uu0v0j9i9y/SPwrwr+k9C/p/Ivcv0j8K8K/pPwv4X+Z/Iu8f4H4V4T/JfGvCP8l8a8I/4vcv0j8K8I/b/wryv+a8q8q/yvyry7/6nKvrv/qci+v/+pSL6/9alOvbf1qU69t82rTr239alOvbfVq0q81+rRpv9box6b9NitPTfq0aT826tOm/diiT5v2Y3M+bdqPjfl0aT9m7NNmXJqMS5PyacOuzLg0GXcm49Kk3Jq0S5N+bcmXJv3akl+b8muTfm05lyb92nIuTfq15Vya9GvLuTSZlyb92nIuTfq15Vya9GvLuTSpV/uX+y/u/v9d7t+hAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC+8QfIu3YjW5Zf4gAAAABJRU5ErkJggg==" alt="logo">
+    <h1>Component Library</h1>
 </header>
 
 <main class="content">
-<section class="card" style="min-width:420px">
-  <div class="topbar">
-    <h2 style="margin:0">Components</h2>
-    <div style="display:flex;gap:0.5rem">
-      <a href="/admin" class="btn" style="padding:0.5rem 1rem;font-size:0.9rem;background:var(--primary-light)">← Back</a>
-      <a href="/components/new" class="btn" style="padding:0.5rem 1rem;font-size:0.9rem">+ New</a>
+<section class="card">
+    <div class="card-header">
+        <h2 class="card-title">Components</h2>
+        <a href="/components/new" class="btn btn-filled">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11 19v-6H5v-2h6V5h2v6h6v2h-6v6Z"/></svg>
+            <span>New Component</span>
+        </a>
     </div>
-  </div>
 
-  {% if components %}
-  <table class="tbl" style="margin-top:1rem">
-    <thead><tr><th>#</th><th>ID</th><th>Name</th><th style="text-align:center">Actions</th></tr></thead>
-    <tbody>
-    {% for c in components %}
-      <tr>
-        <td>{{ loop.index }}</td>
-        <td>{{ c.id }}</td>
-        <td>{{ c.name }}</td>
-        <td style="text-align:center">
-          <a href="/components/{{ c.id }}/edit" class="btn action-btn">Edit</a>
-          <form action="/components/{{ c.id }}/delete" method="post" style="display:inline"
-                onsubmit="return confirm('Delete component {{ c.name }}?')">
-              <button class="btn action-btn" style="background:#d32f2f">Delete</button>
-          </form>
-        </td>
-      </tr>
-    {% endfor %}
-    </tbody>
-  </table>
-  {% else %}
-    <p style="margin-top:1.5rem">No components yet. Click <strong>+ New</strong>.</p>
-  {% endif %}
+    {% if components %}
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>ID</th>
+                <th>Name</th>
+                <th style="text-align: right;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for c in components %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ c.id }}</td>
+                <td>{{ c.name }}</td>
+                <td class="actions-cell">
+                    <div class="form-actions">
+                        <a href="/components/{{ c.id }}/edit" class="table-icon-btn" title="Edit">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 19h1.4l8.625-8.625-1.4-1.4L5 17.6V19ZM19.3 8.925l-4.25-4.2L17.875 1.9l4.25 4.25L19.3 8.925Z"/></svg>
+                        </a>
+                        <form action="/components/{{ c.id }}/delete" method="post" onsubmit="return confirm('Are you sure you want to delete component \'{{ c.name }}\'?')">
+                            <button type="submit" class="table-icon-btn delete" title="Delete">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 21q-.825 0-1.413-.588T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.588 1.413T17 21H7Z"/></svg>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+        <h3>No components yet</h3>
+        <p>Click "New Component" to add one to the library.</p>
+    </div>
+    {% endif %}
 </section>
 </main>
+
+<script>
+    // --- Ripple Effect for Buttons ---
+    function addRippleEffect(button) {
+        button.addEventListener('click', function(e) {
+            const circle = document.createElement('span');
+            this.appendChild(circle);
+            const d = Math.max(this.clientWidth, this.clientHeight);
+            circle.style.width = circle.style.height = d + 'px';
+            const rect = this.getBoundingClientRect();
+            circle.style.left = e.clientX - rect.left - d / 2 + 'px';
+            circle.style.top = e.clientY - rect.top - d / 2 + 'px';
+            circle.classList.add('ripple');
+            circle.style.backgroundColor = this.classList.contains('btn-filled') ? 'var(--ripple-color-light)' : 'var(--ripple-color-dark)';
+            setTimeout(() => circle.remove(), 600);
+        });
+    }
+    // Apply to all buttons on the page
+    document.querySelectorAll('.btn, .table-icon-btn').forEach(addRippleEffect);
+</script>
+
 </body>
 </html>
