@@ -4,87 +4,131 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Thermal Battery Assembly Guidance</title>
-
-<!-- global tokens / utility classes -->
-<link rel="stylesheet" href="/static/styles.css">
-
-<!-- page-specific tweaks -->
+<link rel="stylesheet" href="/static/style.css">
 <style>
-  /* centre column */
-  .stage {
-    position: relative;            /* needed for ghost-card Z-stack */
-    display: flex; flex-direction: column;
-    align-items: center; gap: 1.1rem;
-    max-width: 520px; margin: 0 auto;
+  body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: #f4f4f7;
+    color: #1b1b1f;
   }
 
-  /* ghost cards */
-  .ghost {
-    position: absolute;
-    inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    padding: 2rem 3rem; border-radius: 14px;
-    background: #fff; color: #666;
-    box-shadow: 0 2px 4px rgb(0 0 0 / .08);
-    opacity: .15;      /* faint */
-    transform: scale(.95);         /* a bit smaller */
-    pointer-events: none;
-    user-select: none;
+  .appbar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: var(--md-sys-color-primary, #4555b5);
+    color: white;
+    font-size: 1.8rem;
   }
-  #prevCard { transform: translateX(-7%) scale(.93); }
-  #nextCard { transform: translateX( +7%) scale(.93); }
-
-  /* main card */
-  #pane {
-    position: relative; z-index: 2;   /* sits above ghosts */
-    text-align: center;
+  .appbar img {
+    height: 40px;
   }
 
-  /* component name vs label */
-  #compName   { font-weight: 600; font-size: 1.3rem; }
-  #stepLabel  { font-size: 1.15rem; margin: .4rem 0 .85rem; }
-
-  .step-img   {
-    max-width: 380px; max-height: 260px; object-fit: contain;
-    margin: .8rem auto; border: 1px solid #ccc; border-radius: 8px;
+  .content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 72px);
+    padding: 1rem;
   }
-  #controls   { display:none; gap:.75rem; justify-content:center }
-  #status     { margin-top:.9rem }
+
+  .card-layout {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    max-width: 960px;
+    width: 100%;
+    gap: 2rem;
+  }
+
+  .step-img {
+    width: 320px;
+    max-height: 300px;
+    object-fit: contain;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+  }
+
+  .text-content {
+    flex: 1;
+    text-align: left;
+  }
+
+  #compName {
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  #stepLabel {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  #status {
+    font-size: 1.2rem;
+    margin-top: 1.5rem;
+  }
+
+  #controls {
+    display: none;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .btn {
+    padding: 1rem 1.8rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    background-color: var(--md-sys-color-primary, #4555b5);
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  .btn:hover {
+    background-color: #3b4ba1;
+  }
+  .btn-secondary {
+    background-color: #ccc;
+    color: #333;
+  }
+  .btn-secondary:hover {
+    background-color: #aaa;
+  }
+
+  .meta {
+    font-size: 1.3rem;
+    color: #666;
+  }
 </style>
 </head>
 <body>
-
 <header class="appbar">
   <img src="/static/logo.png" alt="logo">
   <h1>Thermal Battery Assembly Guidance</h1>
 </header>
-
 <main class="content">
-  <section class="stage">
-    <!-- ghost cards -->
-    <div id="prevCard" class="ghost"   style="visibility:hidden"></div>
-    <div id="nextCard" class="ghost"   style="visibility:hidden"></div>
-
-    <!-- MAIN CARD ----------------------------------------------------- -->
-    <section id="pane" class="card">
+  <section class="card-layout">
+    <img id="stepImg" class="step-img" alt="Preview" hidden>
+    <div class="text-content">
       <p class="meta">Loading queue…</p>
-
       <div id="compName" style="display:none"></div>
       <div id="stepLabel"></div>
-
-      <img id="stepImg" class="step-img" alt="" hidden>
-
       <div id="controls">
-        <button id="nextBtn" class="btn" style="min-width:160px">Next Step</button>
+        <button id="nextBtn" class="btn" style="min-width:180px">Next Step</button>
         <button id="stopBtn" class="btn btn-secondary">Force Stop</button>
       </div>
-
       <p id="status"></p>
-    </section>
+    </div>
   </section>
 </main>
-
-<!-- CACHE-BUST WITH BUILD STAMP -->
 <script src="/static/script.js?v={{ config.BUILD }}"></script>
 </body>
 </html>

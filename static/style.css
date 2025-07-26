@@ -1,0 +1,170 @@
+/* =========================================================
+   RES - Material 3 Expressive UI
+   ========================================================= */
+
+/* 1. Generate M3 Theme from RES Brand Color */
+:root {
+  --md-source-color: #32337A; /* Your RES Brand Blue */
+
+  /* M3 Tonal Palette (Auto-generated from source) */
+  --md-sys-color-primary: #4555b5;
+  --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-primary-container: #dde0ff;
+  --md-sys-color-on-primary-container: #000d64;
+  --md-sys-color-secondary: #5b5d72;
+  --md-sys-color-on-secondary: #ffffff;
+  --md-sys-color-secondary-container: #e0e0f9;
+  --md-sys-color-on-secondary-container: #181a2c;
+  --md-sys-color-background: #fefbff;
+  --md-sys-color-on-background: #1b1b1f;
+  --md-sys-color-surface: #fefbff;
+  --md-sys-color-on-surface: #1b1b1f;
+  --md-sys-color-surface-variant: #e4e1ec;
+  --md-sys-color-on-surface-variant: #46464f;
+  --md-sys-color-outline: #777680;
+  --md-sys-color-outline-variant: #c7c5d0;
+}
+
+/* =========================================================
+   2. Base Layout & M3 Typography
+   ========================================================= */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--md-sys-color-background);
+    color: var(--md-sys-color-on-background);
+    margin: 0;
+    display: grid;
+    grid-template-columns: 380px 1fr; /* Fixed side panel */
+    height: 100vh;
+    overflow: hidden;
+}
+.headline-small { font-size: 1.5rem; font-weight: 400; }
+.title-large { font-size: 1.375rem; font-weight: 500; }
+.label-medium { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.03em; }
+.body-medium { font-size: 0.875rem; }
+
+/* =========================================================
+   3. Panel & Form Styling
+   ========================================================= */
+.side-panel {
+    background-color: var(--md-sys-color-surface);
+    border-right: 1px solid var(--md-sys-color-outline-variant);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-shrink: 0;
+}
+.panel-header .logo { height: 48px; }
+.panel-header .header-text { line-height: 1.4; }
+.panel-header .header-text p { margin: 0; color: var(--md-sys-color-on-surface-variant); }
+.panel-header .header-text h1 { margin: 0; }
+
+.component-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    flex-grow: 1;
+}
+.component-form > .mdc-button {
+    margin-top: auto; /* Push button to the bottom */
+}
+
+/* =========================================================
+   4. M3 Component Overrides (Buttons & Text Fields)
+   ========================================================= */
+.mdc-button--filled {
+    --mdc-filled-button-container-color: var(--md-sys-color-primary);
+    --mdc-filled-button-label-text-color: var(--md-sys-color-on-primary);
+}
+.mdc-button--outlined {
+    --mdc-outlined-button-outline-color: var(--md-sys-color-outline);
+    --mdc-outlined-button-label-text-color: var(--md-sys-color-primary);
+}
+.mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__leading,
+.mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__notch,
+.mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__trailing {
+    border-color: var(--md-sys-color-outline);
+}
+.mdc-text-field--focused .mdc-floating-label {
+    color: var(--md-sys-color-primary) !important;
+}
+.mdc-text-field--focused .mdc-notched-outline__leading,
+.mdc-text-field--focused .mdc-notched-outline__notch,
+.mdc-text-field--focused .mdc-notched-outline__trailing {
+    border-color: var(--md-sys-color-primary) !important;
+    border-width: 2px;
+}
+.mdc-select--outlined .mdc-select__dropdown-icon {
+    fill: var(--md-sys-color-on-surface-variant);
+}
+
+/* =========================================================
+   5. Visualizer & File Drop Zone
+   ========================================================= */
+.visualizer-panel {
+    padding: 2rem;
+    display: flex;
+}
+.file-drop-zone {
+    flex-grow: 1;
+    border: 2px dashed var(--md-sys-color-outline-variant);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+    text-align: center;
+    padding: 2rem;
+    transition: background-color 0.2s;
+}
+.file-drop-zone.dragging {
+    background-color: var(--md-sys-color-primary-container);
+    border-color: var(--md-sys-color-primary);
+}
+.file-input-native { display: none; }
+.drop-zone-prompt { color: var(--md-sys-color-on-surface-variant); }
+.icon-large { font-size: 4rem; }
+.image-preview {
+    display: none;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 14px;
+}
+.analysis-overlay {
+    margin-top: 1.5rem;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+.spinner {
+    border: 4px solid var(--md-sys-color-primary-container);
+    border-left-color: var(--md-sys-color-primary);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+/* =========================================================
+   6. Responsive
+   ========================================================= */
+@media (max-width: 900px) {
+  body {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    height: auto;
+  }
+  .side-panel { border-right: none; border-bottom: 1px solid var(--md-sys-color-outline-variant); }
+  .visualizer-panel { min-height: 400px; }
+}

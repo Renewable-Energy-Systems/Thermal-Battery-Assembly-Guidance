@@ -1,40 +1,256 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Create Component · RES</title>
-<link rel="stylesheet" href="/static/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Component · RES</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    :root {
+      --md-sys-color-primary: #1A237E;
+      --md-sys-color-surface: #E8EAF6;
+      --md-sys-color-on-surface: #0D1333;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: white;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      width: 100%;
+      max-width: 480px;
+      background-color: var(--md-sys-color-surface);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .panel-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .logo {
+      height: 40px;
+    }
+    .header-text h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--md-sys-color-primary);
+    }
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1.5rem;
+    }
+    label {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--md-sys-color-primary);
+    }
+    input[type="text"], select {
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid #c5cae9;
+      border-radius: 8px;
+    }
+    .btn {
+      padding: 0.9rem;
+      font-weight: 600;
+      color: white;
+      background-color: var(--md-sys-color-primary);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+    .btn:hover {
+      background-color: #0D1333;
+    }
+    .file-drop-zone {
+      margin-top: 2rem;
+      border: 2px dashed #9fa8da;
+      border-radius: 12px;
+      background-color: #f3f4fa;
+      padding: 2rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    .image-preview {
+      display: none;
+      max-width: 100%;
+      margin-top: 1rem;
+      border-radius: 8px;
+    }
+    .analysis-overlay {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 1rem;
+      gap: 1rem;
+    }
+    .spinner {
+      border: 4px solid rgba(0,0,0,0.1);
+      border-left-color: var(--md-sys-color-primary);
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 <body>
-<header class="appbar"><img src="/static/logo.png"><h1>New Component</h1></header>
+  <div class="container">
+    <div class="panel-header">
+      <img src="/static/logo.png" alt="RES Logo" class="logo">
+      <div class="header-text">
+        <h1>New Component</h1>
+      </div>
+    </div>
+    <form method="post" enctype="multipart/form-data" class="component-form">
+      <div class="form-field">
+        <label for="comp_name">Component Name</label>
+        <input type="text" id="comp_name" name="comp_name" required maxlength="40" placeholder="Enter component name">
+      </div>
+      <div class="form-field">
+        <label for="gpio">GPIO Pin</label>
+        <select name="gpio" id="gpio" required>
+          <option value="" disabled selected>Select a GPIO Pin</option>
+          {% for pin in gpio_choices %}
+            <option value="{{ pin }}">{{ pin }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button class="btn" type="submit">Create Component</button>
+    </form>
 
-<main class="content">
-<section class="card" style="min-width:340px">
-  <h2 style="margin-top:0">Details</h2>
-  {% if error %}
-    <p class="error" style="color:#d32f2f">{{ error }}</p>
-  {% endif %}
-  <form method="post" enctype="multipart/form-data" novalidate>
-    <label class="form-label" for="comp_name">Component Name</label>
-    <input class="form-field" id="comp_name" name="comp_name" required maxlength="40">
+    <div class="file-drop-zone" id="file-drop-zone">
+      <label for="comp_img" class="sr-only">Upload Component Image</label>
+      <input type="file" id="comp_img" name="comp_img" accept="image/*" class="file-input-native" aria-label="Component image upload input">
+      <span class="material-icons" style="font-size: 40px; color: gray;">image</span>
+      <p>Drag & drop an image here, or click to select</p>
+      <img id="image-preview" class="image-preview" src="" alt="Component Preview">
+      <div class="analysis-overlay" id="analysis-overlay">
+        <div class="spinner" id="spinner"></div>
+        <button type="button" id="analyze-image-btn" class="btn">
+          <span class="material-icons">auto_awesome</span>
+          Analyze with Gemini
+        </button>
+      </div>
+    </div>
+  </div>
 
-    <label class="form-label" for="comp_img" style="margin-top:0.8rem">Preview Image&nbsp;(optional)</label>
-    <input type="file" id="comp_img" name="comp_img" accept="image/*">
+  <script>
+    const fileInput = document.getElementById('comp_img');
+    const fileDropZone = document.getElementById('file-drop-zone');
+    const dropZonePrompt = document.getElementById('drop-zone-prompt');
+    const imagePreview = document.getElementById('image-preview');
+    const analysisOverlay = document.getElementById('analysis-overlay');
+    const analyzeBtn = document.getElementById('analyze-image-btn');
+    const spinner = document.getElementById('spinner');
+    const componentNameInput = document.getElementById('comp_name');
 
-    <label for="gpio">GPIO pins:</label>
-    <label class="form-label mb-1">GPIO pins:</label>
-    <select name="gpio" class="form-select" required>
-      {% for pin in gpio_choices %}
-        <option value="{{ pin }}">{{ pin }}</option>
-      {% endfor %}
-</select>
+    fileDropZone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', () => handleFileSelect(fileInput.files));
 
+    fileDropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      fileDropZone.classList.add('dragging');
+    });
+    fileDropZone.addEventListener('dragleave', () => fileDropZone.classList.remove('dragging'));
+    fileDropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      fileDropZone.classList.remove('dragging');
+      handleFileSelect(e.dataTransfer.files);
+    });
 
+    function handleFileSelect(files) {
+      if (files.length > 0) {
+        const file = files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          imagePreview.src = e.target.result;
+          imagePreview.style.display = 'block';
+          analysisOverlay.style.display = 'flex';
+          analyzeBtn.style.display = 'inline-flex';
+          spinner.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+      }
+    }
 
+    analyzeBtn.addEventListener('click', async () => {
+      if (!fileInput.files || fileInput.files.length === 0) return;
 
-    <button class="btn" style="width:100%;margin-top:1rem">Create</button>
-  </form>
-</section>
-</main>
+      spinner.style.display = 'block';
+      analyzeBtn.style.display = 'none';
+
+      try {
+        const file = fileInput.files[0];
+        const base64ImageData = await toBase64(file);
+        const prompt = "You are an expert electronics engineer. Analyze the image and provide a concise, standard name for the component shown. For example: '5mm Red LED', 'Raspberry Pi Pico', '10k Ohm Resistor'. Provide only the component name.";
+
+        const payload = {
+          contents: [{
+            parts: [
+              { text: prompt },
+              { inline_data: { mime_type: file.type, data: base64ImageData } }
+            ]
+          }]
+        };
+
+        const apiKey = "";
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key=${apiKey}`;
+
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) throw new Error(`API Error: ${response.statusText}`);
+
+        const result = await response.json();
+
+        if (result.candidates && result.candidates[0]?.content?.parts[0]?.text) {
+          const suggestedName = result.candidates[0].content.parts[0].text;
+          componentNameInput.value = suggestedName.trim();
+          componentNameInput.focus();
+          componentNameInput.blur();
+        } else {
+          throw new Error("Could not parse a valid name from the API response.");
+        }
+
+      } catch (error) {
+        console.error("Gemini API Error:", error);
+        alert("Error analyzing image: " + error.message);
+      } finally {
+        spinner.style.display = 'none';
+        analyzeBtn.style.display = 'inline-flex';
+      }
+    });
+
+    const toBase64 = file => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = error => reject(error);
+    });
+  </script>
 </body>
 </html>

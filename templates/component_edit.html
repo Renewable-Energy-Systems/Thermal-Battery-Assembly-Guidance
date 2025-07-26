@@ -1,44 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Edit Component · RES</title>
-<link rel="stylesheet" href="/static/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Component · RES</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Material+Symbols+Outlined" rel="stylesheet">
+    <link rel="stylesheet" href="static/style.css">
 </head>
 <body>
-<header class="appbar"><img src="/static/logo.png"><h1>Edit Component – {{ comp.name }}</h1></header>
 
-<main class="content">
-<section class="card" style="min-width:340px">
-  <h2 style="margin-top:0">Properties</h2>
-  <form method="post" enctype="multipart/form-data" novalidate>
-    <label class="form-label" for="comp_name">Name</label>
-    <input class="form-field" id="comp_name" name="comp_name" required maxlength="40"
-           value="{{ comp.name }}">
+<header class="app-bar">
+    <img src="/static/logo.png" alt="RES Logo">
+    <h1 class="title-large">Edit Componentoo – {{ comp.name }}</h1>
+</header>
 
-    <label class="form-label" for="comp_img" style="margin-top:0.8rem">Preview Image (replace)</label>
-    <input type="file" id="comp_img" name="comp_img" accept="image/*">
+<main class="content-wrapper">
+    <section class="card">
+        <h2 class="headline-small">Properties</h2>
 
-    {% if comp.image %}
-      <img src="/comp_assets/{{ cid }}/{{ comp.image }}" alt="" style="height:60px;margin-top:0.6rem">
-    {% endif %}
+        <form method="post" enctype="multipart/form-data" novalidate>
+            <!-- Component Name -->
+            <div class="form-field-outlined">
+                <input type="text" id="comp_name" name="comp_name" required maxlength="40" value="{{ comp.name }}" placeholder=" ">
+                <label for="comp_name">Component Name</label>
+            </div>
 
-<label class="form-label mb-1">GPIO pin:</label>
-<select name="gpio" class="form-select" required>
-  {% for pin in gpio_choices %}
-    <option value="{{ pin }}"
-            {% if comp and pin == comp.gpio %}selected{% endif %}>
-        {{ pin }}
-    </option>
-  {% endfor %}
-</select>
+            <!-- Current Image Preview -->
+            {% if comp.image %}
+            <div class="image-preview-container">
+                <p class="label-small">Current Image</p>
+                <img src="/comp_assets/{{ cid }}/{{ comp.image }}" alt="Current component preview" class="image-preview">
+            </div>
+            {% endif %}
 
+            <!-- Preview Image Replacement -->
+            <div class="file-input-wrapper">
+                <input type="file" id="comp_img" name="comp_img" accept="image/*" class="file-input-native">
+                <label for="comp_img" class="btn-outlined">
+                    <span class="material-symbols-outlined">upload_file</span>
+                    <span id="file-name-display">Replace Preview Image</span>
+                </label>
+            </div>
+            
+            <!-- GPIO Pins -->
+            <div class="form-field-outlined">
+                 <select name="gpio" id="gpio" required>
+                    {% for pin in gpio_choices %}
+                        <option value="{{ pin }}" {% if comp and pin == comp.gpio %}selected{% endif %}>
+                            {{ pin }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <label for="gpio">GPIO Pin</label>
+            </div>
 
-
-
-    <button class="btn" style="width:100%;margin-top:1rem">Save</button>
-  </form>
-</section>
+            <button class="btn-filled" type="submit">Save Changes</button>
+        </form>
+    </section>
 </main>
+
+<script>
+    // Script to update the file input label with the selected filename
+    const fileInput = document.getElementById('comp_img');
+    const fileNameDisplay = document.getElementById('file-name-display');
+    const originalFileText = fileNameDisplay.textContent;
+
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) {
+            fileNameDisplay.textContent = fileInput.files[0].name;
+        } else {
+            fileNameDisplay.textContent = originalFileText;
+        }
+    });
+
+    // Script to handle floating labels for pre-filled values on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.form-field-outlined input, .form-field-outlined select').forEach(field => {
+            // If the field has a value (e.g., from 'value' or 'selected' attributes)
+            if (field.value) {
+                // Find its label and apply the floated state
+                const label = field.nextElementSibling;
+                if (label && label.tagName === 'LABEL') {
+                    // This logic is now handled by CSS :not(:placeholder-shown) for inputs
+                    // and a :valid check for selects, but we add a class for robustness
+                    // especially for select elements.
+                    if(field.tagName === 'SELECT'){
+                        field.classList.add('has-value');
+                    }
+                }
+            }
+            // Add blur listener to correctly handle state if user clears a field
+            field.addEventListener('blur', () => {
+                if(field.value) {
+                    field.classList.add('has-value');
+                } else {
+                    field.classList.remove('has-value');
+                }
+            });
+        });
+    });
+</script>
+
 </body>
 </html>

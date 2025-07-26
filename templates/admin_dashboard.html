@@ -4,94 +4,317 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Admin Dashboard · RES</title>
-
-  <!-- shared design tokens -->
-  <link rel="stylesheet" href="/static/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-    /* ── tile layout ─────────────────────────────────────────────── */
-    .tile-grid{
-      display:grid;
-      gap:1.25rem;
-      grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+    /* ─── 0. Reset & Base ────────────────────────────────────────── */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
-    .tile{
-      background:var(--surface);
-      border-radius:12px;
-      box-shadow:var(--elev-1);
-      padding:1.5rem 1rem;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      text-align:center;
-      transition:transform .15s, box-shadow .15s;
+    html {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
-    .tile:hover{
-      transform:translateY(-4px);
-      box-shadow:var(--elev-2);
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--surface);
+      color: var(--on-surface);
     }
-    .tile svg{
-      width:40px;height:40px;
-      margin-bottom:.75rem;
-      fill:var(--primary);
+    a {
+      text-decoration: none;
+      color: inherit;
     }
-    .tile span{font-weight:600}
+    img {
+      max-width: 100%;
+      vertical-align: middle;
+      width: 4em;
+      height: auto !important;
+    }
+
+    /* ─── 1. Material 3 Color Palette (Derived from RES logo) ──── */
+    :root {
+      --primary: #3A5BAA;
+      --on-primary: #FFFFFF;
+      --primary-container: #D8E2FF;
+      --on-primary-container: #001849;
+      --secondary: #575E71;
+      --on-secondary: #FFFFFF;
+      --secondary-container: #DBE2F9;
+      --on-secondary-container: #141B2C;
+      --surface: #FDFBFF;
+      --surface-variant: #E1E2EC;
+      --on-surface: #1A1C1E;
+      --on-surface-variant: #44474F;
+      --outline: #74777F;
+      --shadow: #000000;
+      --elev-1: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      --elev-2: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 2px 6px 2px rgba(0, 0, 0, 0.15);
+      --hover-state-layer: rgba(var(--on-surface-rgb), 0.08); /* For hover */
+      --focus-state-layer: rgba(var(--on-surface-rgb), 0.12); /* For focus */
+      --ripple-color: rgba(var(--on-surface-rgb), 0.1);
+    }
+
+    /* ─── 2. App Bar ─────────────────────────────────────────────── */
+    .appbar {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.5rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--surface-variant);
+    }
+    .appbar img {
+      height: 32px;
+    }
+    .appbar h1 {
+      font-size: 1.375rem; /* Title Large */
+      font-weight: 500;
+      color: var(--on-surface);
+    }
+
+    /* ─── 3. Main Content Layout ───────────────────────────────── */
+    .content {
+      padding: 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    /* ─── 4. Card Component ────────────────────────────────────── */
+    .card {
+      background: var(--surface-variant);
+      border-radius: 16px;
+      padding: 1.5rem;
+    }
+    .card.welcome-card {
+        grid-column: 1 / -1; /* Span full width */
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 2rem;
+        background-color: var(--secondary-container);
+        color: var(--on-secondary-container);
+    }
+    .welcome-text h2 {
+        font-size: 2rem; /* Headline Medium */
+        font-weight: 600;
+    }
+    .welcome-text p {
+        font-size: 1rem; /* Body Large */
+        margin-top: 0.5rem;
+        color: var(--on-secondary-container);
+        opacity: 0.8;
+    }
+    .welcome-illustration {
+        width: 150px;
+        height: 150px;
+        flex-shrink: 0;
+    }
+    
+    .card.actions-card {
+        grid-column: 1 / -1;
+        background: var(--surface);
+        border: 1px solid var(--surface-variant);
+    }
+    .actions-card h2 {
+      font-size: 1.5rem; /* Title Large */
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: var(--on-surface);
+    }
+
+    /* ─── 5. Tile Component (Quick Actions) ────────────────────── */
+    .tile-grid {
+      display: grid;
+      gap: 1.25rem;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+
+    .tile {
+      position: relative; /* For ripple effect and state layer */
+      overflow: hidden; /* To contain ripple */
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: box-shadow 0.2s ease-out, transform 0.2s ease-out;
+      box-shadow: var(--elev-1);
+      animation:fade-in .5s ease-out forwards;
+      opacity:0;
+    }
+    /* Staggered animation */
+    .tile:nth-child(1) { animation-delay: 0.1s; }
+    .tile:nth-child(2) { animation-delay: 0.15s; }
+    .tile:nth-child(3) { animation-delay: 0.2s; }
+    .tile:nth-child(4) { animation-delay: 0.25s; }
+    .tile:nth-child(5) { animation-delay: 0.3s; }
+
+    .tile::after { /* The state layer */
+        content: '';
+        position: absolute;
+        top:0; left:0; width:100%; height:100%;
+        background-color: var(--on-primary-container);
+        opacity: 0;
+        transition: opacity .2s ease-out;
+    }
+    .tile:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--elev-2);
+    }
+    .tile:hover::after {
+        opacity: 0.08; /* Hover state */
+    }
+    .tile:active::after {
+        opacity: 0.12; /* Pressed state */
+    }
+
+    .tile svg {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 1rem;
+      fill: var(--on-primary-container);
+    }
+
+    .tile span {
+      font-weight: 600;
+      font-size: 1rem; /* Body Large */
+    }
+
+    /* ─── 6. Ripple Effect & Animations ──────────────────────────── */
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--ripple-color);
+      transform: scale(0);
+      animation: ripple-effect 0.6s linear;
+    }
+
+    @keyframes ripple-effect {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+    
+    @keyframes fade-in {
+      from { transform: translateY(10px); opacity:0; }
+      to { transform: translateY(0); opacity:1; }
+    }
+
+    @media (max-width: 600px) {
+      .welcome-card {
+        flex-direction: column;
+        text-align: center;
+      }
+      .welcome-illustration {
+        width: 120px;
+        height: 120px;
+        margin-top: 1rem;
+      }
+    }
+
   </style>
 </head>
 <body>
 
-<!-- ───── App-bar ───── -->
 <header class="appbar">
-  <img src="/static/logo.png" alt="RES logo">
+  <img src="/static/res_logo_transparent.png" alt="RES logo">
   <h1>Admin Dashboard</h1>
 </header>
 
-<!-- ───── Main content ───── -->
 <main class="content">
-  <section class="card" style="width:100%;max-width:780px">
-    <h2 style="margin-top:0">Quick Actions</h2>
+    <div class="grid-container">
 
-    <div class="tile-grid" style="margin-top:1.25rem">
+        <section class="card welcome-card">
+            <div class="welcome-text">
+                <h2>Welcome Back!</h2>
+                <p>Ready to manage your energy systems? Here are some quick actions to get you started.</p>
+            </div>
+            <svg class="welcome-illustration" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+              <path fill="#3A5BAA" d="M49.3,-64.7C62.8,-53.4,71.9,-37.2,76.3,-20.1C80.7,-2.9,80.4,15.1,72.4,29.3C64.3,43.5,48.5,53.8,32.3,61.9C16.1,69.9,-0.5,75.7,-16.2,72.8C-31.9,69.9,-46.7,58.3,-58.3,44.5C-70,30.7,-78.6,14.7,-78.7,-1.5C-78.8,-17.8,-70.5,-34.3,-58.5,-46.8C-46.4,-59.4,-30.7,-68.2,-14.8,-72.1C1.2,-76,7.4,-75.9,23.3,-74.6C39.2,-73.3,55.9,-71.7,49.3,-64.7Z" transform="translate(100 100)" />
+            </svg>
+        </section>
 
-      <!-- New Project -->
-      <a class="tile" href="/projects/new">
-        <svg viewBox="0 0 24 24"><path d="M19 11H13V5h-2v6H5v2h6v6h2v-6h6z"/></svg>
-        <span>New&nbsp;Project</span>
-      </a>
-
-      <!-- Manage Projects -->
-      <a class="tile" href="/projects">
-        <svg viewBox="0 0 24 24"><path d="M10 4H2v16h20V6H12l-2-2z"/></svg>
-        <span>Manage&nbsp;Projects</span>
-      </a>
-
-      <!-- Component Library (NEW) -->
-      <a class="tile" href="/components">
-        <svg viewBox="0 0 24 24">
-          <path d="M4 4h6v6H4V4m0 10h6v6H4v-6M14 4h6v6h-6V4m0 10h6v6h-6v-6Z"/>
-        </svg>
-        <span>Component&nbsp;Library</span>
-      </a>
-
-      <!-- Session Queue -->
-      <a class="tile" href="/admin/sessions">
-        <svg viewBox="0 0 24 24">
-          <path d="M4 4h16v2H4V4m0 4h16v2H4V8m0 4h16v2H4v-2m0 4h16v2H4v-2z"/>
-        </svg>
-        <span>Session&nbsp;Queue</span>
-      </a>
-
-      <!-- Logs -->
-      <a class="tile" href="/logs">
-        <svg viewBox="0 0 24 24">
-          <path d="M3 3h18v2H3V3m0 4h18v2H3V7m0 4h11v2H3v-2m0 4h18v2H3v-2z"/>
-        </svg>
-        <span>Logs</span>
-      </a>
+        <section class="card actions-card">
+            <h2>Quick Actions</h2>
+        
+            <div class="tile-grid">
+        
+              <a class="tile" href="/projects/new">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M20 6h-8l-2-2H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-1 8h-3v3h-2v-3h-3v-2h3V9h2v3h3v2z"/></svg>
+                <span>New Project</span>
+              </a>
+        
+              <a class="tile" href="/projects">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M10.5 13H8v-3h2.5V7.5h3V10H16v3h-2.5v2.5h-3V13zM12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z"/></svg>
+                <span>Manage Projects</span>
+              </a>
+        
+              <a class="tile" href="/components">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
+                <span>Component Library</span>
+              </a>
+        
+              <a class="tile" href="/admin/sessions">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M8 16h8v2H8zm0-4h8v2H8zm0-4h8v2H8zm6-4h-3.33L12 2h-1.33L9.33 4H6v2h8z"/></svg>
+                <span>Session Queue</span>
+              </a>
+        
+              <a class="tile" href="/logs">
+                <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px"><g><rect fill="none" height="24" width="24"/></g><g><g><path d="M14,2H6C4.9,2,4,2.9,4,4v16c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V8L14,2z M16,18H8v-2h8V18z M16,14H8v-2h8V14z M13,9V3.5 L18.5,9H13z"/></g></g></svg>
+                <span>Logs</span>
+              </a>
+        
+            </div>
+        </section>
 
     </div>
-  </section>
 </main>
+
+<script>
+  // Simple JavaScript for Material-style ripple effect
+  document.querySelectorAll('.tile').forEach(tile => {
+    tile.addEventListener('click', function (e) {
+      // Don't create ripple if it's already there
+      if (this.querySelector('.ripple')) {
+        this.querySelector('.ripple').remove();
+      }
+
+      const circle = document.createElement('span');
+      const diameter = Math.max(this.clientWidth, this.clientHeight);
+      const radius = diameter / 2;
+
+      // Get click coordinates relative to the button
+      const rect = this.getBoundingClientRect();
+      const rippleX = e.clientX - rect.left - radius;
+      const rippleY = e.clientY - rect.top - radius;
+
+      circle.style.width = circle.style.height = `${diameter}px`;
+      circle.style.left = `${rippleX}px`;
+      circle.style.top = `${rippleY}px`;
+      circle.classList.add('ripple');
+      
+      this.appendChild(circle);
+
+      // Remove the ripple element after the animation finishes
+      setTimeout(() => {
+        circle.remove();
+      }, 600);
+    });
+  });
+</script>
 
 </body>
 </html>

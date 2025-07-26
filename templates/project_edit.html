@@ -1,103 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Edit Project · RES</title>
-  <link rel="stylesheet" href="/static/styles.css">
-
-  <style>
-    .step-row{
-      display:flex;align-items:center;gap:.6rem;
-      margin-bottom:.8rem;padding:.6rem;
-      border:1px solid #ddd;border-radius:8px;background:#fafafa;
-    }
-    .step-row select,.step-row input[type=text]{flex:1}
-    .drag-handle{cursor:grab;font-size:1.25rem;user-select:none}
-    .del-btn{padding:.35rem .8rem;font-size:.85rem;background:#d32f2f;color:#fff}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Project · RES</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
 
 <header class="appbar">
-  <img src="/static/logo.png" alt="RES logo">
-  <h1>Edit Project – {{ project.name }}</h1>
+    <img src="/static/logo.png" alt="RES logo">
+    <h1>Edit Project – {{ project.name }}</h1>
 </header>
 
 <main class="content">
-  <section class="card" style="width:100%;max-width:660px">
-    <h2>Assembly Sequence</h2>
+    <section class="card">
+        <div class="card-header">
+            <h2 class="card-title">Assembly Sequence</h2>
+            <div class="form-actions">
+                <button type="button" id="addStepBtn" class="btn btn-secondary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <span>Add Step</span>
+                </button>
+                <button type="submit" form="seqForm" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                    <span>Save Project</span>
+                </button>
+            </div>
+        </div>
 
-    <form id="seqForm" method="post">
-      <div id="stepsContainer"></div>
-
-      <button type="button" id="addStepBtn" class="btn"
-              style="margin-top:.5rem">+ Add Step</button>
-
-      <button type="submit" class="btn"
-              style="width:100%;margin-top:1rem">Save Project</button>
-    </form>
-  </section>
+        <form id="seqForm" method="post">
+            <div id="steps-list-wrapper">
+                <div id="stepsContainer">
+                    <!-- Draggable steps are inserted here -->
+                </div>
+            </div>
+        </form>
+    </section>
 </main>
 
 <script>
-/* ---- data from Flask ---- */
-const components   = {{ components|tojson }};   // [{id,name,label,img}, …]
-const stepsData    = {{ sequence|tojson }};     // [{comp:'',label:''}, …]
-const container    = document.getElementById('stepsContainer');
-let   stepIdx      = 0;
+/* ---- Data from Flask ---- */
+const components = {{ components|tojson }};
+const stepsData = {{ sequence|tojson }};
+const container = document.getElementById('stepsContainer');
+let stepIdx = 0;
 
-/* ---- helper to build <select> options ---- */
-function compOptions(selected){
-  return `
-    <option value="" disabled ${!selected?'selected':''}>Component…</option>
-    ${components.map(c=>`
-      <option value="${c.id}" ${selected===c.id?'selected':''}>
-        ${c.name}
-      </option>`).join('')}
-  `;
+/* ---- Helper to build <select> options ---- */
+function compOptions(selected) {
+    let optionsHTML = `<option value="" disabled ${!selected ? 'selected' : ''}>Select component...</option>`;
+    components.forEach(c => {
+        const isSelected = selected === c.id ? 'selected' : '';
+        optionsHTML += `<option value="${c.id}" ${isSelected}>${c.name}</option>`;
+    });
+    return optionsHTML;
 }
 
-/* ---- build one editable row ---- */
-function createStepRow(data={comp:'',label:''}){
-  const idx = stepIdx++;
-  const row = document.createElement('div');
-  row.className='step-row'; row.dataset.idx=idx; row.draggable=true;
+/* ---- Build one editable row ---- */
+function createStepRow(data = { comp: '', label: '' }) {
+    const idx = stepIdx++;
+    const row = document.createElement('div');
+    row.className = 'step-row';
+    row.dataset.idx = idx;
+    row.draggable = true;
 
-  row.innerHTML = `
-    <span class="drag-handle">☰</span>
+    const labelValue = data.label || '';
+    const escapedLabel = labelValue.replace(/"/g, '&quot;');
 
-    <select name="comp_${idx}" class="form-field" required>
-      ${compOptions(data.comp)}
-    </select>
+    row.innerHTML = `
+        <span class="drag-handle" title="Drag to reorder">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><g><line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" /><line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" /></g></svg>
+        </span>
+        <span class="step-number">${container.children.length + 1}</span>
+        <div class="step-fields">
+            <select name="comp_${idx}" class="form-field" required>${compOptions(data.comp)}</select>
+            <input type="text" name="label_${idx}" placeholder="Instruction / note..." value="${escapedLabel}" class="form-field">
+        </div>
+        <button type="button" class="btn-icon-delete" title="Remove step">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+        </button>
+    `;
 
-    <input type="text" name="label_${idx}" placeholder="Instruction / note"
-           value="${data.label??''}" class="form-field">
+    // --- Event Listeners ---
+    row.querySelector('.btn-icon-delete').onclick = () => {
+        row.remove();
+        updateStepNumbers();
+    };
 
-    <button type="button" class="del-btn" title="Remove step">✕</button>
-  `;
+    row.addEventListener('dragstart', e => {
+        row.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', idx);
+    });
+    row.addEventListener('dragend', () => {
+        row.classList.remove('dragging');
+        updateStepNumbers();
+    });
 
-  /* delete */
-  row.querySelector('.del-btn').onclick = ()=>row.remove();
+    container.appendChild(row);
+}
 
-  /* drag-n-drop reorder */
-  row.addEventListener('dragstart', e=>e.dataTransfer.setData('text',idx));
-  row.addEventListener('dragover',  e=>e.preventDefault());
-  row.addEventListener('drop',      e=>{
+// --- Drag & Drop Logic ---
+container.addEventListener('dragover', e => {
     e.preventDefault();
-    const srcIdx = e.dataTransfer.getData('text');
-    const srcEl  = [...container.children].find(r=>r.dataset.idx===srcIdx);
-    container.insertBefore(srcEl, row);
-  });
+    const afterElement = getDragAfterElement(container, e.clientY);
+    const draggingEl = document.querySelector('.dragging');
+    if (draggingEl) {
+        if (afterElement == null) {
+            container.appendChild(draggingEl);
+        } else {
+            container.insertBefore(draggingEl, afterElement);
+        }
+    }
+});
 
-  container.appendChild(row);
+function getDragAfterElement(container, y) {
+    const draggableElements = [...container.querySelectorAll('.step-row:not(.dragging)')];
+    return draggableElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        if (offset < 0 && offset > closest.offset) {
+            return { offset: offset, element: child };
+        } else {
+            return closest;
+        }
+    }, { offset: Number.NEGATIVE_INFINITY }).element;
 }
 
-/* ---- populate existing sequence ---- */
-stepsData.forEach(createStepRow);
+// --- Utility Functions ---
+function updateStepNumbers() {
+    const rows = container.querySelectorAll('.step-row');
+    rows.forEach((r, index) => {
+        r.querySelector('.step-number').textContent = index + 1;
+    });
+}
 
-/* ---- “Add Step” button ---- */
-document.getElementById('addStepBtn').onclick = ()=>createStepRow();
+// --- Initial Population ---
+document.addEventListener('DOMContentLoaded', () => {
+    stepsData.forEach(createStepRow);
+    document.getElementById('addStepBtn').onclick = () => {
+        createStepRow();
+        const wrapper = document.getElementById('steps-list-wrapper');
+        wrapper.scrollTop = wrapper.scrollHeight;
+    };
+});
 </script>
+
 </body>
 </html>
