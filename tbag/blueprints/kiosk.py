@@ -4,10 +4,10 @@ tbag.blueprints.kiosk
 Shop-floor runtime.
 
 • Claims sessions from the queue and guides the operator step-by-step.  
-• **Before every run** forces *all* LED pins off, even if they were
-  locked by another program, then keeps exactly one LED on – the one that
-  belongs to the current component.  
-• Frees every line at start / finish / abort so no stale exports linger.  
+• **Before every run** forces *all* LED pins low – even if another
+  process has them locked – then keeps exactly one LED on (current
+  component).  
+• Frees every line at start / finish / abort, so no stale exports linger.  
 • Records NEXT / FINISH / ABORT in the database + event-log.
 """
 
@@ -15,16 +15,24 @@ from __future__ import annotations
 
 import datetime
 import sqlite3
+import time
 from typing import Dict, Optional
 
 from flask import Blueprint, abort, jsonify, render_template, request
 
 from ..config import DEVICE_ID
-from ..db     import DB_FILE, log
-from ..gpio   import LED, Button                        # mocked on non-Pi hosts
+from ..db import DB_FILE, log
+from ..gpio import LED, Button                        # mocked on non-Pi hosts
 from ..helpers.components import ALLOWED_GPIO_PINS, load_component
-from ..helpers.projects    import load_config
+from ..helpers.projects import load_config
 
+# ── try direct gpiod access (preferred) ───────────────────────────────
+try:
+    import gpiod  # type: ignore
+    _HAS_GPIOD = True
+except ImportError:
+    _HAS_GPIOD = False
+    print("[INFO] python3-gpiod not found; falling back to gpiozero reset")
 
 # ────────────────────────── GPIO helpers ──────────────────────────────
 _led_cache: Dict[int, LED] = {}      # lazy, 1 LED object per *used* pin
@@ -73,23 +81,51 @@ def _activate_led(pin: Optional[int]) -> None:
 
 def _reset_all_leds() -> None:
     """
-    Force every *allowed* GPIO line low and release it –
-    even if the pin was exported by another process.
+    Force every *allowed* GPIO line low and release it – even if another
+    userspace process owns the pin.
+
+    Preferred path: use `gpiod` (GPIO character device).  
+    Fallback: use gpiozero’s LED wrapper (may fail if line busy).
     """
-    # iterate over the fixed list rather than cache ⇢ catches stale externals
     for pin in ALLOWED_GPIO_PINS:
+        # ── gpiod (steals the line) ───────────────────────────────
+        if _HAS_GPIOD:
+            try:
+                chip = gpiod.Chip("gpiochip0")
+                line = chip.get_line(pin)
+                line.request(
+                    consumer="tbag-force-reset",
+                    type=gpiod.LINE_REQ_DIR_OUT,
+                    default_vals=[0],   # drive LOW immediately
+                )
+                time.sleep(0.005)       # 5 ms – let the LED discharge
+            except Exception as exc:
+                # fall through to gpiozero attempt
+                print(f"[WARN] gpiod reset failed for GPIO {pin}: {exc}",
+                      flush=True)
+            finally:
+                try:
+                    line.release()
+                except Exception:
+                    pass
+                try:
+                    chip.close()
+                except Exception:
+                    pass
+
+        # ── gpiozero fallback ─────────────────────────────────────
         try:
             led = LED(pin)
             led.off()
         except Exception as exc:
-            # e.g. line busy – still try to close
-            print(f"[WARN] could not reset GPIO {pin}: {exc}", flush=True)
+            print(f"[WARN] gpiozero reset failed for GPIO {pin}: {exc}",
+                  flush=True)
         finally:
             try:
                 led.close()
             except Exception:
                 pass
-            _led_cache.pop(pin, None)  # purge from cache if it was there
+            _led_cache.pop(pin, None)
 
     global _current_pin
     _current_pin = None
@@ -98,7 +134,6 @@ def _reset_all_leds() -> None:
 # ─────────────────────────── Flask BP ─────────────────────────────────
 bp = Blueprint("kiosk", __name__)
 pedal = Button(20) if hasattr(Button, "__call__") else Button()   # mock-safe
-
 
 # ── UI entry point ────────────────────────────────────────────────────
 @bp.route("/")
@@ -208,7 +243,7 @@ def progress():
 
         conn.commit()
 
-    _reset_all_leds()                           # off after run end
+    _reset_all_leds()                           # ⇠ off after run end
 
     if act == "finish":
         log("session_end",   {"session_id": sid})
