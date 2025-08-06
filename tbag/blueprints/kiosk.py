@@ -165,15 +165,18 @@ def claim():
         run = c.execute(
             """
             UPDATE runs
-               SET status     = 'active',
-                   ts_started = ?,
-                   device     = ?
-             WHERE session_id = ? AND status = 'pending'
+            SET status     = 'active',
+                ts_started = ?,
+                device     = ?
+            WHERE session_id = ?
+            AND status     = 'pending'
+            AND (device = '' OR device IS NULL OR device = ?)
             RETURNING *
             """,
             (datetime.datetime.now().isoformat(timespec="seconds"),
-             DEVICE_ID,
-             sid),
+            DEVICE_ID,
+            sid,
+            DEVICE_ID),
         ).fetchone()
 
     if run is None:
