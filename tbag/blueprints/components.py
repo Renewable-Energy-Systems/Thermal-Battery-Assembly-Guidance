@@ -31,12 +31,18 @@ bp = Blueprint("componentsBP", __name__)
 # ───────────────────────── list ─────────────────────────────────
 @bp.get("/components")
 def list_components_route():
-    """HTML overview – name only (id hidden in link)."""
     comps = []
     for p in components_list():
         cfg = load_component(p.name)
-        if cfg:                                             # guard against None
-            comps.append({"id": p.name, "name": cfg["name"]})
+        if not cfg:
+            continue
+        led_lbl = GPIO_LABELS.get(cfg["gpio"], "—")   # numeric → “L” label
+        comps.append({
+            "id": p.name,
+            "name": cfg["name"],
+            "led_label": led_lbl.replace("L", "LED ", 1),
+            "image": cfg.get("image"),
+        })
     return render_template("component_list.html", components=comps)
 
 

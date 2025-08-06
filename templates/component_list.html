@@ -4,72 +4,78 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Components · RES</title>
+
+<!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+
 <style>
-    /* ─── 0. Reset & Base ────────────────────────────────────────── */
+    /* —–––––– 0. Reset & Base –––––– */
     :root {
-        --primary: #3A5BAA; --on-primary: #FFFFFF;
-        --error: #BA1A1A; --on-error: #FFFFFF;
-        --surface: #F8F9FD; --surface-container: #FFFFFF;
-        --on-surface: #1A1C1E; --on-surface-variant: #44474F;
-        --surface-variant: #F1F3F9;
-        --outline: #DDE2EB;
-        --shadow: #000000;
-        --elev-1: 0px 1px 2px rgba(0,0,0,.08), 0px 1px 3px 1px rgba(0,0,0,.05);
-        --elev-2: 0px 1px 2px rgba(0,0,0,.08), 0px 2px 6px 2px rgba(0,0,0,.05);
-        --ripple-color-light: rgba(255, 255, 255, 0.2);
-        --ripple-color-dark: rgba(0, 0, 0, 0.1);
+        --primary:#3A5BAA;--on-primary:#FFF;
+        --error:#BA1A1A;--on-error:#FFF;
+        --surface:#F8F9FD;--surface-container:#FFF;
+        --on-surface:#1A1C1E;--on-surface-variant:#44474F;
+        --surface-variant:#F1F3F9;--outline:#DDE2EB;
+        --elev-1:0 1px 2px rgba(0,0,0,.08),0 1px 3px 1px rgba(0,0,0,.05);
+        --elev-2:0 1px 2px rgba(0,0,0,.08),0 2px 6px 2px rgba(0,0,0,.05);
+        --ripple-color-light:rgba(255,255,255,.2);
+        --ripple-color-dark:rgba(0,0,0,.1);
     }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { -webkit-font-smoothing: antialiased; }
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--surface); color: var(--on-surface); }
-    a { text-decoration: none; color: inherit; }
-    img { max-width: 100%; display: block; }
+    *,*:before,*:after{box-sizing:border-box;margin:0;padding:0}
+    html{-webkit-font-smoothing:antialiased}
+    body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--surface);color:var(--on-surface)}
+    a{text-decoration:none;color:inherit}
+    img{max-width:100%;display:block}
 
-    /* ─── 2. Shared Components ───────────────────────────────────── */
-    .appbar { display: flex; align-items: center; gap: .5rem; padding: 1rem 1.5rem; background: var(--surface-container); border-bottom: 1px solid var(--outline); }
-    .appbar img { height: 32px; }
-    .appbar h1 { font-size: 1.375rem; font-weight: 500; color: var(--on-surface); }
-    .appbar .icon-btn { display: inline-flex; justify-content: center; align-items: center; width: 40px; height: 40px; border-radius: 50%; margin-right: .5rem; transition: background-color .2s; }
-    .appbar .icon-btn:hover { background-color: rgba(0,0,0,0.05); }
-    .appbar .icon-btn svg { width: 24px; height: 24px; fill: var(--on-surface); }
-    
-    .content { padding: 1.5rem; max-width: 900px; margin: 0 auto; }
-    .card { background: var(--surface-container); border-radius: 16px; border: 1px solid var(--outline); box-shadow: var(--elev-1); }
-    .card-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; }
-    .card-title { font-size: 1.5rem; font-weight: 600; }
-    
-    .btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; padding: .625rem 1.5rem; border: none; border-radius: 100px; font-family: inherit; font-size: .875rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; cursor: pointer; transition: box-shadow .2s; position: relative; overflow: hidden; }
-    .btn-filled { background-color: var(--primary); color: var(--on-primary); box-shadow: var(--elev-1); }
-    .btn-filled:hover { box-shadow: var(--elev-2); }
-    .btn svg { width: 18px; height: 18px; fill: currentColor; }
-    .ripple { position: absolute; border-radius: 50%; transform: scale(0); animation: ripple-effect .6s linear; }
-    @keyframes ripple-effect { to { transform: scale(4); opacity: 0; } }
+    /* —–––––– 2. Shared Components –––––– */
+    .appbar{display:flex;align-items:center;gap:.5rem;padding:1rem 1.5rem;background:var(--surface-container);border-bottom:1px solid var(--outline)}
+    .appbar img{height:32px}
+    .appbar h1{font-size:1.375rem;font-weight:500;color:var(--on-surface)}
+    .icon-btn{display:inline-flex;justify-content:center;align-items:center;width:40px;height:40px;border-radius:50%;margin-right:.5rem;transition:background-color .2s}
+    .icon-btn:hover{background-color:rgba(0,0,0,.05)}
+    .icon-btn svg{width:24px;height:24px;fill:var(--on-surface)}
 
-    /* ─── 3. Data Table & List Styles ────────────────────────────── */
-    .data-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-    .data-table thead { text-align: left; }
-    .data-table th { padding: .75rem 1.5rem; color: var(--on-surface-variant); font-weight: 600; border-bottom: 1px solid var(--outline); background-color: var(--surface-variant); }
-    .data-table td { padding: .75rem 1.5rem; border-bottom: 1px solid var(--outline); }
-    .data-table tbody tr:hover { background-color: rgba(0,0,0,0.02); }
-    .data-table tbody tr:last-child td { border-bottom: none; }
-    .data-table .actions-cell { text-align: right; }
-    .data-table .actions-cell .form-actions { display: flex; justify-content: flex-end; align-items: center; gap: 0; }
-    
-    .table-icon-btn { display: inline-flex; justify-content: center; align-items: center; width: 40px; height: 40px; padding: 0; border: none; border-radius: 50%; background: none; cursor: pointer; color: var(--on-surface-variant); transition: background-color .2s; position: relative; overflow: hidden; }
-    .table-icon-btn:hover { background-color: rgba(0,0,0,0.05); }
-    .table-icon-btn.delete:hover { background-color: rgba(var(--error-rgb, 186, 26, 26), 0.08); color: var(--error); }
-    .table-icon-btn svg { width: 20px; height: 20px; fill: currentColor; }
+    .content{padding:1.5rem;max-width:900px;margin:0 auto}
+    .card{background:var(--surface-container);border-radius:16px;border:1px solid var(--outline);box-shadow:var(--elev-1)}
+    .card-header{display:flex;justify-content:space-between;align-items:center;padding:1rem 1.5rem}
+    .card-title{font-size:1.5rem;font-weight:600}
 
-    .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 3rem 1rem; color: var(--on-surface-variant); }
-    .empty-state svg { width: 48px; height: 48px; margin-bottom: 1rem; color: var(--outline); }
-    .empty-state h3 { font-size: 1.25rem; font-weight: 600; color: var(--on-surface); }
+    .btn{display:inline-flex;align-items:center;gap:.5rem;padding:.625rem 1.5rem;border:none;border-radius:100px;font-size:.875rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;position:relative;overflow:hidden;transition:box-shadow .2s}
+    .btn-filled{background:var(--primary);color:var(--on-primary);box-shadow:var(--elev-1)}
+    .btn-filled:hover{box-shadow:var(--elev-2)}
+    .btn svg{width:18px;height:18px;fill:currentColor}
 
+    .ripple{position:absolute;border-radius:50%;transform:scale(0);animation:ripple .6s linear}
+    @keyframes ripple{to{transform:scale(4);opacity:0}}
+
+    /* —–––––– 3. Table –––––– */
+    .data-table{width:100%;border-collapse:collapse;font-size:.9rem}
+    .data-table th,
+    .data-table td{padding:.75rem 1.5rem;border-bottom:1px solid var(--outline)}
+    .data-table thead{background:var(--surface-variant);text-align:left}
+    .data-table th{color:var(--on-surface-variant);font-weight:600}
+    .data-table tbody tr:hover{background:rgba(0,0,0,.02)}
+    .data-table tbody tr:last-child td{border-bottom:none}
+    .actions-cell{text-align:right}
+    .form-actions{display:flex;justify-content:flex-end;gap:0}
+
+    .table-icon-btn{display:inline-flex;justify-content:center;align-items:center;width:40px;height:40px;border:none;border-radius:50%;background:none;color:var(--on-surface-variant);cursor:pointer;overflow:hidden;position:relative;transition:background-color .2s}
+    .table-icon-btn:hover{background:rgba(0,0,0,.05)}
+    .table-icon-btn.delete:hover{background:rgba(186,26,26,.08);color:var(--error)}
+    .table-icon-btn svg{width:20px;height:20px}
+
+    /* thumbnail */
+    .thumb{width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid var(--outline)}
+
+    /* Empty-state */
+    .empty-state{display:flex;flex-direction:column;align-items:center;padding:3rem 1rem;color:var(--on-surface-variant);text-align:center}
+    .empty-state svg{width:48px;height:48px;margin-bottom:1rem;color:var(--outline)}
+    .empty-state h3{font-size:1.25rem;font-weight:600;color:var(--on-surface)}
 </style>
 </head>
+
 <body>
 <header class="appbar">
     <a href="/" class="icon-btn" aria-label="Back to Dashboard">
@@ -96,7 +102,9 @@
                 <th>#</th>
                 <th>ID</th>
                 <th>Name</th>
-                <th style="text-align: right;">Actions</th>
+                <th>LED Pin</th>
+                <th>Image</th>
+                <th style="text-align:right">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -105,12 +113,20 @@
                 <td>{{ loop.index }}</td>
                 <td>{{ c.id }}</td>
                 <td>{{ c.name }}</td>
+                <td>{{ c.led_label }}</td>
+                <td>
+                    {% if c.image %}
+                        <img src="/comp_assets/{{ c.id }}/{{ c.image }}" alt="preview" class="thumb">
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
                 <td class="actions-cell">
                     <div class="form-actions">
                         <a href="/components/{{ c.id }}/edit" class="table-icon-btn" title="Edit">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 19h1.4l8.625-8.625-1.4-1.4L5 17.6V19ZM19.3 8.925l-4.25-4.2L17.875 1.9l4.25 4.25L19.3 8.925Z"/></svg>
                         </a>
-                        <form action="/components/{{ c.id }}/delete" method="post" onsubmit="return confirm('Are you sure you want to delete component \'{{ c.name }}\'?')">
+                        <form action="/components/{{ c.id }}/delete" method="post" onsubmit="return confirm('Delete component &quot;{{ c.name }}&quot;?')">
                             <button type="submit" class="table-icon-btn delete" title="Delete">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 21q-.825 0-1.413-.588T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.588 1.413T17 21H7Z"/></svg>
                             </button>
@@ -123,33 +139,30 @@
     </table>
     {% else %}
     <div class="empty-state">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
         <h3>No components yet</h3>
-        <p>Click "New Component" to add one to the library.</p>
+        <p>Click “New Component” to add one to the library.</p>
     </div>
     {% endif %}
 </section>
 </main>
 
 <script>
-    // --- Ripple Effect for Buttons ---
-    function addRippleEffect(button) {
-        button.addEventListener('click', function(e) {
-            const circle = document.createElement('span');
-            this.appendChild(circle);
-            const d = Math.max(this.clientWidth, this.clientHeight);
-            circle.style.width = circle.style.height = d + 'px';
-            const rect = this.getBoundingClientRect();
-            circle.style.left = e.clientX - rect.left - d / 2 + 'px';
-            circle.style.top = e.clientY - rect.top - d / 2 + 'px';
-            circle.classList.add('ripple');
-            circle.style.backgroundColor = this.classList.contains('btn-filled') ? 'var(--ripple-color-light)' : 'var(--ripple-color-dark)';
-            setTimeout(() => circle.remove(), 600);
+    // Ripple
+    function addRipple(btn){
+        btn.addEventListener('click',e=>{
+            const r=document.createElement('span');btn.appendChild(r);
+            const d=Math.max(btn.clientWidth,btn.clientHeight);
+            r.style.width=r.style.height=d+'px';
+            const rect=btn.getBoundingClientRect();
+            r.style.left=e.clientX-rect.left-d/2+'px';
+            r.style.top=e.clientY-rect.top-d/2+'px';
+            r.classList.add('ripple');
+            r.style.backgroundColor=btn.classList.contains('btn-filled')?'var(--ripple-color-light)':'var(--ripple-color-dark)';
+            setTimeout(()=>r.remove(),600);
         });
     }
-    // Apply to all buttons on the page
-    document.querySelectorAll('.btn, .table-icon-btn').forEach(addRippleEffect);
+    document.querySelectorAll('.btn,.table-icon-btn').forEach(addRipple);
 </script>
-
 </body>
 </html>
