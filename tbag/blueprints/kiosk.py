@@ -3,11 +3,12 @@ tbag.blueprints.kiosk
 ─────────────────────
 Shop-floor runtime.
 
-* Claims sessions from the queue and guides the operator step-by-step.
-* Keeps exactly **one** GPIO LED on – the one that belongs to the
-  current component – and turns the previous one off.
-* Frees every line at start / finish / abort so no stale exports linger.
-* Records NEXT / FINISH / ABORT in the database + event-log.
+• Claims sessions from the queue and guides the operator step-by-step.  
+• **Before every run** forces *all* LED pins off, even if they were
+  locked by another program, then keeps exactly one LED on – the one that
+  belongs to the current component.  
+• Frees every line at start / finish / abort so no stale exports linger.  
+• Records NEXT / FINISH / ABORT in the database + event-log.
 """
 
 from __future__ import annotations
@@ -20,8 +21,8 @@ from flask import Blueprint, abort, jsonify, render_template, request
 
 from ..config import DEVICE_ID
 from ..db     import DB_FILE, log
-from ..gpio   import LED, Button               # mocked on non-Pi hosts
-from ..helpers.components import load_component
+from ..gpio   import LED, Button                        # mocked on non-Pi hosts
+from ..helpers.components import ALLOWED_GPIO_PINS, load_component
 from ..helpers.projects    import load_config
 
 
@@ -44,11 +45,10 @@ def _activate_led(pin: Optional[int]) -> None:
     """
     global _current_pin
 
-    # nothing to do?
     if pin == _current_pin:
-        return
+        return  # nothing to do
 
-    # ── turn previous off ────────────────────────────────────────────
+    # ── turn previous off ──────────────────────────────────────────
     if _current_pin is not None:
         try:
             _led(_current_pin).off()
@@ -58,7 +58,7 @@ def _activate_led(pin: Optional[int]) -> None:
 
     _current_pin = None  # reset even if new pin fails
 
-    # ── turn new one on ──────────────────────────────────────────────
+    # ── turn new one on ────────────────────────────────────────────
     if pin is not None:
         try:
             _led(pin).on()
@@ -72,13 +72,24 @@ def _activate_led(pin: Optional[int]) -> None:
 
 
 def _reset_all_leds() -> None:
-    """Turn *every* cached LED off & free the lines."""
-    for p, led in list(_led_cache.items()):
+    """
+    Force every *allowed* GPIO line low and release it –
+    even if the pin was exported by another process.
+    """
+    # iterate over the fixed list rather than cache ⇢ catches stale externals
+    for pin in ALLOWED_GPIO_PINS:
         try:
+            led = LED(pin)
             led.off()
+        except Exception as exc:
+            # e.g. line busy – still try to close
+            print(f"[WARN] could not reset GPIO {pin}: {exc}", flush=True)
         finally:
-            led.close()
-        _led_cache.pop(p, None)
+            try:
+                led.close()
+            except Exception:
+                pass
+            _led_cache.pop(pin, None)  # purge from cache if it was there
 
     global _current_pin
     _current_pin = None
@@ -133,7 +144,7 @@ def claim():
     if run is None:
         abort(409, "session already claimed or not found")
 
-    _reset_all_leds()                           # start clean GPIO state
+    _reset_all_leds()                          # ⇠ force-clean GPIO state
     cfg = load_config(run["project"]) or {"sequence": []}
 
     return jsonify(status="claimed",
@@ -197,8 +208,7 @@ def progress():
 
         conn.commit()
 
-    # turn every LED off once the run ends
-    _reset_all_leds()
+    _reset_all_leds()                           # off after run end
 
     if act == "finish":
         log("session_end",   {"session_id": sid})
