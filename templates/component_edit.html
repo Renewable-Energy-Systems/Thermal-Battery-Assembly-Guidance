@@ -95,41 +95,54 @@
         <h2>Properties</h2>
         <form method="post" enctype="multipart/form-data" novalidate>
             <div class="form-grid">
-                
                 <div>
+                    <!-- Component name -->
                     <div class="form-group">
                         <div class="form-field-filled">
-                            <input type="text" id="comp_name" name="comp_name" required maxlength="40" value="{{ comp.name }}" placeholder=" " class="form-input">
+                            <input type="text" id="comp_name" name="comp_name"
+                                   required maxlength="40" value="{{ comp.name }}"
+                                   placeholder=" " class="form-input">
                             <label for="comp_name" class="form-label">Component Name</label>
                         </div>
                     </div>
 
+                    <!-- LED pin picker -->
                     <div class="form-group">
                         <div class="form-field-filled">
-                           <select name="gpio" id="gpio" required class="form-input">
-                                {% for pin in gpio_choices %}
-                                    <option value="{{ pin }}" {% if comp and pin == comp.gpio %}selected{% endif %}>
-                                        {{ pin }}
+                            <select name="gpio" id="gpio" required class="form-input">
+                                {% for pin, label in gpio_choices %}
+                                    <option value="{{ pin }}"
+                                            {% if comp and pin == comp.gpio %}selected{% endif %}>
+                                        {{ label|replace('L', 'LED ', 1) }} — GPIO{{ pin }}
                                     </option>
                                 {% endfor %}
                             </select>
-                            <label for="gpio" class="form-label">GPIO Pin</label>
+                            <label for="gpio" class="form-label">LED Pin</label>
                         </div>
                     </div>
                 </div>
 
+                <!-- Image column (unchanged) -->
                 <div>
                     {% if comp.image %}
                     <div class="image-preview-container">
                         <p>Current Image</p>
-                        <img src="/comp_assets/{{ cid }}/{{ comp.image }}" alt="Current component preview" class="image-preview">
+                        <img src="/comp_assets/{{ cid }}/{{ comp.image }}"
+                             alt="Current component preview" class="image-preview">
                     </div>
                     {% endif %}
-    
+
                     <div class="file-input-wrapper">
-                        <input type="file" id="comp_img" name="comp_img" accept="image/*" class="file-input-native">
+                        <input type="file" id="comp_img" name="comp_img"
+                               accept="image/*" class="file-input-native">
                         <label for="comp_img" class="btn btn-outlined">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6zM8 15.01l1.41 1.41L11 14.84V19h2v-4.16l1.59 1.59L16 15.01 12.01 11z"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px"
+                                 viewBox="0 0 24 24" width="24px">
+                                 <path d="M0 0h24v24H0V0z" fill="none"/>
+                                 <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6
+                                          20V4h7v5h5v11H6zM8 15.01l1.41 1.41L11 14.84V19h2v-4.16l1.59
+                                          1.59L16 15.01 12.01 11z"/>
+                            </svg>
                             <span id="file-name-display">Replace Preview Image</span>
                         </label>
                     </div>
@@ -137,7 +150,11 @@
             </div>
 
             <button class="btn btn-filled" type="submit" style="margin-top: 1.5rem;">
-                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm2 16H5V5h11.17L19 7.83V19zM12 18c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3-3zM6 6h9v4H6z"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm2
+                             16H5V5h11.17L19 7.83V19zM12 18c-1.66 0-3-1.34-3-3s1.34-3 3-3
+                             3 1.34 3 3-1.34 3-3 3zM6 6h9v4H6z"/>
+                </svg>
                 <span>Save Changes</span>
             </button>
         </form>

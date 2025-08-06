@@ -4,8 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Create Component · RES</title>
+
+  <!-- fonts / icons -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
   <style>
     :root {
       --md-sys-color-primary: #1A237E;
@@ -30,7 +33,6 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.05);
       display: flex;
       flex-direction: column;
-      align-items: stretch;
     }
     .panel-header {
       display: flex;
@@ -38,10 +40,8 @@
       gap: 1rem;
       margin-bottom: 2rem;
     }
-    .logo {
-      height: 40px;
-    }
-    .header-text h1 {
+    .logo { height: 40px; }
+    .panel-header h1 {
       margin: 0;
       font-size: 1.5rem;
       font-weight: 700;
@@ -66,16 +66,16 @@
     .btn {
       padding: 0.9rem;
       font-weight: 600;
-      color: white;
+      color: #fff;
       background-color: var(--md-sys-color-primary);
       border: none;
       border-radius: 8px;
       cursor: pointer;
       margin-top: 0.5rem;
     }
-    .btn:hover {
-      background-color: #0D1333;
-    }
+    .btn:hover { background-color: #0D1333; }
+
+    /* drag-&-drop image zone */
     .file-drop-zone {
       margin-top: 2rem;
       border: 2px dashed #9fa8da;
@@ -109,42 +109,54 @@
       height: 36px;
       animation: spin 1s linear infinite;
     }
-    @keyframes spin {
-      100% { transform: rotate(360deg); }
-    }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
   </style>
 </head>
+
 <body>
   <div class="container">
+    <!-- header -->
     <div class="panel-header">
       <img src="/static/logo.png" alt="RES Logo" class="logo">
-      <div class="header-text">
-        <h1>New Component</h1>
-      </div>
+      <h1>New Component</h1>
     </div>
+
+    <!-- form -->
     <form method="post" enctype="multipart/form-data" class="component-form">
+      <!-- component name -->
       <div class="form-field">
         <label for="comp_name">Component Name</label>
-        <input type="text" id="comp_name" name="comp_name" required maxlength="40" placeholder="Enter component name">
+        <input type="text" id="comp_name" name="comp_name"
+               maxlength="40" required placeholder="Enter component name">
       </div>
+
+      <!-- LED pin picker -->
       <div class="form-field">
-        <label for="gpio">GPIO Pin</label>
+        <label for="gpio">LED Pin</label>
         <select name="gpio" id="gpio" required>
-          <option value="" disabled selected>Select a GPIO Pin</option>
-          {% for pin in gpio_choices %}
-            <option value="{{ pin }}">{{ pin }}</option>
+          <option value="" disabled selected>Select an LED Pin</option>
+          {% for pin, label in gpio_choices %}
+            <option value="{{ pin }}">
+              {{ label|replace('L', 'LED ', 1) }} — GPIO{{ pin }}
+            </option>
           {% endfor %}
         </select>
       </div>
+
       <button class="btn" type="submit">Create Component</button>
     </form>
 
+    <!-- image upload / analysis -->
     <div class="file-drop-zone" id="file-drop-zone">
       <label for="comp_img" class="sr-only">Upload Component Image</label>
-      <input type="file" id="comp_img" name="comp_img" accept="image/*" class="file-input-native" aria-label="Component image upload input">
+      <input type="file" id="comp_img" name="comp_img"
+             accept="image/*" class="file-input-native"
+             aria-label="Component image upload input">
+
       <span class="material-icons" style="font-size: 40px; color: gray;">image</span>
-      <p>Drag & drop an image here, or click to select</p>
-      <img id="image-preview" class="image-preview" src="" alt="Component Preview">
+      <p>Drag &amp; drop an image here, or click to select</p>
+
+      <img id="image-preview" class="image-preview" alt="Component Preview">
       <div class="analysis-overlay" id="analysis-overlay">
         <div class="spinner" id="spinner"></div>
         <button type="button" id="analyze-image-btn" class="btn">
