@@ -3,79 +3,254 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Battery Projects · RES</title>
-<link rel="stylesheet" href="/static/style.css" />
+<title>Project Library · RES</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  .tbl               { width:100%; border-collapse:collapse; font-size:0.95rem; }
-  .tbl th, .tbl td   { padding:0.55rem 0.8rem; }
-  .tbl thead         { background:var(--surface-variant); }
-  .tbl tbody tr:nth-child(even){ background:#f7f8ff; }
+    /* ─── 0. Base & M3 Palette ─────────────────────────────────── */
+    :root {
+        --primary:#3A5BAA;--on-primary:#FFF;
+        --primary-container:#D8E2FF;--on-primary-container:#001849;
+        --error:#BA1A1A;--on-error:#FFF;
+        --surface:#F8F9FD;--surface-container:#FFF;
+        --on-surface:#1A1C1E;--on-surface-variant:#44474F;
+        --surface-variant:#F1F3F9;--outline:#DDE2EB;
+        --elev-1:0 1px 2px rgba(0,0,0,.08),0 1px 3px 1px rgba(0,0,0,.05);
+        --elev-2:0 1px 2px rgba(0,0,0,.08),0 2px 6px 2px rgba(0,0,0,.05);
+    }
+    *,*:before,*:after{box-sizing:border-box;margin:0;padding:0}
+    html{-webkit-font-smoothing:antialiased}
+    body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--surface);color:var(--on-surface)}
+    a{text-decoration:none;color:inherit}
 
-  .action-btn        { padding:0.35rem 0.9rem; font-size:0.85rem; }
-  .del-btn           { background:#d32f2f; color:#fff; }
-  .topbar            { display:flex; justify-content:space-between; align-items:center; }
+    /* ─── 2. Shared Components ───────────────────────────────────── */
+    .appbar{display:flex;align-items:center;gap:1rem;padding:1rem 1.5rem;background:var(--surface-container);border-bottom:1px solid var(--outline)}
+    .appbar img{height:32px;}
+    .appbar h1{font-size:1.375rem;font-weight:500;color:var(--on-surface)}
+    .content{padding:1.5rem;max-width:1100px;margin:0 auto}
+    .card{background:var(--surface-container);border-radius:16px;border:1px solid var(--outline);box-shadow:var(--elev-1); overflow: hidden;}
+    .card-header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1rem;padding:1rem 1.5rem;}
+    .card-title{font-size:1.5rem;font-weight:600}
+    .btn{display:inline-flex;align-items:center;gap:.5rem;padding:.625rem 1.5rem;border:none;border-radius:100px;font-size:.875rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;transition:all .2s}
+    .btn-filled{background:var(--primary);color:var(--on-primary);box-shadow:var(--elev-1)}
+    .btn-filled:hover{box-shadow:var(--elev-2)}
+    .btn-tonal{background:var(--primary-container);color:var(--on-primary-container)}
+    .btn svg{width:18px;height:18px;fill:currentColor}
+
+    /* ─── 3. Search & Table Controls ─────────────────────────────── */
+    .controls-group{display:flex;align-items:center;gap:.75rem}
+    .search-wrapper{position:relative}
+    .search-wrapper svg{position:absolute;left:1rem;top:50%;transform:translateY(-50%);width:20px;height:20px;fill:var(--on-surface-variant)}
+    .search-input{font-family:inherit;font-size:1rem;padding:.75rem 1rem .75rem 3rem;border:1px solid var(--outline);border-radius:100px;background:var(--surface);min-width:300px}
+    .search-input:focus{outline:2px solid var(--primary);border-color:var(--primary)}
+
+    /* ─── 4. Data Table Styles ───────────────────────────────────── */
+    .table-wrapper{overflow-x:auto; border-top: 1px solid var(--outline);}
+    .data-table{width:100%;border-collapse:collapse;font-size:.9rem}
+    .data-table th, .data-table td{padding:.75rem 1.5rem;border-bottom:1px solid var(--outline);text-align:left}
+    .data-table thead{background:var(--surface-variant)}
+    .data-table th{color:var(--on-surface-variant);font-weight:600;cursor:pointer;user-select:none;white-space:nowrap}
+    .data-table th .sort-icon{display:inline-block;width:1em;height:1em;margin-left:.5em;opacity:.4;vertical-align:middle;transition:all .2s}
+    .data-table th.sorted .sort-icon{opacity:1;color:var(--primary)}
+    .data-table tbody tr:hover{background:rgba(58, 91, 170, 0.04)}
+    .data-table tbody tr:last-child td{border-bottom:none}
+    .actions-cell{text-align:right;white-space:nowrap}
+    .table-icon-btn{display:inline-flex;justify-content:center;align-items:center;width:40px;height:40px;border:none;border-radius:50%;background:none;color:var(--on-surface-variant);cursor:pointer;transition:background-color .2s}
+    .table-icon-btn:hover{background:rgba(0,0,0,.05)}
+    .table-icon-btn.delete:hover{background:rgba(186,26,26,.08);color:var(--error)}
+    .table-icon-btn svg{width:20px;height:20px}
+
+    /* ─── 5. Pagination ──────────────────────────────────────────── */
+    .pagination-footer{display:flex;justify-content:space-between;align-items:center;padding:1rem 1.5rem;border-top:1px solid var(--outline)}
+    .pagination-footer .btn{padding:.5rem 1rem;text-transform:none}
 </style>
 </head>
 <body>
-<!-- ───── App-bar ───── -->
 <header class="appbar">
-  <img src="/static/logo.png" alt="RES logo" />
-  <h1>Battery Projects</h1>
+    <a href="/admin"><img src="/static/logo.png" alt="RES logo" /></a>
+    <h1>Project Library</h1>
 </header>
 
 <main class="content">
-<section class="card" style="min-width:420px">
-  <div class="topbar">
-    <h2 style="margin:0">Project Library</h2>
-    <div style="display:flex;gap:0.5rem">
-      <a href="/admin"         class="btn" style="padding:0.5rem 1rem;font-size:0.9rem;background:var(--primary-light)">← Back</a>
-      <a href="/projects/new"  class="btn" style="padding:0.5rem 1rem;font-size:0.9rem">+ New</a>
+<section class="card">
+    <div class="card-header">
+        <h2 class="card-title">Projects</h2>
+        <div class="controls-group">
+            <div class="search-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                <input type="search" id="searchInput" class="search-input" placeholder="Search by ID or Name...">
+            </div>
+            <a href="/admin" class="btn btn-tonal">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20L4 12l8-8 1.425 1.4-5.6 5.6H20v2H7.825l5.6 5.6Z"/></svg>
+                <span>Dashboard</span>
+            </a>
+            <a href="/projects/new" class="btn btn-filled">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11 19v-6H5v-2h6V5h2v6h6v2h-6v6Z"/></svg>
+                <span>New Project</span>
+            </a>
+        </div>
     </div>
-  </div>
 
-  {% if projects %}
-  <table class="tbl" style="margin-top:1rem">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>ID</th>
-        <th>Name</th>
-        <th style="text-align:center">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-    {% for p in projects %}
-      <tr>
-        <td>{{ loop.index }}</td>
-        <td>{{ p.id }}</td>
-        <td>{{ p.name }}</td>
-        <td style="text-align:center">
-          <a href="/projects/{{ p.id }}/edit" class="btn action-btn">Edit</a>
-
-          <!-- Delete (POST) -->
-          <form action="/projects/{{ p.id }}/delete" method="post"
-                class="del-form" style="display:inline">
-            <button type="submit" class="btn action-btn del-btn">Delete</button>
-          </form>
-        </td>
-      </tr>
-    {% endfor %}
-    </tbody>
-  </table>
-  {% else %}
-    <p style="margin-top:1.5rem">No projects found. Click <strong>+ New</strong> to create one.</p>
-  {% endif %}
+    <div class="table-wrapper">
+        <table class="data-table" id="projectsTable">
+            <thead>
+                <tr>
+                    <th style="width:1%">#</th>
+                    <th data-sort="id">ID <span class="sort-icon"></span></th>
+                    <th data-sort="name">Name <span class="sort-icon"></span></th>
+                    <th data-sort="description">Description <span class="sort-icon"></span></th>
+                    <th style="text-align:right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+        </table>
+    </div>
+    <div class="pagination-footer">
+        <span id="pageInfo"></span>
+        <div class="controls-group">
+            <button id="prevBtn" class="btn btn-tonal">Previous</button>
+            <button id="nextBtn" class="btn btn-tonal">Next</button>
+        </div>
+    </div>
 </section>
 </main>
 
 <script>
-/* confirm-before-delete guard */
-document.querySelectorAll('.del-form').forEach(frm => {
-  frm.addEventListener('submit', e => {
-    if(!confirm('Delete this project and all its images?\nThis cannot be undone.')){
-      e.preventDefault();
-    }
-  });
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Data & State
+    const projects = [
+        {% for p in projects %}
+        {
+            id: "{{ p.id }}",
+            name: "{{ p.name }}",
+            description: "{{ p.description or '' }}"
+        },
+        {% endfor %}
+    ];
+
+    let currentPage = 1;
+    const rowsPerPage = 10;
+    let filteredProjects = [...projects];
+    let sortState = { column: 'name', direction: 'asc' };
+
+    // 2. DOM Elements
+    const tableBody = document.querySelector('#projectsTable tbody');
+    const searchInput = document.getElementById('searchInput');
+    const pageInfo = document.getElementById('pageInfo');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const headers = document.querySelectorAll('#projectsTable th[data-sort]');
+
+    // 3. Rendering Functions
+    const renderTable = () => {
+        tableBody.innerHTML = '';
+        const start = (currentPage - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+        const paginatedProjects = filteredProjects.slice(start, end);
+
+        if (paginatedProjects.length === 0) {
+            const emptyHtml = `<tr><td colspan="5" style="text-align:center;padding:3rem;">
+                <p style="font-weight:600;color:var(--on-surface);">No projects found</p>
+                <p style="color:var(--on-surface-variant);">Try adjusting your search or add a new project.</p>
+            </td></tr>`;
+            tableBody.innerHTML = emptyHtml;
+        } else {
+            paginatedProjects.forEach((p, index) => {
+                const row = `
+                    <tr>
+                        <td>${start + index + 1}</td>
+                        <td><code>${p.id}</code></td>
+                        <td>${p.name}</td>
+                        <td>${p.description || '–'}</td>
+                        <td class="actions-cell">
+                            <a href="/projects/${p.id}/edit" class="table-icon-btn" title="Edit">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5 19h1.4l8.625-8.625-1.4-1.4L5 17.6V19ZM19.3 8.925l-4.25-4.2L17.875 1.9l4.25 4.25L19.3 8.925Z"/></svg>
+                            </a>
+                            <form action="/projects/${p.id}/delete" method="post" onsubmit="return confirm('Delete project &quot;${p.name}&quot;?')">
+                                <button type="submit" class="table-icon-btn delete" title="Delete">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M7 21q-.825 0-1.413-.588T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.588 1.413T17 21H7Z"/></svg>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                `;
+                tableBody.insertAdjacentHTML('beforeend', row);
+            });
+        }
+        renderPagination();
+    };
+
+    const renderPagination = () => {
+        const totalPages = Math.ceil(filteredProjects.length / rowsPerPage);
+        const startItem = filteredProjects.length > 0 ? (currentPage - 1) * rowsPerPage + 1 : 0;
+        const endItem = Math.min(startItem + rowsPerPage - 1, filteredProjects.length);
+        
+        pageInfo.textContent = `Showing ${startItem}–${endItem} of ${filteredProjects.length}`;
+        prevBtn.disabled = currentPage === 1;
+        nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+    };
+    
+    const updateSortIcons = () => {
+        headers.forEach(h => {
+            const icon = h.querySelector('.sort-icon');
+            h.classList.remove('sorted');
+            icon.innerHTML = '↕';
+            if (h.dataset.sort === sortState.column) {
+                h.classList.add('sorted');
+                icon.innerHTML = sortState.direction === 'asc' ? '▲' : '▼';
+            }
+        });
+    };
+
+    // 4. Event Handlers
+    const handleSearch = () => {
+        const query = searchInput.value.toLowerCase();
+        filteredProjects = projects.filter(p => 
+            p.name.toLowerCase().includes(query) ||
+            p.id.toLowerCase().includes(query) ||
+            p.description.toLowerCase().includes(query)
+        );
+        currentPage = 1;
+        applySort();
+    };
+
+    const applySort = () => {
+        const { column, direction } = sortState;
+        filteredProjects.sort((a, b) => {
+            const valA = a[column] || '';
+            const valB = b[column] || '';
+            if (valA < valB) return direction === 'asc' ? -1 : 1;
+            if (valA > valB) return direction === 'asc' ? 1 : -1;
+            return 0;
+        });
+        updateSortIcons();
+        renderTable();
+    };
+
+    headers.forEach(header => {
+        header.addEventListener('click', () => {
+            const column = header.dataset.sort;
+            if (sortState.column === column) {
+                sortState.direction = sortState.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortState.column = column;
+                sortState.direction = 'asc';
+            }
+            applySort();
+        });
+    });
+
+    searchInput.addEventListener('input', handleSearch);
+    prevBtn.addEventListener('click', () => { if(currentPage > 1) { currentPage--; renderTable(); } });
+    nextBtn.addEventListener('click', () => {
+        const totalPages = Math.ceil(filteredProjects.length / rowsPerPage);
+        if(currentPage < totalPages) { currentPage++; renderTable(); }
+    });
+
+    // 5. Initial Render
+    applySort();
 });
 </script>
 </body>
