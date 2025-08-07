@@ -139,5 +139,29 @@
     }
     addRippleEffect(finishBtn);
 </script>
+<script>
+    // Foot pedal / space bar listener
+document.addEventListener('DOMContentLoaded', () => {
+  let spacePressStart = null;
+  let spaceHoldTimer  = null;
+  document.addEventListener('keydown', e => {
+    if (e.code === 'Space' && !spacePressStart) {
+      spacePressStart = Date.now();
+      spaceHoldTimer = setTimeout(() => {
+        if (stopBtn && !stopBtn.disabled && !stopBtn.hidden) stopBtn.click();
+      }, 10000);
+    }
+  });
+  document.addEventListener('keyup', e => {
+    if (e.code === 'Space') {
+      if ((Date.now() - spacePressStart) < 10000) {
+        if (finishBtn && !finishBtn.disabled && !finishBtn.hidden) finishBtn.click();
+      }
+      clearTimeout(spaceHoldTimer);
+      spacePressStart = null;
+    }
+  });
+});
+</script>
 </body>
 </html>
