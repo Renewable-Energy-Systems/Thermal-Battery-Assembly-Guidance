@@ -1,10 +1,10 @@
 # Thermal-Battery Assembly Guidance (**TBAG**)
 
-End-to-end “shop-floor” guidance system for assembling molten-salt
-thermal batteries.  
-Runs on a **Raspberry Pi** inside the glove-box, drives coloured LEDs to
-indicate the *current* component, accepts hands-free *Next / Abort*
-commands via a USB foot-switch and records every session in an SQLite
+End‑to‑end “shop‑floor” guidance system for assembling molten‑salt
+thermal batteries.
+Runs on a **Raspberry Pi** inside the glove‑box, drives coloured LEDs to
+indicate the *current* component, accepts hands‑free *Next / Abort*
+commands via a USB foot‑switch and records every session in an SQLite
 log that supervisors can review from any browser.
 
 ```
@@ -22,19 +22,20 @@ log that supervisors can review from any browser.
 
 ---
 
-## ✨  Key features
-| Area | Highlights |
-|------|------------|
-| **Operator UI** | • Kiosk-style single page<br>• Live component preview + LED guidance<br>• Foot-switch (USB) = *space bar*<br>• Last-step review & summary |
-| **Supervisor UI** | • Admin dashboard (sessions, projects, components)<br>• Live queue manager<br>• XLSX export |
-| **Hardware** | • Any RPi (tested on 4 & 3B+)<br>• Simple 3 mm LEDs + 330 Ω resistors<br>• Optional industrial USB foot pedal |
-| **Backend** | • Flask / Gunicorn<br>• SQLite DB (no server needed)<br>• REST-ish JSON endpoints |
-| **Remote access** | • Cloudflare Tunnel recipe included *(optional)* |
-| **Deployment** | • `systemd` service → auto-start & watchdog |
+## ✨  Key features
+
+| Area              | Highlights                                                                                                                                |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| **Operator UI**   | • Kiosk‑style single page<br>• Live component preview + LED guidance<br>• Foot‑switch (USB) = *space bar*<br>• Last‑step review & summary |
+| **Supervisor UI** | • Admin dashboard (sessions, projects, components)<br>• Live queue manager<br>• XLSX export                                               |
+| **Hardware**      | • Any RPi (tested on 4 & 3B+)<br>• Simple 3 mm LEDs + 330 Ω resistors<br>• Optional industrial USB foot pedal                             |
+| **Backend**       | • Flask / Gunicorn<br>• SQLite DB (no server needed)<br>• REST‑ish JSON endpoints                                                         |
+| **Remote access** | • Cloudflare Tunnel recipe included *(optional)*                                                                                          |
+| **Deployment**    | • `systemd` service → auto‑start & watchdog                                                                                               |
 
 ---
 
-## 🛠️  Quick-start (dev / PC)
+## 🛠️  Quick‑start (dev / PC)
 
 ```bash
 git clone https://github.com/Renewable-Energy-Systems/Thermal-Battery-Assembly-Guidance.git tbag
@@ -45,20 +46,20 @@ export FLASK_APP=app.py
 flask run
 ```
 
-Browse to **http://localhost:5000** and start adding
-**Projects → Components → Sessions**.
+Browse to **[http://localhost:5000](http://localhost:5000)** and start adding
+**Projects → Components → Sessions**.
 
 ---
 
-## 🐙  Production recipe (Raspberry Pi)
+## 🐙  Production recipe (Raspberry Pi)
 
-1. **Prepare OS & deps**
+1. **Prepare OS & deps**
 
    ```bash
    sudo apt update && sudo apt install git python3-venv libgpiod2
    ```
 
-2. **Clone + set-up venv**
+2. **Clone + set‑up venv**
 
    ```bash
    git clone https://github.com/Renewable-Energy-Systems/Thermal-Battery-Assembly-Guidance.git ~/ags
@@ -96,24 +97,24 @@ Browse to **http://localhost:5000** and start adding
 
 4. **Wire LEDs**
 
-   | GPIO | Colour | Component |
-   |------|--------|-----------|
-   | 17   | Red    | Anode     |
-   |  4   | Blue   | Cathode   |
+   | GPIO | Colour | Component   |
+   | ---- | ------ | ----------- |
+   | 17   | Red    | Anode       |
+   | 4    | Blue   | Cathode     |
    | 25   | Green  | Electrolyte |
-   | …    | …      | …         |
+   | …    | …      | …           |
 
-   *330 Ω resistor → LED → GND.  
+   *330 Ω resistor → LED → GND.
    Pin numbers are configured per component in
-   `components/&lt;cid&gt;/config.json`.*
+   `components/<cid>/config.json`.*
 
-5. **USB foot-switch**
+5. **USB foot‑switch**
 
-   *Any* programmable HID pedal works.  
-   Program it to emit a **space bar**:
+   *Any* programmable HID pedal works.
+   Program it to emit a **space bar**:
 
-   * short press &lt; 10 s → “Next / Review”  
-   * long  press ≥ 10 s → “Force Stop”
+   * short press < 10 s → “Next / Review”
+   * long  press ≥ 10 s → “Force Stop”
 
 6. **(Optional) expose over the internet**
 
@@ -145,64 +146,151 @@ Browse to **http://localhost:5000** and start adding
 
 ---
 
-## 📂  Project layout
+## 📂  Project layout
 
 ```
 ags/
 ├─ app.py                  ← Flask bootstrap
 ├─ tbag/
-│  ├─ blueprints/          ← UI + API endpoints
-│  ├─ helpers/             ← tiny pure-Python libs
-│  ├─ gpio.py              ← LED / Button wrapper (mock-friendly)
-│  ├─ db.py                ← SQLite migrations & helpers
+│  ├─ blueprints/          ← UI + API endpoints
+│  ├─ helpers/             ← tiny pure‑Python libs
+│  ├─ gpio.py              ← LED / Button wrapper (mock‑friendly)
+│  ├─ db.py                ← SQLite migrations & helpers
 │  └─ config.py            ← secrets, device ID, build stamp …
-├─ components/             ← user-added component defs
+├─ components/             ← user‑added component defs
 ├─ projects/               ← project JSONs (sequences)
-├─ static/                 ← CSS / JS / logo
+├─ static/                 ← CSS / JS / logo
 └─ templates/              ← Jinja2 pages
 ```
 
 ---
 
-## 🔧  Configuration
+## 🔧  Configuration
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `DEVICE_ID` | `glovebox-pi` | Written into each DB record |
-| `SECRET`    | generated UUID | Flask session key |
-| `GPIOZERO_PIN_FACTORY` | `lgpio` | Use [`lgpio`](https://github.com/gpiozero/lgpio) backend (fast, no sudo) |
+| Variable               | Default        | Description                                                              |
+| ---------------------- | -------------- | ------------------------------------------------------------------------ |
+| `DEVICE_ID`            | `glovebox‑pi`  | Written into each DB record                                              |
+| `SECRET`               | generated UUID | Flask session key                                                        |
+| `GPIOZERO_PIN_FACTORY` | `lgpio`        | Use [`lgpio`](https://github.com/gpiozero/lgpio) backend (fast, no sudo) |
 
 Define via `.env` or directly inside your `systemd` unit.
 
 ---
 
-## 👟  Foot-switch logic (JS)
+## 👟  Foot‑switch logic (JS)
 
-| Action | Condition | Key | Effect |
-|--------|-----------|-----|--------|
-| `NEXT / REVIEW` | press ≤ 10 s | **space** *keyup* | `/api/progress` `next` |
-| `FORCE STOP`    | hold ≥ 10 s | **space** held   | Clicks *Stop* → `/api/progress` `abort` |
+| Action          | Condition    | Key               | Effect                                  |
+| --------------- | ------------ | ----------------- | --------------------------------------- |
+| `NEXT / REVIEW` | press ≤ 10 s | **space** *keyup* | `/api/progress` `next`                  |
+| `FORCE STOP`    | hold ≥ 10 s  | **space** held    | Clicks *Stop* → `/api/progress` `abort` |
 
-Implementation: [`static/script.js`](static/script.js) (v4.6).
-
----
-
-## 🚑  Basic troubleshooting
-
-| Symptom | Check |
-|---------|-------|
-| **LED stays on / GPIO busy** | `_reset_all_leds()` runs every step. Still stuck? `sudo lgpioreset`. |
-| **Summary page 404** | Ensure `/api/progress` sends `"finish"` **before** redirect. |
-| **Tunnel works but local 192.168 … preferred** | Operators bookmark `http://&lt;Pi-IP&gt;:8000`; public URL is fallback. |
+Implementation: [`static/script.js`](static/script.js) (v4.6).
 
 ---
 
-## 📜  License
+## 🚑  Basic troubleshooting
 
-MIT © Renewable Energy Systems 2025 • Contributions welcome!
+| Symptom                                        | Check                                                                   |
+| ---------------------------------------------- | ----------------------------------------------------------------------- |
+| **LED stays on / GPIO busy**                   | `_reset_all_leds()` runs every step.<br>Still stuck? `sudo lgpioreset`. |
+| **Summary page 404**                           | Ensure `/api/progress` sends `"finish"` **before** redirect.            |
+| **Tunnel works but local 192.168 … preferred** | Operators bookmark `http://<Pi‑IP>:8000`; public URL is fallback.       |
+
+---
+
+## 🗄️  Automated nightly backups *(DB + components + projects)*
+
+A lightweight script runs as a **systemd timer** and ships the following
+artefacts to OneDrive (folder `tbag-backups/`):
+
+| File               | Contents                 | Example name                            |
+| ------------------ | ------------------------ | --------------------------------------- |
+| SQLite snapshot    | `events.db` (consistent) | `tbag_2025-08-07_16-34_31.sqlite3.gz`   |
+| Components tarball | `tbag/components/`       | `components_2025-08-07_16-34_31.tar.gz` |
+| Projects tarball   | `tbag/projects/`         | `projects_2025-08-07_16-34_31.tar.gz`   |
+
+```bash
+# /usr/local/bin/backup-tbag.sh (excerpt)
+DB_SRC="/home/res-stack/ags/events.db"
+COMPONENTS_DIR="/home/res-stack/ags/tbag/components"
+PROJECTS_DIR="/home/res-stack/ags/tbag/projects"
+TMP_DIR="/tmp/tbag-backup"
+REMOTE="onedrive:tbag-backups"
+
+# ① SQLite .backup → gzip
+# ② tar -czf components_…  projects_…
+# ③ rclone copy --min-age 1m "$TMP_DIR" "$REMOTE"
+```
+
+**Timer** (`/etc/systemd/system/tbag-backup.timer`)
+
+```ini
+[Timer]
+OnCalendar=*:03:15
+RandomizedDelaySec=5m
+Persistent=true
+```
+
+Logs append to `~/ags/tbag-backup.log` and are rotated weekly.
+
+---
+
+## 🔄  Restore procedure (Pi shell)
+
+```bash
+# Stop TBAG first
+sudo systemctl stop tbag.service
+
+# Pick the latest snapshot that has all three artefacts
+TS=$(rclone lsf onedrive:tbag-backups | \
+     grep 'components_.*tar.gz' | sort | tail -1 | \
+     sed -E 's/^components_(.*)\.tar.gz$/\1/')
+
+for f in tbag_${TS}.sqlite3.gz components_${TS}.tar.gz projects_${TS}.tar.gz; do
+    rclone copy onedrive:tbag-backups/$f /tmp
+done
+
+# ── DB ─────────────────────────────────────────────
+cd /home/res-stack/ags
+mv events.db events.db.old_$(date +%F_%T)
+gunzip /tmp/tbag_${TS}.sqlite3.gz
+mv /tmp/tbag_${TS}.sqlite3 events.db
+chown res-stack:res-stack events.db && chmod 660 events.db
+
+# ── folders ────────────────────────────────────────
+rm -rf tbag/components tbag/projects
+mkdir -p tbag/components tbag/projects
+tar -xzf /tmp/components_${TS}.tar.gz -C tbag/components
+tar -xzf /tmp/projects_${TS}.tar.gz -C tbag/projects
+chown -R res-stack:res-stack tbag/components tbag/projects
+
+# ── restart service ──────────────────────────────────────
+sudo systemctl daemon-reload
+sudo systemctl start tbag.service
+```
+
+---
+
+### ⚙️  `.gitignore` gotcha
+
+Git will **still track** a file that was committed *before* you added it to
+`.gitignore`. To stop tracking `events.db` after adding the ignore rule:
+
+```bash
+git rm --cached events.db
+git commit -m "Ignore DB file; remove from index"
+```
+
+The file remains on disk but is no longer part of future commits.
+
+---
+
+## 📜  License
+
+MIT © Renewable Energy Systems 2025 — Contributions welcome!
 
 ---
 
 ## Credits
-Developed with ❤️ by [@kiranpranay](https://github.com/kiranpranay).  
-Feel free to contribute or report issues!
+
+Developed with ❤️ by [@kiranpranay](https://github.com/kiranpranay).  Feel free to contribute or report issues!
