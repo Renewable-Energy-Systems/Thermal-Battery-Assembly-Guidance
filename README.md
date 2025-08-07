@@ -68,32 +68,76 @@ Browse to **[http://localhost:5000](http://localhost:5000)** and start adding
    pip install -r requirements.txt gunicorn
    ```
 
-3. **Create `systemd` unit**
+### 3a  Backend service
 
-   `/etc/systemd/system/tbag.service`
+`/etc/systemd/system/tbag.service`
 
-   ```ini
-   [Unit]
-   Description=TBAG Flask backend (Gunicorn)
-   After=network.target
+```ini
+[Unit]
+Description=TBAG Flask backend (Gunicorn)
+After=network.target
 
-   [Service]
-   User=pi
-   WorkingDirectory=/home/pi/ags
-   Environment="PATH=/home/pi/ags/.venv/bin"
-   ExecStart=/home/pi/ags/.venv/bin/gunicorn -b 0.0.0.0:8000 \
-             --workers 3 --timeout 90 app:app
-   Restart=on-failure
-   RestartSec=3
+[Service]
+User=pi
+WorkingDirectory=/home/pi/ags
+Environment="PATH=/home/pi/ags/.venv/bin"
+ExecStart=/home/pi/ags/.venv/bin/gunicorn -b 0.0.0.0:8000 \
+          --workers 3 --timeout 90 app:app
+Restart=on-failure
+RestartSec=3
 
-   [Install]
-   WantedBy=multi-user.target
-   ```
+[Install]
+WantedBy=multi-user.target
+```
 
-   ```bash
-   sudo systemctl daemon-reload
-   sudo systemctl enable --now tbag
-   ```
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now tbag
+```
+
+### 3b  Kiosk window (Chromium Snap, **single‑instance**)
+
+`~/.config/systemd/user/kiosk-chromium.service`
+
+```ini
+[Unit]
+Description=Chromium kiosk (single window)
+After=graphical-session.target network-online.target
+Wants=network-online.target
+PartOf=graphical-session.target
+
+[Service]
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=%h/.Xauthority
+
+# ensure only ONE kiosk window
+ExecStartPre=-/usr/bin/pkill -f '/snap/bin/chromium.*--app=http://127.0.0.1:8000'
+
+ExecStart=/snap/bin/chromium \
+          --app=http://127.0.0.1:8000 \
+          --kiosk --incognito --noerrdialogs \
+          --disable-session-crashed-bubble \
+          --disable-restore-session-state \
+          --no-first-run
+
+# after 5 s kill any “session‑restore” duplicate
+ExecStartPost=/usr/bin/bash -c 'sleep 5; \
+  mapfile -t p < <(pgrep -f "/snap/bin/chromium.*--app=http://127.0.0.1:8000"); \
+  [ ${#p[@]} -gt 1 ] && kill "${p[@]:1}" || true'
+
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=graphical-session.target
+```
+
+Enable it **once logged‑in on the Pi’s desktop**:
+
+```bash
+systemctl --user daemon-reload
+systemctl --user enable --now kiosk-chromium.service
+```
 
 4. **Wire LEDs**
 
@@ -282,6 +326,30 @@ git commit -m "Ignore DB file; remove from index"
 ```
 
 The file remains on disk but is no longer part of future commits.
+
+
+---
+
+## 🔄  Operational cheat‑sheet
+
+| Task                             | Command                                                 |
+| -------------------------------- | ------------------------------------------------------- |
+| Restart backend only             | `sudo systemctl restart tbag.service`                   |
+| Restart kiosk window (no reboot) | `systemctl --user restart kiosk-chromium.service`       |
+| Disable kiosk autostart (debug)  | `systemctl --user disable --now kiosk-chromium.service` |
+| Re-enable kiosk                  | `systemctl --user enable --now kiosk-chromium.service`  |
+| Check duplicate windows          | `pgrep -a chromium` *(should list exactly one)*         |
+
+---
+
+## 🚑  Basic troubleshooting
+
+| Symptom                                      | Check / Fix                                                                                                  |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| **LED stays on / GPIO busy**                 | `_reset_all_leds()` runs every step. If still stuck: `lgpioreset`.                                           |
+| **Summary page 404**                         | Ensure `/api/progress` sends `"finish"` **before** redirect.                                                 |
+| **Tunnel works but local 192.168 preferred** | Operators bookmark `http://<Pi-IP>:8000`; public URL is fallback.                                            |
+| **Two Chromium windows**                     | Only one kiosk service should be enabled. Disable extras:<br>`systemctl --user disable --now <unit>.service` |
 
 ---
 
