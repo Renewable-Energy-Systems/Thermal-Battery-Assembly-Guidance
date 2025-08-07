@@ -2,58 +2,143 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Session Queue · TBAG</title>
-<link rel="stylesheet" href="/static/style.css">
-<!-- page-specific tweaks … (CSS unchanged except new column widths) -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session Queue · RES</title>
+
+<!-- Google font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-/* … keep all your existing CSS … */
-th.device-col, td.device-col {min-width:110px}
+  /* ─── 0. Reset & Base ───────────────────────────────────────────── */
+  :root{
+    --primary:#3A5BAA; --on-primary:#FFFFFF;
+    --error:#B3261E;
+    --surface:#F8F9FD; --surface-container:#FFFFFF;
+    --on-surface:#1A1C1E; --on-surface-variant:#44474F;
+    --surface-variant:#E1E2EC; --outline:#74777F;
+    --elev-1:0 1px 3px rgba(0,0,0,.06);
+    --elev-2:0 2px 6px rgba(0,0,0,.08);
+    --ripple-color-light:rgba(255,255,255,.2);
+  }
+  *,*:before,*:after{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-font-smoothing:antialiased}
+  body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--surface);color:var(--on-surface)}
+
+  /* ─── 1. Shared Components ─────────────────────────────────────── */
+  .appbar{display:flex;align-items:center;gap:.5rem;padding:1rem 1.5rem;background:var(--surface-container);border-bottom:1px solid var(--surface-variant)}
+  .appbar img{height:32px;margin-left:.5rem}
+  .appbar h1{font-size:1.375rem;font-weight:500}
+
+  .content{padding:1.5rem;max-width:1400px;margin:0 auto}
+  .grid-container{display:grid;gap:1.5rem;grid-template-columns:minmax(320px,450px) 1fr}
+  @media(max-width:900px){.grid-container{grid-template-columns:1fr}}
+
+  .card{background:var(--surface-container);border:1px solid var(--surface-variant);border-radius:16px;box-shadow:var(--elev-1);padding:1.5rem}
+  .card-title{font-size:1.5rem;font-weight:600;margin-bottom:1.5rem}
+
+  /* Buttons */
+  .btn-filled{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.625rem 1.5rem;border:none;border-radius:100px;font-weight:600;cursor:pointer;background:var(--primary);color:var(--on-primary);position:relative;overflow:hidden;transition:box-shadow .2s}
+  .btn-filled:hover{box-shadow:var(--elev-2)}
+  .ripple{position:absolute;border-radius:50%;transform:scale(0);animation:ripple .6s linear;background:var(--ripple-color-light)}
+  @keyframes ripple{to{transform:scale(4);opacity:0}}
+
+  /* Form fields */
+  .form-group{position:relative;margin-bottom:1.5rem}
+  .form-field-filled{position:relative;background:rgba(0,0,0,.04);border-top-left-radius:4px;border-top-right-radius:4px;padding-top:1.25rem}
+  .form-field-filled:hover{background:rgba(0,0,0,.08)}
+  .form-input{display:block;width:100%;padding:.5rem .75rem;border:none;font-size:1rem;background:none;outline:none}
+  select.form-input{-webkit-appearance:none;-moz-appearance:none;appearance:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath fill='%2344474F' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E") no-repeat right .5rem center / 1rem;padding-right:2rem}
+  .form-label{position:absolute;left:.75rem;top:1.5rem;pointer-events:none;transition:.2s;color:var(--on-surface-variant)}
+  .form-input:focus ~ .form-label,
+  .form-input:not(:placeholder-shown) ~ .form-label,
+  select.form-input:not([value=""]) ~ .form-label{top:.5rem;font-size:.75rem;color:var(--primary)}
+
+  /* Table */
+  .table-wrapper{overflow-x:auto;max-height:70vh}
+  .data-table{width:100%;border-collapse:collapse;font-size:.9rem}
+  .data-table th,.data-table td{padding:.75rem 1rem;border-bottom:1px solid var(--surface-variant);white-space:nowrap;text-align:left}
+  .data-table thead{background:var(--surface-container);position:sticky;top:0}
+  .data-table tbody tr:hover{background:rgba(0,0,0,.02)}
+
+  /* Status chips */
+  .chip{display:inline-block;font-size:.75rem;font-weight:600;padding:.2rem .6rem;border-radius:8px}
+  .status-pending{background:#FFDEB0;color:#795502}
+  .status-active{background:#D8E2FF;color:#001849}
+  .status-finished{background:#A3F5B8;color:#003911}
+  .status-aborted{background:#FFDAD6;color:#410002}
+
+  /* Delete button */
+  .delete-btn{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border:none;border-radius:50%;background:none;cursor:pointer}
+  .delete-btn:hover{background:rgba(179,38,30,.08)}
+  .delete-btn svg{width:20px;height:20px;fill:var(--error)}
 </style>
 </head>
+
 <body>
 <header class="appbar">
-  <img src="/static/logo.png" alt="logo">
+  <a href="/admin"><img src="/static/logo.png" alt="logo"></a>
   <h1>Session Queue</h1>
 </header>
 
 <main class="content">
-<div class="grid">
+<div class="grid-container">
 
-  <!-- ═══ Create-form ══════════════════════════════ -->
-  <section class="card" style="padding:2.2rem">
-    <h2 style="margin-top:0">Create New Session</h2>
+  <!-- ═════ Create New Session ─════════════════════════════════════ -->
+  <section class="card">
+    <h2 class="card-title">Create New Session</h2>
 
-    <form action="/admin/sessions/new" method="post"
-          class="flex-row" style="gap:.6rem;margin-top:1.4rem;flex-wrap:wrap">
-      <!-- project -->
-      <select id="projectSel" name="project" required>
-        <option value="" disabled selected>Select project…</option>
-      </select>
+    <form action="/admin/sessions/new" method="post" novalidate>
+      <!-- Project -->
+      <div class="form-group">
+        <div class="form-field-filled">
+          <select id="projectSel" name="project" required class="form-input" value="">
+            <option value="" disabled selected></option>
+          </select>
+          <label class="form-label" for="projectSel">Project</label>
+        </div>
+      </div>
+      <!-- Device (static options) -->
+      <div class="form-group">
+        <div class="form-field-filled">
+          <select name="device" class="form-input" value="">
+            <option value="local-pi">AGS Panel</option>
+          </select>
+          <label class="form-label">Target Device</label>
+        </div>
+      </div>
+      <!-- Stack ID -->
+      <div class="form-group">
+        <div class="form-field-filled">
+          <input name="stack_id" placeholder=" " required class="form-input">
+          <label class="form-label">Stack ID</label>
+        </div>
+      </div>
+      <!-- Operator -->
+      <div class="form-group">
+        <div class="form-field-filled">
+          <input name="operator" placeholder=" " required class="form-input">
+          <label class="form-label">Operator</label>
+        </div>
+      </div>
 
-      <!-- device -->
-      <select id="deviceSel" name="device">
-        <option value="" selected>Any device</option>
-      </select>
-
-      <input name="stack_id"  placeholder="Stack ID"  required>
-      <input name="operator"  placeholder="Operator" required>
-      <button class="btn" style="flex:0 0 auto">Add</button>
+      <button class="btn-filled" style="width:100%">Add to Queue</button>
     </form>
   </section>
 
-  <!-- ═══ Live table ═══════════════════════════════ -->
-  <section class="card" style="padding:2.2rem">
-    <h2 style="margin-top:0">Pending / Active Runs</h2>
-
-    <div class="table-wrap" style="margin-top:1rem">
+  <!-- ═════ Pending & Active Runs ─══════════════════════════════════ -->
+  <section class="card">
+    <h2 class="card-title">Pending &amp; Active Runs</h2>
+    <div class="table-wrapper">
       <table id="sessTbl" class="data-table">
         <thead>
           <tr>
-            <th style="min-width:140px">Created</th>
+            <th>Created</th>
             <th>Project</th>
-            <th>Stack</th>
+            <th>Stack&nbsp;ID</th>
             <th>Operator</th>
-            <th class="device-col">Device</th>
+            <th>Device</th>
             <th>Status</th>
             <th></th>
           </tr>
@@ -62,59 +147,68 @@ th.device-col, td.device-col {min-width:110px}
       </table>
     </div>
   </section>
+
 </div>
 </main>
 
-<!-- ═══ JS: populate selects + live refresh ═══════ -->
+<!-- ─── JavaScript ──────────────────────────────────────────────── -->
 <script>
-/* populate project list */
-async function loadProjects(){
-  const sel=document.getElementById('projectSel');
-  const prev=sel.value;
-  const list=await fetch('/projects/json').then(r=>r.json());
-  sel.innerHTML='<option value="" disabled>Select project…</option>' +
+  /* Ripple effect for filled buttons */
+  document.querySelectorAll('.btn-filled').forEach(btn=>{
+    btn.addEventListener('click',e=>{
+      const r=document.createElement('span');btn.appendChild(r);
+      const d=Math.max(btn.clientWidth,btn.clientHeight);
+      r.style.width=r.style.height=d+'px';
+      const rect=btn.getBoundingClientRect();
+      r.style.left=e.clientX-rect.left-d/2+'px';
+      r.style.top =e.clientY-rect.top -d/2+'px';
+      r.classList.add('ripple');setTimeout(()=>r.remove(),600);
+    });
+  });
+
+  /* Floating label interaction */
+  document.querySelectorAll('.form-input').forEach(el=>{
+    const wrapper=el.parentElement;
+    el.addEventListener('focus',()=>wrapper.classList.add('focused'));
+    el.addEventListener('blur', ()=>wrapper.classList.remove('focused'));
+  });
+
+  /* Populate project list */
+  async function loadProjects(){
+    const sel=document.getElementById('projectSel');
+    const current=sel.value;
+    const list=await fetch('/projects/json').then(r=>r.json());
+    sel.innerHTML='<option value="" disabled selected></option>'+
       list.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
-  if(prev) sel.value=prev;
-}
+    if(current) sel.value=current;
+  }
+  loadProjects(); setInterval(loadProjects,30000);
 
-/* populate device list */
-async function loadDevices(){
-  const sel=document.getElementById('deviceSel');
-  const prev=sel.value;
-  const list=await fetch('/admin/devices/json').then(r=>r.json());
-  sel.innerHTML='<option value="">Any device</option>' +
-      list.map(d=>`<option value="${d}">${d}</option>`).join('');
-  if(prev) sel.value=prev;
-}
-loadProjects(); loadDevices();
-setInterval(loadProjects,5000);
-setInterval(loadDevices,5000);
-
-/* live table */
-const tbody=document.querySelector('#sessTbl tbody');
-function rowMarkup(r){
-  const chip=`<span class="chip status-${r.status}">${r.status}</span>`;
-  const del=r.status==='pending'
-    ? `<form method="post" action="/admin/sessions/${r.session_id}/delete">
-         <button class="delete-btn" title="Remove">&#10005;</button>
-       </form>` : '';
-  return `<tr>
+  /* Live table refresh */
+  const tbody=document.querySelector('#sessTbl tbody');
+  function rowMarkup(r){
+    const chip=`<span class="chip status-${r.status}">${r.status}</span>`;
+    const del=r.status==='pending'
+      ? `<form method="post" action="/admin/sessions/${r.session_id}/delete">
+           <button class="delete-btn" title="Remove">
+             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 21q-.825 0-1.413-.588T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.588 1.413T17 21H7Z"/></svg>
+           </button>
+         </form>` : '';
+    return `<tr>
       <td>${r.ts_created.replace('T',' ')}</td>
       <td>${r.project}</td>
       <td>${r.stack_id}</td>
       <td>${r.operator}</td>
-      <td class="device-col">${r.device||'–'}</td>
+      <td>${r.device||'any'}</td>
       <td>${chip}</td>
       <td style="text-align:right">${del}</td>
-  </tr>`;
-}
-async function refresh(){
-  const rows=await fetch('/admin/sessions/json').then(r=>r.json());
-  tbody.innerHTML=rows.map(rowMarkup).join('');
-}
-refresh(); setInterval(refresh,2500);
-
-/* ripple effect (unchanged) … */
+    </tr>`;
+  }
+  async function refreshTable(){
+    const rows=await fetch('/admin/sessions/json').then(r=>r.json());
+    tbody.innerHTML=rows.map(rowMarkup).join('');
+  }
+  refreshTable(); setInterval(refreshTable,2500);
 </script>
 </body>
 </html>

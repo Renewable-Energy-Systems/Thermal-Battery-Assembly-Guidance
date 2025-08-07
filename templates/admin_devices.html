@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Device Management · RES</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --primary: #3A5BAA; --on-primary: #FFFFFF;
+        --surface: #FDFBFF; --surface-container: #FFFFFF;
+        --on-surface: #1A1C1E; --on-surface-variant: #44474F;
+        --surface-variant: #E1E2EC; --outline: #74777F;
+        --elev-1: 0px 1px 2px rgba(0,0,0,.08), 0px 1px 3px 1px rgba(0,0,0,.05);
+        --elev-2: 0px 1px 2px rgba(0,0,0,.08), 0px 2px 6px 2px rgba(0,0,0,.05);
+    }
+    *,*:before,*:after{box-sizing:border-box;margin:0;padding:0}
+    html{-webkit-font-smoothing:antialiased}
+    body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--surface);color:var(--on-surface)}
+    .appbar{display:flex;align-items:center;gap:.5rem;padding:1rem 1.5rem;background:var(--surface-container);border-bottom:1px solid var(--surface-variant)}
+    .appbar img{height:32px; margin-left: .5rem;}
+    .appbar h1{font-size:1.375rem;font-weight:500;color:var(--on-surface)}
+    .content{padding:1.5rem;max-width:1000px;margin:0 auto}
+    .grid-container{display:grid;gap:1.5rem;grid-template-columns:minmax(320px,380px) 1fr}
+    @media(max-width:800px){.grid-container{grid-template-columns:1fr}}
+    .card{background:var(--surface-container);border-radius:16px;border:1px solid var(--surface-variant);box-shadow:var(--elev-1);padding:1.5rem}
+    .card-title{font-size:1.5rem;font-weight:600;color:var(--on-surface);margin-bottom:1.5rem}
+    .form-group{position:relative;margin-bottom:1.5rem}
+    .form-field-filled{position:relative;background-color:rgba(0,0,0,0.04);border-top-left-radius:4px;border-top-right-radius:4px;padding-top:1.25rem}
+    .form-input{display:block;width:100%;padding:.5rem .75rem;font-family:inherit;font-size:1rem;border:none;background:none;outline:none;color:var(--on-surface)}
+    .form-label{position:absolute;left:.75rem;top:1.5rem;font-size:1rem;color:var(--on-surface-variant);pointer-events:none;transition:all .2s ease}
+    input.form-input:not(:placeholder-shown) ~ label{top:.5rem;font-size:.75rem;color:var(--primary)}
+    .btn-filled{display:inline-flex;align-items:center;justify-content:center;padding:.625rem 1.5rem;border:none;border-radius:100px;font-weight:600;cursor:pointer;background:var(--primary);color:var(--on-primary);box-shadow:var(--elev-1)}
+    .data-table{width:100%;border-collapse:collapse;font-size:.9rem}
+    .data-table th,.data-table td{padding:.75rem 1rem;border-bottom:1px solid var(--surface-variant);text-align:left;white-space:nowrap}
+    .data-table thead{background:var(--surface-container)}
+    .delete-btn{display:inline-flex;justify-content:center;align-items:center;width:36px;height:36px;border:none;border-radius:50%;background:none;cursor:pointer}
+    .delete-btn:hover{background-color:rgba(186,26,26,.08)}
+    .delete-btn svg{width:20px;height:20px;fill:#BA1A1A}
+</style>
+</head>
+<body>
+<header class="appbar">
+    <a href="/admin"><img src="/static/logo.png" alt="RES logo"></a>
+    <h1>Device Management</h1>
+</header>
+<main class="content">
+<div class="grid-container">
+    <section class="card">
+        <h2 class="card-title">Register New Device</h2>
+        <form action="/admin/devices/new" method="post">
+            <div class="form-group">
+                <div class="form-field-filled">
+                    <input name="device_id" placeholder=" " required class="form-input">
+                    <label class="form-label">Device ID</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-field-filled">
+                    <input name="description" placeholder=" " class="form-input">
+                    <label class="form-label">Description (e.g., Location)</label>
+                </div>
+            </div>
+            <button class="btn-filled" style="width:100%">Add Device</button>
+        </form>
+    </section>
+
+    <section class="card">
+        <h2 class="card-title">Registered Devices</h2>
+        <div style="overflow-x:auto;">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Device ID</th>
+                        <th>Description</th>
+                        <th>Added On</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for device in devices %}
+                    <tr>
+                        <td><strong>{{ device.device_id }}</strong></td>
+                        <td>{{ device.description or '–' }}</td>
+                        <td>{{ device.ts_added.split('T')[0] }}</td>
+                        <td style="text-align:right;">
+                            <form action="/admin/devices/{{ device.device_id }}/delete" method="post" onsubmit="return confirm('Remove this device?')">
+                                <button type="submit" class="delete-btn" title="Remove">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 21q-.825 0-1.413-.588T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.588 1.413T17 21H7Z"/></svg>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" style="text-align:center;padding:2rem;">No devices registered yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+</main>
+</body>
+</html>
