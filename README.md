@@ -1,6 +1,6 @@
 # Thermal-Battery Assembly Guidance (**TBAG**)
 
-End‑to‑end “shop‑floor” guidance system for assembling molten‑salt
+End‑to‑end “shop‑floor” guidance system for assembling lithium
 thermal batteries.
 Runs on a **Raspberry Pi** inside the glove‑box, drives coloured LEDs to
 indicate the *current* component, accepts hands‑free *Next / Abort*
