@@ -1,5 +1,13 @@
 # Thermal-Battery Assembly Guidance (**TBAG**)
 
+<p align="center">
+<img src="images/ags-1.jpeg"  style="border-radius: 1em" alt="Product Image 1">
+</p>
+<p align="center">
+<img src="images/ags-2.jpeg"  style="border-radius: 1em" alt="Product Image 2">
+</p>
+
+
 End‑to‑end “shop‑floor” guidance system for assembling lithium
 thermal batteries.
 Runs on a **Raspberry Pi** inside the glove‑box, drives coloured LEDs to
