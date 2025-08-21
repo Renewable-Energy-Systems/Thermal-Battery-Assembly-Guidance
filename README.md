@@ -1,10 +1,10 @@
 # Thermal-Battery Assembly Guidance (**TBAG**)
 
 <p align="center">
-<img src="images/ags-1.jpeg"  style="border-radius: 1em" alt="Product Image 1">
+<img src="static/ags-1.jpeg"  style="border-radius: 1em" alt="Product Image 1">
 </p>
 <p align="center">
-<img src="images/ags-2.jpeg"  style="border-radius: 1em" alt="Product Image 2">
+<img src="static/ags-2.jpeg"  style="border-radius: 1em" alt="Product Image 2">
 </p>
 
 
