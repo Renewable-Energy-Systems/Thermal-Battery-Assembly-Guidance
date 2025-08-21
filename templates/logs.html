@@ -1,39 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Event Log · TBAG</title>
-  <link rel="stylesheet" href="/static/style.css">
-  <!-- auto-refresh every 2 s so the table updates live -->
-  <meta http-equiv="refresh" content="2">
-  <style>
-    table{width:100%;border-collapse:collapse;font-size:.9rem}
-    th,td{padding:.45rem .75rem;border-bottom:1px solid #eef}
-    thead{background:var(--surface-variant)} tbody tr:nth-child(even){background:#f7f8ff}
-    .event{font-family:monospace;font-size:.8rem}
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Raw Event Log · RES</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    /* ─── 0. Base & M3 Palette ─────────────────────────────────── */
+    :root {
+        --primary:#3A5BAA;--on-primary:#FFF;
+        --primary-container:#D8E2FF;--on-primary-container:#001849;
+        --surface:#F8F9FD;--surface-container:#FFF;
+        --on-surface:#1A1C1E;--on-surface-variant:#44474F;
+        --surface-variant:#F1F3F9;--outline:#DDE2EB;
+        --elev-1:0 1px 2px rgba(0,0,0,.08),0 1px 3px 1px rgba(0,0,0,.05);
+    }
+    *,*:before,*:after{box-sizing:border-box;margin:0;padding:0}
+    html{-webkit-font-smoothing:antialiased}
+    body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--surface);color:var(--on-surface)}
+
+    /* ─── 2. Shared Components ───────────────────────────────────── */
+    .appbar{display:flex;align-items:center;gap:1rem;padding:1rem 1.5rem;background:var(--surface-container);border-bottom:1px solid var(--outline)}
+    .appbar img{height:32px;}
+    .appbar h1{font-size:1.375rem;font-weight:500;color:var(--on-surface)}
+    .content{padding:1.5rem;max-width:1200px;margin:0 auto}
+    .card{background:var(--surface-container);border-radius:16px;border:1px solid var(--outline);box-shadow:var(--elev-1);overflow:hidden}
+    .card-header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1rem;padding:1rem 1.5rem}
+    .card-title{font-size:1.5rem;font-weight:600}
+    .btn-tonal{display:inline-flex;align-items:center;gap:.5rem;padding:.625rem 1.5rem;border:none;border-radius:100px;font-size:.875rem;font-weight:600;cursor:pointer;background:var(--primary-container);color:var(--on-primary-container)}
+
+    /* ─── 3. Controls & Table ────────────────────────────────────── */
+    .controls-group{display:flex;align-items:center;gap:.75rem}
+    .search-input{font-family:inherit;font-size:1rem;padding:.75rem 1rem;border:1px solid var(--outline);border-radius:100px;background:var(--surface);min-width:300px}
+    .table-wrapper{overflow-x:auto; border-top: 1px solid var(--outline);}
+    .data-table{width:100%;border-collapse:collapse}
+    .data-table th, .data-table td{padding:.75rem 1.5rem;border-bottom:1px solid var(--outline);text-align:left;white-space:nowrap}
+    .data-table thead{background:var(--surface-variant)}
+    .data-table th{color:var(--on-surface-variant);font-weight:600}
+    .data-table tbody tr:hover{background:rgba(58, 91, 170, 0.04)}
+    .event-cell{font-family:monospace;font-size:.85rem;white-space:pre-wrap;word-break:break-all}
+
+    /* ─── 4. Pagination ──────────────────────────────────────────── */
+    .pagination-footer{display:flex;justify-content:space-between;align-items:center;padding:1rem 1.5rem;border-top:1px solid var(--outline)}
+</style>
 </head>
 <body>
 <header class="appbar">
-  <img src="/static/logo.png" alt="logo">
-  <h1>Raw Event Stream</h1>
+    <a href="/admin"><img src="/static/logo.png" alt="logo"></a>
+    <h1>Raw Event Stream</h1>
 </header>
 
 <main class="content">
-  <section class="card" style="max-width:900px">
-    <table>
-      <thead><tr><th style="width:180px">Timestamp</th><th>Event</th></tr></thead>
-      <tbody>
-        {% for r in rows %}
-          <tr>
-            <td>{{ r.ts }}</td>
-            <td class="event">{{ r.event }}</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </section>
+<section class="card">
+    <div class="card-header">
+        <h2 class="card-title">Event Log</h2>
+        <div class="controls-group">
+            <input type="search" id="searchInput" class="search-input" placeholder="Search events...">
+            <select id="eventTypeFilter" class="search-input" style="min-width: 200px;"></select>
+        </div>
+    </div>
+    <div class="table-wrapper">
+        <table class="data-table">
+            <thead><tr><th style="width:200px">Timestamp</th><th>Event Details</th></tr></thead>
+            <tbody id="logTableBody">
+            {% for r in rows %}
+                <tr data-event-type="{{ r.event.split('::')[0] }}">
+                    <td>{{ r.ts }}</td>
+                    <td class="event-cell">{{ r.event }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination-footer">
+        <span id="pageInfo"></span>
+        <div>
+            <button id="prevBtn" class="btn-tonal">Previous</button>
+            <button id="nextBtn" class="btn-tonal">Next</button>
+        </div>
+    </div>
+</section>
 </main>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. State & Elements
+    const allRows = Array.from(document.querySelectorAll('#logTableBody tr'));
+    let filteredRows = [...allRows];
+    let currentPage = 1;
+    const rowsPerPage = 15;
+
+    const tableBody = document.getElementById('logTableBody');
+    const searchInput = document.getElementById('searchInput');
+    const eventTypeFilter = document.getElementById('eventTypeFilter');
+    const pageInfo = document.getElementById('pageInfo');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    // 2. Populate Event Type Filter
+    const eventTypes = [...new Set(allRows.map(row => row.dataset.eventType))].sort();
+    eventTypeFilter.innerHTML = '<option value="">All Event Types</option>' + 
+        eventTypes.map(type => `<option value="${type}">${type}</option>`).join('');
+
+    // 3. Rendering Logic
+    const renderPage = () => {
+        tableBody.innerHTML = '';
+        const start = (currentPage - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+        const paginatedRows = filteredRows.slice(start, end);
+        
+        paginatedRows.forEach(row => tableBody.appendChild(row));
+        
+        const totalPages = Math.ceil(filteredRows.length / rowsPerPage) || 1;
+        pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+        prevBtn.disabled = currentPage === 1;
+        nextBtn.disabled = currentPage === totalPages;
+    };
+
+    // 4. Filtering Logic
+    const applyFilters = () => {
+        const searchQuery = searchInput.value.toLowerCase();
+        const selectedType = eventTypeFilter.value;
+
+        filteredRows = allRows.filter(row => {
+            const textMatch = row.textContent.toLowerCase().includes(searchQuery);
+            const typeMatch = !selectedType || row.dataset.eventType === selectedType;
+            return textMatch && typeMatch;
+        });
+
+        currentPage = 1;
+        renderPage();
+    };
+    
+    // 5. Event Listeners
+    searchInput.addEventListener('input', applyFilters);
+    eventTypeFilter.addEventListener('change', applyFilters);
+    prevBtn.addEventListener('click', () => { if (currentPage > 1) { currentPage--; renderPage(); } });
+    nextBtn.addEventListener('click', () => {
+        const totalPages = Math.ceil(filteredRows.length / rowsPerPage);
+        if (currentPage < totalPages) { currentPage++; renderPage(); }
+    });
+
+    // Initial Render
+    renderPage();
+});
+</script>
 </body>
 </html>

@@ -4,71 +4,133 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Session {{ sid }} · RES</title>
-<link rel="stylesheet" href="/static/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ── layout ────────────────────────────────────────────── */
-.timeline      { position:relative; margin-left:36px; }
-.timeline::before{ content:''; position:absolute; left:-18px; top:0;
-                   width:2px; height:100%; background:#c5cae9; }
-.event         { position:relative; margin-bottom:1.4rem; padding-left:1rem;
-                 cursor:pointer; }
-.event:hover   { background:#f5f6ff; }
-.event::before{ content:''; position:absolute; left:-27px; top:4px;
-                width:12px; height:12px; border-radius:50%; }
-.event time    { font-weight:600; margin-right:0.4rem; }
-.event .kind   { font-weight:600; text-transform:capitalize; }
-.payload       { font-family:monospace; font-size:0.85rem; white-space:pre;
-                 margin:0.45rem 0 0 0; display:none; }
+    /* ─── 0. Base & M3 Palette ─────────────────────────────────── */
+    :root {
+        --primary:#3A5BAA;--on-primary:#FFF;
+        --primary-container:#D8E2FF;--on-primary-container:#001849;
+        --secondary-container:#DBE2F9;--on-secondary-container:#141B2C;
+        --error:#B3261E; --on-error:#FFF;
+        --error-container:#FFDAD6; --on-error-container:#410002;
+        --success-container:#D2F8D3;--on-success-container:#002206;
+        --surface:#F8F9FD;--surface-container:#FFF;
+        --on-surface:#1A1C1E;--on-surface-variant:#44474F;
+        --surface-variant:#F1F3F9;--outline:#DDE2EB;
+        --elev-1:0 1px 2px rgba(0,0,0,.08),0 1px 3px 1px rgba(0,0,0,.05);
+    }
+    *,*:before,*:after{box-sizing:border-box;margin:0;padding:0}
+    html{-webkit-font-smoothing:antialiased}
+    body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--surface);color:var(--on-surface)}
 
-/* ── colour coding ─────────────────────────────────────── */
-.start::before { background:#2196f3; }
-.next::before  { background:#7e57c2; }
-.end::before   { background:#43a047; }
-.abort::before { background:#e53935; }
-.end  .kind    { color:#2e7d32; }
-.abort.kind    { color:#c62828; }
+    /* ─── 2. Shared Components ───────────────────────────────────── */
+    .appbar{display:flex;align-items:center;gap:1rem;padding:1rem 1.5rem;background:var(--surface-container);border-bottom:1px solid var(--outline)}
+    .appbar img{height:32px;}
+    .appbar h1{font-size:1.375rem;font-weight:500;color:var(--on-surface)}
+    .appbar code{font-size:1.1rem;background:var(--surface-variant);padding:.2rem .5rem;border-radius:6px}
+    .content{padding:1.5rem;max-width:900px;margin:0 auto}
+    .card{background:var(--surface-container);border-radius:16px;border:1px solid var(--outline);box-shadow:var(--elev-1);overflow:hidden}
+    .card-header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1rem;padding:1rem 1.5rem}
+    .card-title{font-size:1.5rem;font-weight:600}
+    .btn{display:inline-flex;align-items:center;gap:.5rem;padding:.625rem 1.5rem;border:none;border-radius:100px;font-size:.875rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;transition:all .2s}
+    .btn-tonal{background:var(--primary-container);color:var(--on-primary-container)}
+    .btn-secondary{background:var(--secondary-container);color:var(--on-secondary-container)}
+    .btn svg{width:18px;height:18px;fill:currentColor}
 
-.open .payload { display:block; }
+    /* ─── 3. Timeline & Event Styling ────────────────────────────── */
+    .search-input{font-family:inherit;font-size:1rem;padding:.75rem 1rem;border:1px solid var(--outline);border-radius:100px;background:var(--surface);min-width:250px}
+    .timeline{position:relative;padding:1rem 0 1rem 1.5rem;margin-left:24px; border-top: 1px solid var(--outline);}
+    .timeline::before{content:'';position:absolute;left:0;top:0;width:2px;height:100%;background:var(--outline)}
+    .event{position:relative;margin-bottom:1rem;transition:background-color .2s}
+    .event-header{display:flex;align-items:center;gap:.75rem;padding:.5rem;border-radius:8px;cursor:pointer}
+    .event:hover .event-header{background-color:var(--surface-variant)}
+    .timeline-icon{position:absolute;left:-28px;top:10px;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:4px solid var(--surface-container)}
+    .timeline-icon svg{width:16px;height:16px;fill:currentColor}
+    .event-time{font-size:.9rem;font-weight:600;color:var(--on-surface-variant)}
+    .event-kind{font-weight:600;text-transform:capitalize}
 
-/* back button */
-.fab { position:fixed; bottom:40px; right:40px; }
-@media (max-width:600px){
-  .fab{ position:static; margin-top:1.6rem; display:block; text-align:center; }
-}
+    /* Event Type Colors */
+    .event-session_start .timeline-icon{background:var(--primary);color:var(--on-primary)}
+    .event-session_end .timeline-icon{background:var(--on-success-container);color:var(--success-container)}
+    .event-session_end .event-kind{color:var(--on-success-container)}
+    .event-session_abort .timeline-icon{background:var(--error);color:var(--on-error)}
+    .event-session_abort .event-kind{color:var(--error)}
+    .event-next_pressed .timeline-icon{background:var(--on-secondary-container);color:var(--secondary-container)}
+
+    /* Payload Styling */
+    .payload-wrapper{max-height:0;overflow:hidden;transition:max-height .3s ease-out}
+    .event.open > .payload-wrapper{max-height:500px}
+    .payload{font-family:monospace;font-size:.85rem;white-space:pre-wrap;word-break:break-all;background:var(--surface-variant);padding:1rem;border-radius:8px;margin: .5rem 0 0 3.25rem;}
 </style>
 </head>
 <body>
 <header class="appbar">
-  <img src="/static/logo.png" alt="logo">
-  <h1>Session {{ sid }}</h1>
+    <a href="/logs"><img src="/static/logo.png" alt="logo"></a>
+    <h1>Session Timeline: <code>{{ sid }}</code></h1>
 </header>
 
 <main class="content">
-<section class="card" style="max-width:820px">
-  <h2 style="margin-top:0">Timeline</h2>
-
-  <div class="timeline">
+<section class="card">
+    <div class="card-header">
+        <h2 class="card-title">Events</h2>
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
+            <input type="search" id="searchInput" class="search-input" placeholder="Filter events...">
+            <a href="/logs/{{ sid }}/export" class="btn btn-secondary" title="Download as Excel">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 10v3h-1v-4h5v-2h-5V4h1V3h-2v1H7v2h5v3H7v2h5v4H7v2h6v-1h1v-1h2v-1h-2v-3Zm-1-5H8V4h4v1Z"/></svg>
+                <span>Export</span>
+            </a>
+            <a href="/logs" class="btn btn-tonal">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20L4 12l8-8 1.425 1.4-5.6 5.6H20v2H7.825l5.6 5.6Z"/></svg>
+                <span>Back</span>
+            </a>
+        </div>
+    </div>
+    <div class="timeline" id="timelineContainer">
     {% for e in events %}
-      {% set k = e.kind %}
-      <div class="event {{ k.split('_')[1] if '_' in k else k }}" onclick="this.classList.toggle('open')">
-        <time>{{ e.ts[:19].replace('T',' ') }}</time>
-        <span class="kind">{{ k.replace('session_','') }}</span>
-        <div class="payload">{{ e.payload | tojson(indent=2) }}</div>
-      </div>
+        {% set kind_class = "event-" + e.kind.split('::')[0] %}
+        <div class="event {{ kind_class }}">
+            <div class="event-header" onclick="this.parentElement.classList.toggle('open')">
+                <div class="timeline-icon">
+                    {% if 'start' in e.kind %}<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8 19V5l11 7Z"/></svg>
+                    {% elif 'end' in e.kind %}<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m10 18-6-6 6-6 1.4 1.4-4.6 4.6 4.6 4.6L10 18Zm4-1-4.6-4.6L10.8 11l6 6-1.4 1.4-6-6Z"/></svg>
+                    {% elif 'abort' in e.kind %}<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 22q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.137 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35-1.35-3.175 2.137T12 22Zm-1-5h2V7h-2v10Zm0 3q.425 0 .713-.288T12 19q0-.425-.288-.713T11 18q-.425 0-.713.288T10 19q0 .425.288.713T11 20Z"/></svg>
+                    {% else %}<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12.95 10.45 15.5 7.9l-1.4-1.4-2.55 2.55q-.1.1-.225.15t-.225.05q-.1 0-.225-.05t-.225-.15L8.3 6.5l-1.4 1.4 2.55 2.55q.25.25.25.6t-.25.6L6.9 16.2l1.4 1.4 2.55-2.55q.1-.1.225-.15t.225-.05q.1 0 .225.05t.225.15l2.55 2.55 1.4-1.4-2.55-2.55q-.25-.25-.25-.6t.25-.6Z"/></svg>
+                    {% endif %}
+                </div>
+                <time>{{ e.ts[:19].replace('T',' ') }}</time>
+                <span class="event-kind">{{ e.kind.replace('_',' ') }}</span>
+            </div>
+            <div class="payload-wrapper">
+                <pre class="payload"><code>{{ e.payload | tojson(indent=2) }}</code></pre>
+            </div>
+        </div>
     {% endfor %}
-  </div>
-
-  <a href="/logs" class="btn fab">← Back to Logs</a>
-  <a href="/logs/{{ sid }}/export" class="btn btn-secondary fab" style="right:160px"
-   title="Download as Excel">⬇︎ Excel</a>
-
+    </div>
 </section>
 </main>
-
 <script>
-/* optional: auto-expand first & last events */
-document.querySelectorAll('.event:first-child, .event:last-child')
-        .forEach(e => e.classList.add('open'));
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('searchInput');
+    const timelineContainer = document.getElementById('timelineContainer');
+    const events = Array.from(timelineContainer.querySelectorAll('.event'));
+
+    // Auto-expand first and last events for context
+    if (events.length > 0) {
+        events[0].classList.add('open');
+        events[events.length - 1].classList.add('open');
+    }
+
+    // Live search filter functionality
+    searchInput.addEventListener('input', () => {
+        const query = searchInput.value.toLowerCase();
+        events.forEach(event => {
+            const eventText = event.textContent.toLowerCase();
+            event.style.display = eventText.includes(query) ? 'block' : 'none';
+        });
+    });
+});
 </script>
 </body>
 </html>
