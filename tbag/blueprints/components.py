@@ -42,6 +42,7 @@ def list_components_route():
             "name": cfg["name"],
             "led_label": led_lbl.replace("L", "LED ", 1),
             "image": cfg.get("image"),
+            "default_thickness": cfg.get("default_thickness", 0.0),
         })
     return render_template("component_list.html", components=comps)
 
@@ -56,6 +57,7 @@ def components_json():
                 "id": p.name,
                 "name": cfg["name"],
                 "image": cfg.get("image"),  # may be None
+                "default_thickness": cfg.get("default_thickness", 0.0),
             }
             for p in components_list()
             if (cfg := load_component(p.name))              # cfg is not None here
@@ -69,6 +71,7 @@ def new_component():
     if request.method == "POST":
         name = request.form["comp_name"].strip()
         gpio = int(request.form["gpio"])
+        default_thickness = float(request.form.get("default_thickness", 0.0))
 
         # duplicate-name check (case-insensitive, None-safe)
         duplicate = any(
@@ -96,7 +99,14 @@ def new_component():
             (COMPONENTS / cid / "images").mkdir(parents=True, exist_ok=True)
             fs.save(COMPONENTS / cid / "images" / img_name)
 
-        save_component(cid, {"name": name, "image": img_name, "gpio": gpio})
+            fs.save(COMPONENTS / cid / "images" / img_name)
+
+        save_component(cid, {
+            "name": name,
+            "image": img_name,
+            "gpio": gpio,
+            "default_thickness": default_thickness,
+        })
         return redirect("/components")
 
     # GET – blank form
@@ -113,11 +123,13 @@ def edit_component(cid):
         "name": cid,
         "image": None,
         "gpio": ALLOWED_GPIO_PINS[0],
+        "default_thickness": 0.0,
     }
 
     if request.method == "POST":
         cfg["name"] = request.form["comp_name"].strip()
         cfg["gpio"] = int(request.form["gpio"])
+        cfg["default_thickness"] = float(request.form.get("default_thickness", 0.0))
 
         # replace image if a new file was chosen
         fs: wz.FileStorage = request.files.get("comp_img")  # type: ignore

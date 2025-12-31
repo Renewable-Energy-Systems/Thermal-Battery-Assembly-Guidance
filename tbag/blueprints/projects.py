@@ -21,6 +21,7 @@ from ..helpers.projects import (
     projects_list, load_config, save_config, new_project_slug, PROJECTS
 )
 
+from ..helpers.components import load_component
 from ..components_helpers import list_components          # component library
 
 bp = Blueprint("projects", __name__)                      # /projects…
@@ -31,7 +32,7 @@ bp = Blueprint("projects", __name__)                      # /projects…
 @bp.get("/projects/json")
 def projects_json():
     data = [
-        {"id": p.name, "name": load_config(p.name)["name"]}
+        {"id": p.name, "name": load_config(p.name)["name"], "default_thickness": load_component(p.name).get("default_thickness", 0.0) if load_component(p.name) else 0.0}
         for p in projects_list() if load_config(p.name)
     ]
     return jsonify(data)
@@ -84,8 +85,9 @@ def edit(pid: str):
                 break
 
             label = request.form.get(f"label_{idx}", "").strip()
+            thickness = float(request.form.get(f"thickness_{idx}", 0.0))
             if comp_id:                        # skip empty
-                seq.append({"comp": comp_id, "label": label})
+                seq.append({"comp": comp_id, "label": label, "thickness": thickness})
             idx += 1
 
         cfg["sequence"] = seq
@@ -94,6 +96,11 @@ def edit(pid: str):
 
     # GET – render editor
     components = list_components()             # dropdown options
+    # Enrich components with default_thickness for the frontend
+    for c in components:
+        c_cfg = load_component(c['id'])
+        c['default_thickness'] = c_cfg.get('default_thickness', 0.0) if c_cfg else 0.0
+
     return render_template(
         "project_edit.html",
         project   = cfg,

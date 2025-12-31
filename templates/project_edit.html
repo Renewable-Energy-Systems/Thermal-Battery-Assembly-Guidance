@@ -11,6 +11,10 @@
     <style>
         /* ─── 0. Reset & Base ────────────────────────────────────────── */
         :root {
+            /* ... (keep existing vars) ... */
+            --drawer-width: 320px;
+        }
+        :root {
             --primary: #3A5BAA; --on-primary: #FFFFFF;
             --primary-container: #D8E2FF; --on-primary-container: #001849;
             --secondary: #575E71; --on-secondary: #FFFFFF;
@@ -38,7 +42,19 @@
         .appbar .icon-btn:hover { background-color: rgba(0,0,0,0.05); }
         .appbar .icon-btn svg { width: 24px; height: 24px; fill: var(--on-surface); }
         
-        .content { padding: 1.5rem; max-width: 900px; margin: 0 auto; }
+        .content { 
+            padding: 1.5rem; 
+            max-width: 1400px; /* Increased max-width for 2 cols */
+            margin: 0 auto; 
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 1.5rem;
+            align-items: start;
+        }
+        
+        @media (max-width: 900px) {
+            .content { grid-template-columns: 1fr; }
+        }
         .card { background: var(--surface-container); border-radius: 16px; border: 1px solid var(--outline); box-shadow: var(--elev-1); }
         .card-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-bottom: 1px solid var(--outline); }
         .card-title { font-size: 1.5rem; font-weight: 600; }
@@ -132,6 +148,23 @@
 </header>
 
 <main class="content">
+    <!-- SIDEBAR: Project Components -->
+    <aside class="card" id="sidebar-card">
+        <div class="card-header">
+            <h2 class="card-title" style="font-size: 1.25rem;">Project Components</h2>
+        </div>
+        <div style="padding: 1rem; color: var(--on-surface-variant); font-size: 0.875rem;">
+            <p style="margin-bottom: 1rem;">Set thickness for all instances of a component here.</p>
+            <div id="project-components-list" style="display: flex; flex-direction: column; gap: 1rem; max-height: 55vh; overflow-y: auto; padding-right: 0.5rem;">
+                <!-- Component summary rows will go here -->
+                <div class="empty-params" style="text-align: center; color: var(--outline);">
+                    No components yet.
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN: Assembly Sequence -->
     <section class="card">
         <div class="card-header">
             <h2 class="card-title">Assembly Sequence</h2>
@@ -155,7 +188,7 @@
                     <p>Click "Add Step" to build your assembly sequence.</p>
                 </div>
                 <div id="stepsContainer">
-                    </div>
+                </div>
             </div>
         </form>
     </section>
@@ -179,8 +212,38 @@ function buildComponentOptions(selectedValue) {
     return optionsHTML;
 }
 
+// --- Validation Helper ---
+function setupNumericInput(input) {
+    // 1. Prevent invalid keystrokes (letters, symbols)
+    input.addEventListener('keydown', (e) => {
+        // Allow: Backspace, Delete, Tab, Escape, Enter, Arrows
+        const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+        if (allowedKeys.includes(e.key) || 
+            // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+            (e.ctrlKey === true || e.metaKey === true)) {
+            return;
+        }
+        
+        // Allow: numbers
+        if (/^[0-9]$/.test(e.key)) {
+            return;
+        }
+
+        // Allow: ONE decimal point
+        if (e.key === '.' && !input.value.includes('.')) {
+            return;
+        }
+
+        // Block everything else
+        e.preventDefault();
+    });
+
+    // 2. Sanitize on input (removed to allow typing decimals correctly in type="number")
+    // input.addEventListener('input', ...) - Removed because it strips trailing dots.
+}
+
 /* ---- Build one editable row ---- */
-function createStepRow(data = { comp: '', label: '' }) {
+function createStepRow(data = { comp: '', label: '', thickness: 0 }) {
     const idx = stepIdx++;
     const row = document.createElement('div');
     row.className = 'step-row';
@@ -209,6 +272,12 @@ function createStepRow(data = { comp: '', label: '' }) {
                     <label class="form-label">Instruction / Note</label>
                 </div>
             </div>
+            <div class="form-group" style="flex-grow: 0; flex-basis: 120px;">
+                <div class="form-field-filled">
+                    <input type="number" name="thickness_${idx}" step="0.001" min="0" placeholder=" " value="${data.thickness || 0}" class="form-input thickness-input">
+                    <label class="form-label">Thickness (mm)</label>
+                </div>
+            </div>
         </div>
         <button type="button" class="btn-icon-delete" title="Remove step">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H22V8H20V21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21V8H2V6H7V3C7 2.44772 7.44772 2 8 2H16C16.5523 2 17 2.44772 17 3V6ZM18 8H6V20H18V8ZM9 11V17H11V11H9ZM13 11V17H15V11H13ZM9 4V6H15V4H9Z"></path></svg>
@@ -224,25 +293,143 @@ function createStepRow(data = { comp: '', label: '' }) {
         input.addEventListener('focus', () => fieldContainer.classList.add('focused'));
         input.addEventListener('blur', () => fieldContainer.classList.remove('focused'));
         if (input.tagName === 'SELECT') {
-            input.addEventListener('change', () => input.dataset.empty = !input.value);
+            input.addEventListener('change', () => {
+                input.dataset.empty = !input.value;
+                // Auto-fill thickness if selecting a component
+                const thicknessInput = row.querySelector('.thickness-input');
+                if (input.value && thicknessInput && (!thicknessInput.value || thicknessInput.value == 0)) {
+                    const comp = components.find(c => c.id === input.value);
+                    if (comp && comp.default_thickness) {
+                         thicknessInput.value = comp.default_thickness;
+                         thicknessInput.parentElement.classList.add('focused');
+                    }
+                }
+                updateSidebar(); // Refresh sidebar on component change
+            });
         }
-    });
 
-    row.querySelector('.btn-icon-delete').onclick = () => {
-        row.remove();
-        updateStepNumbers();
-        toggleEmptyState();
-    };
+        
+                if (input.classList.contains('thickness-input')) {
+                    setupNumericInput(input); // Apply strict validation
+                    input.addEventListener('input', () => {
+                        // VALIDATION: Enforce positive number
+                        if (input.value < 0) input.value = 0;
+                        
+                        const myRow = input.closest('.step-row');
+                        const myCompId = myRow.querySelector('select').value;
+                        if (!myCompId) return;
 
-    row.addEventListener('dragstart', e => {
-        row.classList.add('dragging');
-        e.dataTransfer.effectAllowed = 'move';
-    });
-    row.addEventListener('dragend', () => {
-        row.classList.remove('dragging');
-        updateStepNumbers();
-    });
-}
+                        const newVal = input.value;
+                        
+                        // 1. Update other sequence rows
+                        document.querySelectorAll('.step-row').forEach(otherRow => {
+                            const otherSelect = otherRow.querySelector('select');
+                            if (otherSelect && otherSelect.value === myCompId) {
+                                const otherThickness = otherRow.querySelector('.thickness-input');
+                                if (otherThickness && otherThickness !== input) {
+                                    otherThickness.value = newVal;
+                                    otherThickness.parentElement.classList.add('focused');
+                                }
+                            }
+                        });
+
+                        // 2. Update Sidebar
+                        const sidebarInput = document.querySelector(`.sidebar-comp-thickness[data-comp-id="${myCompId}"]`);
+                        if (sidebarInput) {
+                            sidebarInput.value = newVal;
+                            sidebarInput.parentElement.classList.add('focused');
+                        }
+                    });
+                }
+            });
+
+            row.querySelector('.btn-icon-delete').onclick = () => {
+                row.remove();
+                updateStepNumbers();
+                toggleEmptyState();
+                updateSidebar(); // Refresh sidebar on delete
+            };
+
+            row.addEventListener('dragstart', e => {
+                row.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+            });
+            row.addEventListener('dragend', () => {
+                row.classList.remove('dragging');
+                updateStepNumbers();
+            });
+        }
+        
+        /* ---- Sidebar Logic ---- */
+        function updateSidebar() {
+            const sidebarList = document.getElementById('project-components-list');
+            
+            // Gather unique components from sequence
+            const usedComponents = new Map(); // id -> thickness
+            document.querySelectorAll('.step-row').forEach(row => {
+                const select = row.querySelector('select');
+                const thicknessInput = row.querySelector('.thickness-input');
+                if (select && select.value) {
+                    if (!usedComponents.has(select.value)) {
+                         usedComponents.set(select.value, thicknessInput.value);
+                    }
+                }
+            });
+
+            if (usedComponents.size === 0) {
+                sidebarList.innerHTML = '<div class="empty-params" style="text-align: center; color: var(--outline);">No components used.</div>';
+                return;
+            }
+
+            sidebarList.innerHTML = '';
+            usedComponents.forEach((val, compId) => {
+                const comp = components.find(c => c.id === compId);
+                if (!comp) return;
+
+                const item = document.createElement('div');
+                item.className = 'form-group';
+                item.style.marginBottom = '0';
+                
+                item.innerHTML = `
+                    <div style="font-weight: 500; font-size: 0.875rem; margin-bottom: 0.25rem;">${comp.name}</div>
+                    <div class="form-field-filled">
+                        <input type="number" step="0.001" min="0" 
+                               value="${val}" 
+                               data-comp-id="${compId}"
+                               placeholder="Default: ${comp.default_thickness || 0}" 
+                               class="form-input sidebar-comp-thickness">
+                        <label class="form-label">Thickness (mm)</label>
+                    </div>
+                `;
+                sidebarList.appendChild(item);
+
+                // Add Event Listener for Sidebar -> Sequence sync
+                const input = item.querySelector('input');
+                setupNumericInput(input); // Apply strict validation
+                
+                // float label logic
+                const fieldContainer = input.parentElement;
+                input.addEventListener('focus', () => fieldContainer.classList.add('focused'));
+                input.addEventListener('blur', () => fieldContainer.classList.remove('focused'));
+                if(input.value) fieldContainer.classList.add('focused');
+
+                input.addEventListener('input', () => {
+                   
+                    const newVal = input.value;
+                    // Update ALL sequence rows with this component
+                    document.querySelectorAll('.step-row').forEach(row => {
+                        const select = row.querySelector('select');
+                        if (select && select.value === compId) {
+                            const thick = row.querySelector('.thickness-input');
+                            if (thick) {
+                                thick.value = newVal;
+                                thick.parentElement.classList.add('focused');
+                            }
+                        }
+                    });
+                });
+            });
+        }
 
 // --- Drag & Drop Logic ---
 container.addEventListener('dragover', e => {
@@ -298,6 +485,7 @@ document.querySelectorAll('.btn').forEach(addRippleEffect);
 document.addEventListener('DOMContentLoaded', () => {
     stepsData.forEach(createStepRow);
     toggleEmptyState();
+    updateSidebar();
     
     document.getElementById('addStepBtn').onclick = () => {
         createStepRow();
