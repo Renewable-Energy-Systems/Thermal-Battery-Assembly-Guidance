@@ -10,7 +10,7 @@ Project-library (process-recipe) management UI
 from __future__ import annotations
 from flask import (
     Blueprint, render_template, request, redirect,
-    send_from_directory, jsonify, abort
+    send_from_directory, jsonify, abort, Response
 )
 import werkzeug.datastructures as wz
 import uuid, pathlib
@@ -78,6 +78,12 @@ def edit(pid: str):
         abort(404, f"Project {pid!r} not found")
 
     if request.method == "POST":
+        # Save Base Z
+        try:
+            cfg["base_z"] = float(request.form.get("base_z", 0.0))
+        except ValueError:
+            cfg["base_z"] = 0.0
+
         seq, idx = [], 0
         while True:
             comp_id = request.form.get(f"comp_{idx}")
@@ -109,7 +115,114 @@ def edit(pid: str):
     )
 
 
-# 5) Serve project images --------------------------------------------------
+@bp.get("/projects/<pid>/program")
+def download_program(pid: str):
+    """Generates and downloads a .pg robotic program file."""
+    cfg = load_config(pid)
+    if not cfg:
+        abort(404, f"Project {pid!r} not found")
+    
+    sequence = cfg.get("sequence", [])
+    total_steps = len(sequence)
+    total_thickness = sum(float(step.get("thickness", 0.0)) for step in sequence)
+    high_z = 10.0  # Safe clearance
+    base_z = float(cfg.get("base_z", 0.0))
+    
+    # Header
+    lines = [
+        "Process Main",
+        "int speed = 100, acc = 100, dec = 100, cp = 0",
+        "int i = 1",
+        "int idsrc = 1",
+        f"float high = {high_z:.3f}",
+        f"float valz = {base_z:.3f}",
+        "float valth = 0.0",
+        "float valsz = 0.0",
+        "float valapp = 0.0",
+        "",
+        "Do"
+    ]
+
+    # Pre-calculate counts for Source Stack Logic
+    from collections import Counter
+    comp_counts = Counter(s.get("comp", f"unknown_{k}") for k, s in enumerate(sequence))
+    comp_picked = Counter()
+
+    # Component Mapping
+    comp_map = {}
+    next_pidx = 1
+    
+    # Lookup Generation
+    for idx, step in enumerate(sequence, 1):
+        cid = step.get("comp", f"unknown_{idx}")
+        thick_val = float(step.get("thickness", 0.0))
+        
+        # Source Mapping
+        if cid not in comp_map:
+            comp_map[cid] = next_pidx
+            next_pidx += 1
+        src_pidx = comp_map[cid]
+        
+        # Source Stack Ht Calculation (Picking from top)
+        # Height = (Total - Picked_Before - 1) * Thickness
+        # i.e. If 5 total, 1st pick (0 previous) -> index 4 (top) -> 4 * th
+        total_count = comp_counts[cid]
+        picked_so_far = comp_picked[cid]
+        remaining_below = total_count - picked_so_far - 1
+        src_z = max(0.0, remaining_below * thick_val)
+        comp_picked[cid] += 1
+        
+        prefix = "If" if idx == 1 else "ElseIf"
+        lines.append(f"{prefix} i == {idx} Then")
+        lines.append(f"valth = {thick_val:.3f}")
+        lines.append(f"idsrc = {src_pidx}")
+        lines.append(f"valsz = {src_z:.3f}")
+    
+    if total_steps > 0:
+        lines.append("EndIf")
+    
+    # Motion Logic
+    lines.extend([
+        "",
+        "valapp = valsz + high",
+        "MOVJ(Pn(idsrc) + Z(valapp, 1), speed, acc, dec, cp)",
+        "MOVJ(Pn(idsrc) + Z(valsz, 1), speed, acc, dec, cp)",
+        "Open(0)",
+        "Delay(200)",
+        "MOVJ(Pn(idsrc) + Z(valapp, 1), speed, acc, dec, cp)",
+        "",
+        "valapp = valz + high",
+        "MOVJ(Pn(21) + Z(valapp, 1), speed, acc, dec, cp)",
+        "MOVJ(Pn(21) + Z(valz, 1), speed, acc, dec, cp)",
+        "Close(0)",
+        "MOVJ(Pn(21) + Z(valapp, 1), speed, acc, dec, cp)",
+        "",
+        "valz = valz + valth",
+        "i = i + 1",
+        f"If i > {total_steps} Then",
+        "Break()",
+        "EndIf",
+        "Loop",
+        "ProcessEnd"
+    ])
+    
+    content = "\r\n".join(lines)
+    
+    # Debug: Save to local file
+    try:
+        with open("d:/projects/ags/debug_output.pg", "w") as f:
+            f.write(content)
+    except Exception as e:
+        print(f"Failed to save debug file: {e}")
+
+    return Response(
+        content,
+        mimetype="text/plain",
+        headers={"Content-Disposition": f"attachment;filename={pid}_program.pg"}
+    )
+    
+
+# 6) Serve project images --------------------------------------------------
 @bp.get("/proj_assets/<pid>/<path:fname>")
 def asset(pid: str, fname: str):
     return send_from_directory(PROJECTS / pid / "images", fname)

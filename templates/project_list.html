@@ -168,6 +168,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             <a href="/projects/${p.id}/edit" class="table-icon-btn" title="Edit">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5 19h1.4l8.625-8.625-1.4-1.4L5 17.6V19ZM19.3 8.925l-4.25-4.2L17.875 1.9l4.25 4.25L19.3 8.925Z"/></svg>
                             </a>
+                            <a href="/projects/${p.id}/program" class="table-icon-btn" title="Download Program" target="_blank">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                            </a>
                             <form action="/projects/${p.id}/delete" method="post" onsubmit="return confirm('Delete project &quot;${p.name}&quot;?')">
                                 <button type="submit" class="table-icon-btn delete" title="Delete">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M7 21q-.825 0-1.413-.588T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.588 1.413T17 21H7Z"/></svg>
