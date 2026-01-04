@@ -125,7 +125,8 @@ def download_program(pid: str):
     sequence = cfg.get("sequence", [])
     total_steps = len(sequence)
     total_thickness = sum(float(step.get("thickness", 0.0)) for step in sequence)
-    high_z = 10.0  # Safe clearance
+    high_z = 10.0  # App/Retract clearance
+    safe_z = 35.0  # Safe Transit Height (below max 40)
     base_z = float(cfg.get("base_z", 0.0))
     
     # Header
@@ -135,6 +136,7 @@ def download_program(pid: str):
         "int i = 1",
         "int idsrc = 1",
         f"float high = {high_z:.3f}",
+        f"float safe = {safe_z:.3f}",
         f"float valz = {base_z:.3f}",
         "float valth = 0.0",
         "float valsz = 0.0",
@@ -163,13 +165,11 @@ def download_program(pid: str):
             next_pidx += 1
         src_pidx = comp_map[cid]
         
-        # Source Stack Ht Calculation (Picking from top)
-        # Height = (Total - Picked_Before - 1) * Thickness
-        # i.e. If 5 total, 1st pick (0 previous) -> index 4 (top) -> 4 * th
-        total_count = comp_counts[cid]
+        # Source Stack Ht Calculation (Picking from top down)
+        # Taught Point (P1...) is the TOP of the stack/feeder.
+        # Height decreases: 0, -Th, -2Th, ...
         picked_so_far = comp_picked[cid]
-        remaining_below = total_count - picked_so_far - 1
-        src_z = max(0.0, remaining_below * thick_val)
+        src_z = -1.0 * (picked_so_far * thick_val)
         comp_picked[cid] += 1
         
         prefix = "If" if idx == 1 else "ElseIf"
@@ -185,17 +185,21 @@ def download_program(pid: str):
     lines.extend([
         "",
         "valapp = valsz + high",
+        "MOVJ(Pn(idsrc) + Z(safe, 1), speed, acc, dec, cp)",
         "MOVJ(Pn(idsrc) + Z(valapp, 1), speed, acc, dec, cp)",
         "MOVJ(Pn(idsrc) + Z(valsz, 1), speed, acc, dec, cp)",
         "Open(0)",
         "Delay(200)",
         "MOVJ(Pn(idsrc) + Z(valapp, 1), speed, acc, dec, cp)",
+        "MOVJ(Pn(idsrc) + Z(safe, 1), speed, acc, dec, cp)",
         "",
         "valapp = valz + high",
+        "MOVJ(Pn(21) + Z(safe, 1), speed, acc, dec, cp)",
         "MOVJ(Pn(21) + Z(valapp, 1), speed, acc, dec, cp)",
         "MOVJ(Pn(21) + Z(valz, 1), speed, acc, dec, cp)",
         "Close(0)",
         "MOVJ(Pn(21) + Z(valapp, 1), speed, acc, dec, cp)",
+        "MOVJ(Pn(21) + Z(safe, 1), speed, acc, dec, cp)",
         "",
         "valz = valz + valth",
         "i = i + 1",
