@@ -2,17 +2,17 @@
 
 // Element cache
 const controls = document.getElementById('controls');
-const nextBtn  = document.getElementById('nextBtn');
-const stopBtn  = document.getElementById('stopBtn');
-const imgEl    = document.getElementById('stepImg');
+const nextBtn = document.getElementById('nextBtn');
+const stopBtn = document.getElementById('stopBtn');
+const imgEl = document.getElementById('stepImg');
 const compNameEl = document.getElementById('compName');
-const labelEl  = document.getElementById('stepLabel');
+const labelEl = document.getElementById('stepLabel');
 const statusEl = document.getElementById('stepCounter');
 
 // Session state
 let session = null;
-let seq     = [];
-let idx     = -1;
+let seq = [];
+let idx = -1;
 
 // Component data maps
 let compImgMap = {};  // { id: 'image.png' }
@@ -21,7 +21,7 @@ let compNameMap = {}; // { id: 'Component Name' }
 // Foot pedal / space bar listener
 document.addEventListener('DOMContentLoaded', () => {
   let spacePressStart = null;
-  let spaceHoldTimer  = null;
+  let spaceHoldTimer = null;
   document.addEventListener('keydown', e => {
     if (e.code === 'Space' && !spacePressStart) {
       spacePressStart = Date.now();
@@ -42,20 +42,20 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ---------- Helpers --------------------------------------------------- */
-const sleep  = ms => new Promise(r => setTimeout(r, ms));
+const sleep = ms => new Promise(r => setTimeout(r, ms));
 const jFetch = (url, data) =>
   fetch(url, {
-    method : 'POST',
-    headers: { 'Content-Type':'application/json' },
-    body   : JSON.stringify(data)
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
   });
 
 /* ---------- Primary Application Flow ---------------------------------- */
-async function waitForJob () {
+async function waitForJob() {
   while (true) {
     const queue = await fetch('/api/pending').then(r => r.json());
     if (queue.length) {
-      const sid  = queue[0].session_id;
+      const sid = queue[0].session_id;
       const resp = await jFetch('/api/claim', { session_id: sid });
       if (resp.ok) return resp.json();
     }
@@ -65,10 +65,10 @@ async function waitForJob () {
 
 function showStep(i) {
   const step = seq[i] ?? {};
-  
+
   // Update component name, instruction label, and step counter
   compNameEl.textContent = compNameMap[step.comp] || '-';
-  labelEl.textContent  = step.label ?? '';
+  labelEl.textContent = step.label ?? '';
   statusEl.textContent = `Step ${i + 1} / ${seq.length}`;
 
   // Update image
@@ -106,6 +106,48 @@ async function abort() {
   location.reload();
 }
 
+/* ---------- WebSocket Client ------------------------------------------ */
+function connectWebSocket() {
+  const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const WS_HOST = '192.168.0.145:9000';
+  const url = `ws://${WS_HOST}`;
+
+  console.log('[WS] Connecting to', url);
+
+  const ws = new WebSocket(url);
+
+  ws.onopen = () => {
+    console.log('[WS] Connected');
+  };
+
+  ws.onmessage = (event) => {
+    try {
+      const msg = JSON.parse(event.data);
+      console.log('[WS] Received:', msg);
+
+      if (msg.event === 'pick_place_done') {
+        console.log('[WS] Robot finished step. Advancing...');
+        // Only advance if the next button is logically clickable (session active)
+        if (nextBtn && !nextBtn.disabled && !nextBtn.hidden) {
+          advance();
+        }
+      }
+    } catch (e) {
+      console.error('[WS] Parse error:', e);
+    }
+  };
+
+  ws.onclose = () => {
+    console.log('[WS] Disconnected. Reconnecting in 3s...');
+    setTimeout(connectWebSocket, 3000);
+  };
+
+  ws.onerror = (err) => {
+    console.error('[WS] Error:', err);
+    ws.close(); // Ensure onclose triggers
+  };
+}
+
 /* ---------- Bootstrap on Page Load ------------------------------------ */
 (async () => {
   // 1. Fetch component data first to build our lookup maps
@@ -116,7 +158,7 @@ async function abort() {
   // 2. Wait for a session to be assigned
   const data = await waitForJob();
   session = data.session;
-  seq     = data.sequence;
+  seq = data.sequence;
 
   // 3. Populate the structured header with session details
   document.getElementById('metaProject').textContent = session.project;
@@ -130,4 +172,7 @@ async function abort() {
 
   // 5. Kick off the first step
   advance();
+
+  // 6. Connect to Robot WebSocket
+  connectWebSocket();
 })();
