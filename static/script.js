@@ -109,7 +109,7 @@ async function abort() {
 /* ---------- WebSocket Client ------------------------------------------ */
 function connectWebSocket() {
   const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-  const WS_HOST = '192.168.0.145:9000';
+  const WS_HOST = '192.168.0.166:9000';
   const url = `ws://${WS_HOST}`;
 
   console.log('[WS] Connecting to', url);
