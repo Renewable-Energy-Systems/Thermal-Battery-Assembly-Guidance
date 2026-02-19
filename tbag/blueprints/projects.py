@@ -92,8 +92,15 @@ def edit(pid: str):
 
             label = request.form.get(f"label_{idx}", "").strip()
             thickness = float(request.form.get(f"thickness_{idx}", 0.0))
+            teachpoint = request.form.get(f"teachpoint_{idx}", "").strip()
+            
             if comp_id:                        # skip empty
-                seq.append({"comp": comp_id, "label": label, "thickness": thickness})
+                seq.append({
+                    "comp": comp_id, 
+                    "label": label, 
+                    "thickness": thickness,
+                    "teachpoint": teachpoint
+                })
             idx += 1
 
         cfg["sequence"] = seq
@@ -127,7 +134,6 @@ def download_program(pid: str):
     total_thickness = sum(float(step.get("thickness", 0.0)) for step in sequence)
     high_z = 10.0  # App/Retract clearance
     safe_z = 35.0  # Safe Transit Height (below max 40)
-    base_z = float(cfg.get("base_z", 0.0))
     
     # Header
     lines = [
@@ -137,20 +143,20 @@ def download_program(pid: str):
         "int idsrc = 1",
         f"float high = {high_z:.3f}",
         f"float safe = {safe_z:.3f}",
-        f"float valz = {base_z:.3f}",
+        "float valz = 0.0",
         "float valth = 0.0",
         "float valsz = 0.0",
         "float valapp = 0.0",
         "",
-        "Do"
+        f"For i = 1 To {total_steps}"
     ]
 
     # Pre-calculate counts for Source Stack Logic
     from collections import Counter
-    comp_counts = Counter(s.get("comp", f"unknown_{k}") for k, s in enumerate(sequence))
-    comp_picked = Counter()
+    # stack_z[src_id] -> current Z (starts at 0.0, decreases)
+    stack_z = Counter()     # This tracks Z-height per source location
 
-    # Component Mapping
+    # Component Mapping (Auto-assign fallback)
     comp_map = {}
     next_pidx = 1
     
@@ -158,25 +164,42 @@ def download_program(pid: str):
     for idx, step in enumerate(sequence, 1):
         cid = step.get("comp", f"unknown_{idx}")
         thick_val = float(step.get("thickness", 0.0))
+        user_tp = step.get("teachpoint", "")
         
-        # Source Mapping
-        if cid not in comp_map:
-            comp_map[cid] = next_pidx
-            next_pidx += 1
-        src_pidx = comp_map[cid]
+        # Determine Source ID (idsrc)
+        src_pidx = 1
+        if user_tp and user_tp.upper().startswith("P"):
+            # User explicit teachpoint: P5 -> 5
+            try:
+                src_pidx = int(user_tp.upper().replace("P", ""))
+            except ValueError:
+                # Fallback if parse fails
+                if cid not in comp_map:
+                    comp_map[cid] = next_pidx
+                    next_pidx += 1
+                src_pidx = comp_map[cid]
+        else:
+            # Auto-map based on component appearance
+            if cid not in comp_map:
+                comp_map[cid] = next_pidx
+                next_pidx += 1
+            src_pidx = comp_map[cid]
         
         # Source Stack Ht Calculation (Picking from top down)
-        # Taught Point (P1...) is the TOP of the stack/feeder.
-        # Height decreases: 0, -Th, -2Th, ...
-        picked_so_far = comp_picked[cid]
-        src_z = -1.0 * (picked_so_far * thick_val)
-        comp_picked[cid] += 1
+        # 1. Get current Z for this stack
+        current_z = stack_z[src_pidx]
+        
+        # 2. Update Z for next pick (decrement by thickness)
+        # Note: We assume P1 is taught at TOP of stack.
+        # Next pick will be lower.
+        stack_z[src_pidx] -= thick_val
         
         prefix = "If" if idx == 1 else "ElseIf"
         lines.append(f"{prefix} i == {idx} Then")
         lines.append(f"valth = {thick_val:.3f}")
         lines.append(f"idsrc = {src_pidx}")
-        lines.append(f"valsz = {src_z:.3f}")
+        # Use simple float format for Z
+        lines.append(f"valsz = {current_z:.3f}")
     
     if total_steps > 0:
         lines.append("EndIf")
@@ -199,17 +222,15 @@ def download_program(pid: str):
         "MOVJ(Pn(21) + Z(valapp, 1), speed, acc, dec, cp)",
         "MOVJ(Pn(21) + Z(valz, 1), speed, acc, dec, cp)",
         "Close(0)",
-        "MOVJ(Pn(21) + Z(valapp, 1), speed, acc, dec, cp)",
-        "Delay(5000)",
-        "MOVJ(Pn(21) + Z(safe, 1), speed, acc, dec, cp)",
         "Close(2)",
+        "Delay(500)",
+        "MOVJ(Pn(21) + Z(valapp, 1), speed, acc, dec, cp)",
+        "MOVJ(Pn(21) + Z(safe, 1), speed, acc, dec, cp)",
         "",
         "valz = valz + valth",
-        "i = i + 1",
-        f"If i > {total_steps} Then",
-        "Break()",
-        "EndIf",
-        "Loop",
+        "Next",
+        "",
+        "MOVJ(Pn(22), speed, acc, dec, cp)",
         "ProcessEnd"
     ])
     

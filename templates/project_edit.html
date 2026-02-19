@@ -257,7 +257,8 @@ function setupNumericInput(input) {
 }
 
 /* ---- Build one editable row ---- */
-function createStepRow(data = { comp: '', label: '', thickness: 0 }) {
+/* ---- Build one editable row ---- */
+function createStepRow(data = { comp: '', label: '', thickness: 0, teachpoint: '' }) {
     const idx = stepIdx++;
     const row = document.createElement('div');
     row.className = 'step-row';
@@ -273,6 +274,10 @@ function createStepRow(data = { comp: '', label: '', thickness: 0 }) {
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M3 11h18v2H3v-2zm0-6h18v2H3V5zm0 12h18v2H3v-2z" fill="currentColor"/></svg>
         </span>
         <span class="step-number">${container.children.length + 1}</span>
+        
+        <!-- HIDDEN: Teachpoint Storage -->
+        <input type="hidden" name="teachpoint_${idx}" value="${data.teachpoint || ''}" class="teachpoint-input">
+
         <div class="step-fields">
             <div class="form-group">
                 <div class="form-field-filled">
@@ -322,128 +327,169 @@ function createStepRow(data = { comp: '', label: '', thickness: 0 }) {
             });
         }
 
-        
-                if (input.classList.contains('thickness-input')) {
-                    setupNumericInput(input); // Apply strict validation
-                    input.addEventListener('input', () => {
-                        // VALIDATION: Enforce positive number
-                        if (input.value < 0) input.value = 0;
-                        
-                        const myRow = input.closest('.step-row');
-                        const myCompId = myRow.querySelector('select').value;
-                        if (!myCompId) return;
+        if (input.classList.contains('thickness-input')) {
+            setupNumericInput(input); // Apply strict validation
+            input.addEventListener('input', () => {
+                // VALIDATION: Enforce positive number
+                if (input.value < 0) input.value = 0;
+                
+                const myRow = input.closest('.step-row');
+                const myCompId = myRow.querySelector('select').value;
+                if (!myCompId) return;
 
-                        const newVal = input.value;
-                        
-                        // 1. Update other sequence rows
-                        document.querySelectorAll('.step-row').forEach(otherRow => {
-                            const otherSelect = otherRow.querySelector('select');
-                            if (otherSelect && otherSelect.value === myCompId) {
-                                const otherThickness = otherRow.querySelector('.thickness-input');
-                                if (otherThickness && otherThickness !== input) {
-                                    otherThickness.value = newVal;
-                                    otherThickness.parentElement.classList.add('focused');
-                                }
-                            }
-                        });
-
-                        // 2. Update Sidebar
-                        const sidebarInput = document.querySelector(`.sidebar-comp-thickness[data-comp-id="${myCompId}"]`);
-                        if (sidebarInput) {
-                            sidebarInput.value = newVal;
-                            sidebarInput.parentElement.classList.add('focused');
+                const newVal = input.value;
+                
+                // 1. Update other sequence rows
+                document.querySelectorAll('.step-row').forEach(otherRow => {
+                    const otherSelect = otherRow.querySelector('select');
+                    if (otherSelect && otherSelect.value === myCompId) {
+                        const otherThickness = otherRow.querySelector('.thickness-input');
+                        if (otherThickness && otherThickness !== input) {
+                            otherThickness.value = newVal;
+                            otherThickness.parentElement.classList.add('focused');
                         }
-                    });
+                    }
+                });
+
+                // 2. Update Sidebar
+                const sidebarInput = document.querySelector(`.sidebar-comp-thickness[data-comp-id="${myCompId}"]`);
+                if (sidebarInput) {
+                    sidebarInput.value = newVal;
+                    sidebarInput.parentElement.classList.add('focused');
                 }
             });
+        }
+    });
 
-            row.querySelector('.btn-icon-delete').onclick = () => {
-                row.remove();
-                updateStepNumbers();
-                toggleEmptyState();
-                updateSidebar(); // Refresh sidebar on delete
-            };
+    row.querySelector('.btn-icon-delete').onclick = () => {
+        row.remove();
+        updateStepNumbers();
+        toggleEmptyState();
+        updateSidebar(); // Refresh sidebar on delete
+    };
 
-            row.addEventListener('dragstart', e => {
-                row.classList.add('dragging');
-                e.dataTransfer.effectAllowed = 'move';
-            });
-            row.addEventListener('dragend', () => {
-                row.classList.remove('dragging');
-                updateStepNumbers();
-            });
+    row.addEventListener('dragstart', e => {
+        row.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+    });
+    row.addEventListener('dragend', () => {
+        row.classList.remove('dragging');
+        updateStepNumbers();
+    });
+}
+
+/* ---- Sidebar Logic ---- */
+function updateSidebar() {
+    const sidebarList = document.getElementById('project-components-list');
+    
+    // Gather unique components from sequence
+    // Map: id -> { thickness: val, teachpoint: val }
+    const usedComponents = new Map(); 
+    document.querySelectorAll('.step-row').forEach(row => {
+        const select = row.querySelector('select');
+        const thicknessInput = row.querySelector('.thickness-input');
+        const teachpointInput = row.querySelector('.teachpoint-input');
+        
+        if (select && select.value) {
+            if (!usedComponents.has(select.value)) {
+                 usedComponents.set(select.value, { 
+                     thickness: thicknessInput.value,
+                     teachpoint: teachpointInput.value 
+                 });
+            }
+        }
+    });
+
+    if (usedComponents.size === 0) {
+        sidebarList.innerHTML = '<div class="empty-params" style="text-align: center; color: var(--outline);">No components used.</div>';
+        return;
+    }
+
+    sidebarList.innerHTML = '';
+    usedComponents.forEach((data, compId) => {
+        const comp = components.find(c => c.id === compId);
+        if (!comp) return;
+
+        const item = document.createElement('div');
+        item.className = 'form-group';
+        item.style.marginBottom = '1.5rem';
+        
+        // Build P1-P10 Options
+        let tpOptions = '<option value="" disabled selected>Select Point</option>';
+        for(let i=1; i<=10; i++) {
+            const pVal = `P${i}`;
+            const selected = data.teachpoint === pVal ? 'selected' : '';
+            tpOptions += `<option value="${pVal}" ${selected}>${pVal}</option>`;
         }
         
-        /* ---- Sidebar Logic ---- */
-        function updateSidebar() {
-            const sidebarList = document.getElementById('project-components-list');
+        item.innerHTML = `
+            <div style="font-weight: 600; font-size: 0.95rem; margin-bottom: 0.5rem; color: var(--primary);">${comp.name}</div>
             
-            // Gather unique components from sequence
-            const usedComponents = new Map(); // id -> thickness
+            <!-- Thickness -->
+            <div class="form-field-filled" style="margin-bottom: 0.5rem;">
+                <input type="number" step="0.001" min="0" 
+                       value="${data.thickness}" 
+                       data-comp-id="${compId}"
+                       placeholder="Default: ${comp.default_thickness || 0}" 
+                       class="form-input sidebar-comp-thickness">
+                <label class="form-label">Thickness (mm)</label>
+            </div>
+
+            <!-- Teachpoint -->
+            <div class="form-field-filled">
+                <select class="form-input sidebar-comp-tp" data-comp-id="${compId}">
+                    ${tpOptions}
+                </select>
+                <label class="form-label">Teachpoint</label>
+            </div>
+        `;
+        sidebarList.appendChild(item);
+
+        /* --- Sync Logic --- */
+        const thickInput = item.querySelector('.sidebar-comp-thickness');
+        const tpSelect   = item.querySelector('.sidebar-comp-tp');
+
+        // Setup Thickness Sync (same as before)
+        setupNumericInput(thickInput);
+        const thickContainer = thickInput.parentElement;
+        thickInput.addEventListener('focus', () => thickContainer.classList.add('focused'));
+        thickInput.addEventListener('blur', () => thickContainer.classList.remove('focused'));
+        if(thickInput.value) thickContainer.classList.add('focused');
+
+        thickInput.addEventListener('input', () => {
+            const newVal = thickInput.value;
             document.querySelectorAll('.step-row').forEach(row => {
                 const select = row.querySelector('select');
-                const thicknessInput = row.querySelector('.thickness-input');
-                if (select && select.value) {
-                    if (!usedComponents.has(select.value)) {
-                         usedComponents.set(select.value, thicknessInput.value);
+                if (select && select.value === compId) {
+                    const target = row.querySelector('.thickness-input');
+                    if (target) {
+                        target.value = newVal;
+                        target.parentElement.classList.add('focused');
                     }
                 }
             });
+        });
 
-            if (usedComponents.size === 0) {
-                sidebarList.innerHTML = '<div class="empty-params" style="text-align: center; color: var(--outline);">No components used.</div>';
-                return;
-            }
+        // Setup Teachpoint Sync
+        const tpContainer = tpSelect.parentElement;
+        tpSelect.addEventListener('focus', () => tpContainer.classList.add('focused'));
+        tpSelect.addEventListener('blur', () => tpContainer.classList.remove('focused'));
+        if(tpSelect.value) tpContainer.classList.add('focused');
 
-            sidebarList.innerHTML = '';
-            usedComponents.forEach((val, compId) => {
-                const comp = components.find(c => c.id === compId);
-                if (!comp) return;
-
-                const item = document.createElement('div');
-                item.className = 'form-group';
-                item.style.marginBottom = '0';
-                
-                item.innerHTML = `
-                    <div style="font-weight: 500; font-size: 0.875rem; margin-bottom: 0.25rem;">${comp.name}</div>
-                    <div class="form-field-filled">
-                        <input type="number" step="0.001" min="0" 
-                               value="${val}" 
-                               data-comp-id="${compId}"
-                               placeholder="Default: ${comp.default_thickness || 0}" 
-                               class="form-input sidebar-comp-thickness">
-                        <label class="form-label">Thickness (mm)</label>
-                    </div>
-                `;
-                sidebarList.appendChild(item);
-
-                // Add Event Listener for Sidebar -> Sequence sync
-                const input = item.querySelector('input');
-                setupNumericInput(input); // Apply strict validation
-                
-                // float label logic
-                const fieldContainer = input.parentElement;
-                input.addEventListener('focus', () => fieldContainer.classList.add('focused'));
-                input.addEventListener('blur', () => fieldContainer.classList.remove('focused'));
-                if(input.value) fieldContainer.classList.add('focused');
-
-                input.addEventListener('input', () => {
-                   
-                    const newVal = input.value;
-                    // Update ALL sequence rows with this component
-                    document.querySelectorAll('.step-row').forEach(row => {
-                        const select = row.querySelector('select');
-                        if (select && select.value === compId) {
-                            const thick = row.querySelector('.thickness-input');
-                            if (thick) {
-                                thick.value = newVal;
-                                thick.parentElement.classList.add('focused');
-                            }
-                        }
-                    });
-                });
+        tpSelect.addEventListener('change', () => {
+             const newVal = tpSelect.value;
+             document.querySelectorAll('.step-row').forEach(row => {
+                const select = row.querySelector('select');
+                if (select && select.value === compId) {
+                    const target = row.querySelector('.teachpoint-input');
+                    if (target) {
+                        target.value = newVal;
+                    }
+                }
             });
-        }
+        });
+    });
+}
 
 // --- Drag & Drop Logic ---
 container.addEventListener('dragover', e => {
