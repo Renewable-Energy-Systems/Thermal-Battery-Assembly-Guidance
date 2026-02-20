@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Settings · RES Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Reuse base styles from dashboard */
+    :root {
+      --primary: #3A5BAA; --on-primary: #FFFFFF;
+      --primary-container: #D8E2FF; --on-primary-container: #001849;
+      --surface: #FDFBFF; --on-surface: #1A1C1E;
+      --surface-variant: #E1E2EC; --on-surface-variant: #44474F;
+      --outline: #74777F;
+      --elev-1: 0px 1px 2px rgba(0,0,0,0.3);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--surface); color: var(--on-surface); }
+    
+    .appbar {
+      display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem;
+      background: var(--surface); border-bottom: 1px solid var(--surface-variant);
+    }
+    .appbar a { display: flex; align-items: center; color: inherit; text-decoration: none; }
+    .appbar h1 { font-size: 1.25rem; font-weight: 500; }
+
+    .content { padding: 2rem; max-width: 900px; margin: 0 auto; }
+    
+    .card {
+      background: var(--surface-variant); border-radius: 16px; padding: 2rem;
+      box-shadow: var(--elev-1);
+    }
+    .card h2 { margin-bottom: 1.5rem; font-size: 1.5rem; }
+    
+    .tp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .tp-item {
+      background: var(--surface);
+      padding: 1rem;
+      border-radius: 12px;
+      border: 1px solid var(--outline);
+    }
+    .tp-header {
+      font-weight: 700; color: var(--primary); margin-bottom: 0.75rem;
+      display: flex; justify-content: space-between;
+    }
+    
+    .coord-inputs {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem;
+    }
+    .coord { display: flex; flex-direction: column; }
+    .coord label { font-size: 0.75rem; color: var(--on-surface-variant); margin-bottom: 0.25rem; }
+    .coord input {
+      width: 100%; padding: 0.5rem; border: 1px solid var(--outline); border-radius: 4px;
+      font-family: inherit; font-size: 0.9rem;
+    }
+    
+    .actions { margin-top: 2rem; text-align: right; }
+    .btn {
+      padding: 0.75rem 2rem; background: var(--primary); color: var(--on-primary);
+      border: none; border-radius: 100px; font-weight: 600; cursor: pointer;
+      font-size: 1rem; transition: background 0.2s;
+    }
+    .btn:hover { background: #2A4B9A; }
+  </style>
+</head>
+<body>
+
+<header class="appbar">
+  <a href="/admin">
+    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" fill="currentColor"/></svg>
+  </a>
+  <h1>Global Settings</h1>
+</header>
+
+<main class="content">
+  <form method="POST">
+    <section class="card">
+      <h2>Teachpoint Definitions</h2>
+      <p style="margin-bottom: 1.5rem; color: var(--on-surface-variant);">
+        Define the coordinates for each Teachpoint. These values will be hardcoded into the generated program, overriding the controller's internal table.
+      </p>
+      
+      <div class="tp-grid">
+        {% for key, val in settings.teachpoints.items() %}
+        <div class="tp-item">
+          <div class="tp-header">
+            <span>{{ key }}</span>
+          </div>
+          <div class="coord-inputs">
+            <div class="coord">
+              <label>X (mm)</label>
+              <input type="number" step="0.001" name="{{ key }}_x" value="{{ val.x }}">
+            </div>
+            <div class="coord">
+              <label>Y (mm)</label>
+              <input type="number" step="0.001" name="{{ key }}_y" value="{{ val.y }}">
+            </div>
+            <div class="coord">
+              <label>Z (mm)</label>
+              <input type="number" step="0.001" name="{{ key }}_z" value="{{ val.z }}">
+            </div>
+            <div class="coord">
+              <label>R (deg)</label>
+              <input type="number" step="0.001" name="{{ key }}_r" value="{{ val.r }}">
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      
+      <div class="actions">
+        <button type="submit" class="btn">Save & Apply</button>
+      </div>
+    </section>
+  </form>
+</main>
+
+</body>
+</html>

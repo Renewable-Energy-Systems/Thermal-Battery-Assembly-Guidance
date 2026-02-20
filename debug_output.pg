@@ -1,79 +1,234 @@
 Process Main
-int speed = 100, acc = 100, dec = 100, cp = 0
-int i = 1
-int idsrc = 1
-float high = 10.000
-float safe = 35.000
-float valz = 0.0
-float valth = 0.0
-float valsz = 0.0
-float valapp = 0.0
 
-For i = 1 To 10
-If i == 1 Then
-valth = 1.000
-idsrc = 2
-valsz = 0.000
-ElseIf i == 2 Then
-valth = 1.000
-idsrc = 1
-valsz = 0.000
-ElseIf i == 3 Then
-valth = 1.000
-idsrc = 3
-valsz = 0.000
-ElseIf i == 4 Then
-valth = 1.000
-idsrc = 4
-valsz = 0.000
-ElseIf i == 5 Then
-valth = 1.000
-idsrc = 5
-valsz = 0.000
-ElseIf i == 6 Then
-valth = 1.000
-idsrc = 6
-valsz = 0.000
-ElseIf i == 7 Then
-valth = 1.000
-idsrc = 7
-valsz = 0.000
-ElseIf i == 8 Then
-valth = 1.000
-idsrc = 8
-valsz = 0.000
-ElseIf i == 9 Then
-valth = 1.000
-idsrc = 9
-valsz = 0.000
-ElseIf i == 10 Then
-valth = 1.000
-idsrc = 10
-valsz = 0.000
-EndIf
+int speed = 40
+int acc = 40
+int dec = 40
+int cp = 0
 
-valapp = valsz + high
-MOVJ(Pn(idsrc) + Z(safe, 1), speed, acc, dec, cp)
-MOVJ(Pn(idsrc) + Z(valapp, 1), speed, acc, dec, cp)
-MOVJ(Pn(idsrc) + Z(valsz, 1), speed, acc, dec, cp)
-Open(0)
-Open(2)
-Delay(200)
-MOVJ(Pn(idsrc) + Z(valapp, 1), speed, acc, dec, cp)
-MOVJ(Pn(idsrc) + Z(safe, 1), speed, acc, dec, cp)
+User(0)
+Tool(0)
 
-valapp = valz + high
-MOVJ(Pn(21) + Z(safe, 1), speed, acc, dec, cp)
-MOVJ(Pn(21) + Z(valapp, 1), speed, acc, dec, cp)
-MOVJ(Pn(21) + Z(valz, 1), speed, acc, dec, cp)
-Close(0)
-Close(2)
-Delay(500)
-MOVJ(Pn(21) + Z(valapp, 1), speed, acc, dec, cp)
-MOVJ(Pn(21) + Z(safe, 1), speed, acc, dec, cp)
 
-valz = valz + valth
-Next
-
+// --------------------------------------------------
+// MOVE TO HOME POSITION (Pn22)
+// --------------------------------------------------
 MOVJ(Pn(22), speed, acc, dec, cp)
+
+
+// ==================================================
+// PICK 1  (Top component at P2)
+// Base Z = -34
+// Top Z = -34
+// ==================================================
+
+// Move above P2 at global clearance height
+MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
+
+// Descend to top component (-34)
+MOVL(BuildPoint(360,-400,-34,-6,1), speed, acc, dec, cp)
+Delay(1000)
+
+// Retract vertically to clearance
+MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
+
+
+// Place at P21 level 1 (stack base = -27)
+MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
+MOVL(BuildPoint(90,-450,-27,-17,1), speed, acc, dec, cp)
+Delay(1000)
+MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
+
+
+// ==================================================
+// PICK 2  (Z = -24)
+// ==================================================
+
+MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
+MOVL(BuildPoint(360,-400,-24,-6,1), speed, acc, dec, cp)
+Delay(1000)
+MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
+
+
+// Place level 2 (-22)
+MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
+MOVL(BuildPoint(90,-450,-22,-17,1), speed, acc, dec, cp)
+Delay(1000)
+MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
+
+
+// ==================================================
+// PICK 3  (Z = -34)
+// ==================================================
+
+MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
+MOVL(BuildPoint(360,-400,-34,-6,1), speed, acc, dec, cp)
+Delay(1000)
+MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
+
+
+// Place level 3 (-17)
+MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
+MOVL(BuildPoint(90,-450,-17,-17,1), speed, acc, dec, cp)
+Delay(1000)
+MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
+
+
+// ==================================================
+// PICK 4  (Z = -34)
+// ==================================================
+
+MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
+MOVL(BuildPoint(360,-400,-34,-6,1), speed, acc, dec, cp)
+Delay(1000)
+MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
+
+
+// Place level 4 (-12)
+MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
+MOVL(BuildPoint(90,-450,-12,-17,1), speed, acc, dec, cp)
+Delay(1000)
+MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
+
+
+// ==================================================
+// PICK 5  (Z = -34)
+// ==================================================
+
+MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
+MOVL(BuildPoint(360,-400,-34,-6,1), speed, acc, dec, cp)
+Delay(1000)
+MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
+
+
+// Place level 5 (-7)
+MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
+MOVL(BuildPoint(90,-450,-7,-17,1), speed, acc, dec, cp)
+Delay(1000)
+MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
+
+
+// ==================================================
+// PICK 6  (Z = -34)
+// ==================================================
+
+MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
+MOVL(BuildPoint(360,-400,-34,-6,1), speed, acc, dec, cp)
+Delay(1000)
+MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
+
+
+// Place level 6 (-2)
+MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
+MOVL(BuildPoint(90,-450,-2,-17,1), speed, acc, dec, cp)
+Delay(1000)
+MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
+
+
+// ==================================================
+// PICK 7  (Z = -34)
+// ==================================================
+
+MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
+MOVL(BuildPoint(360,-400,-34,-6,1), speed, acc, dec, cp)
+Delay(1000)
+MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
+
+
+// Place level 7 (3)
+MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
+MOVL(BuildPoint(90,-450,3,-17,1), speed, acc, dec, cp)
+Delay(1000)
+MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
+
+
+// ==================================================
+// PICK 8  (Z = -34)
+// ==================================================
+
+MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
+MOVL(BuildPoint(360,-400,-34,-6,1), speed, acc, dec, cp)
+Delay(1000)
+MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
+
+
+// Place level 8 (8)
+MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
+MOVL(BuildPoint(90,-450,8,-17,1), speed, acc, dec, cp)
+Delay(1000)
+MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
+
+
+// ==================================================
+// PICK 9  (Z = -34)
+// ==================================================
+
+MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
+MOVL(BuildPoint(360,-400,-34,-6,1), speed, acc, dec, cp)
+Delay(1000)
+MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
+
+
+// Place level 9 (13)
+MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
+MOVL(BuildPoint(90,-450,13,-17,1), speed, acc, dec, cp)
+Delay(1000)
+MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
+
+
+// ==================================================
+// PICK 10  (Z = -34)
+// ==================================================
+
+MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
+MOVL(BuildPoint(360,-400,-34,-6,1), speed, acc, dec, cp)
+Delay(1000)
+MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
+
+
+// Place level 10 (18)
+MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
+MOVL(BuildPoint(90,-450,18,-17,1), speed, acc, dec, cp)
+Delay(1000)
+MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
+
+
+// ==================================================
+// PICK 11  (Z = -29)
+// ==================================================
+
+MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
+MOVL(BuildPoint(360,-400,-29,-6,1), speed, acc, dec, cp)
+Delay(1000)
+MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
+
+
+// Place level 11 (23)
+MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
+MOVL(BuildPoint(90,-450,23,-17,1), speed, acc, dec, cp)
+Delay(1000)
+MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
+
+
+// ==================================================
+// PICK 12  (Last component, base Z = -34)
+// ==================================================
+
+MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
+MOVL(BuildPoint(360,-400,-34,-6,1), speed, acc, dec, cp)
+Delay(1000)
+MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
+
+
+// Place level 12 (28)
+MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
+MOVL(BuildPoint(90,-450,28,-17,1), speed, acc, dec, cp)
+Delay(1000)
+MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
+
+
+// --------------------------------------------------
+// RETURN TO HOME
+// --------------------------------------------------
+MOVJ(Pn(22), speed, acc, dec, cp)
+
 ProcessEnd

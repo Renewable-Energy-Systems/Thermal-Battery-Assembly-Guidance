@@ -11,8 +11,36 @@ from flask import Blueprint, abort, jsonify, redirect, render_template, request
 
 from ..config import DB_FILE
 from ..helpers.projects import load_config, projects_list
+from ..helpers.settings import load_settings, save_settings
 
 bp = Blueprint("admin", __name__, url_prefix="/admin")
+
+# ───────── settings ─────────────────
+@bp.route("/settings", methods=["GET", "POST"])
+def settings():
+    if request.method == "POST":
+        # Payload structure: P1_x, P1_y, ...
+        # We need to reconstruct the JSON
+        current = load_settings()
+        tps = current.get("teachpoints", {})
+        
+        for key in tps.keys():
+            # key = "P1", "P2", ...
+            try:
+                tps[key]["x"] = float(request.form.get(f"{key}_x", 0.0))
+                tps[key]["y"] = float(request.form.get(f"{key}_y", 0.0))
+                tps[key]["z"] = float(request.form.get(f"{key}_z", 0.0))
+                tps[key]["r"] = float(request.form.get(f"{key}_r", 0.0))
+            except ValueError:
+                pass # keep old value or 0.0
+        
+        current["teachpoints"] = tps
+        save_settings(current)
+        return redirect("/admin/settings")
+
+    data = load_settings()
+    return render_template("admin_settings.html", settings=data)
+
 
 # ───────── dashboard (home) ─────────
 @bp.get("/")

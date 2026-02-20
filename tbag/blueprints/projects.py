@@ -125,118 +125,157 @@ def edit(pid: str):
 @bp.get("/projects/<pid>/program")
 def download_program(pid: str):
     """Generates and downloads a .pg robotic program file."""
+    from ..helpers.settings import load_settings
+
     cfg = load_config(pid)
     if not cfg:
         abort(404, f"Project {pid!r} not found")
-    
-    sequence = cfg.get("sequence", [])
-    total_steps = len(sequence)
-    total_thickness = sum(float(step.get("thickness", 0.0)) for step in sequence)
-    high_z = 10.0  # App/Retract clearance
-    safe_z = 35.0  # Safe Transit Height (below max 40)
-    
-    # Header
+
+    settings = load_settings()
+    tps = settings.get("teachpoints", {})
+
+    sequence   = cfg.get("sequence", [])
+
+    # Global clearance height is taken from P22 Z
+    clearance_z = float(tps.get("P22", {}).get("z", 39.0))
+    home_tp_name = "P22"
+    dest_tp_name = "P21"
+
+    # Pre-calculate pick offsets for each source teachpoint
+    # A step's pick offset is the sum of thicknesses of all subsequent items picked from the SAME teachpoint.
+    pick_offsets = []
+    for i in range(len(sequence)):
+        step = sequence[i]
+        src_tp = step.get("teachpoint", "P1").strip().upper()
+        if not src_tp:
+            src_tp = "P1"
+        offset = 0.0
+        for j in range(i + 1, len(sequence)):
+            next_tp = sequence[j].get("teachpoint", "P1").strip().upper()
+            if not next_tp:
+                next_tp = "P1"
+            if next_tp == src_tp:
+                offset += float(sequence[j].get("thickness", 0.0))
+        pick_offsets.append((src_tp, offset))
+
+    # ── Program header ───────────────────────────────────────────────────────
     lines = [
         "Process Main",
-        "int speed = 100, acc = 100, dec = 100, cp = 0",
-        "int i = 1",
-        "int idsrc = 1",
-        f"float high = {high_z:.3f}",
-        f"float safe = {safe_z:.3f}",
-        "float valz = 0.0",
-        "float valth = 0.0",
-        "float valsz = 0.0",
-        "float valapp = 0.0",
         "",
-        f"For i = 1 To {total_steps}"
+        "int speed = 40",
+        "int acc = 40",
+        "int dec = 40",
+        "int cp = 0",
+        "",
+        "User(0)",
+        "Tool(0)",
+        "",
+        "",
+        "// --------------------------------------------------",
+        "// MOVE TO HOME POSITION (Pn22)",
+        "// --------------------------------------------------",
+        "MOVJ(Pn(22), speed, acc, dec, cp)",
+        "",
+        ""
     ]
 
-    # Pre-calculate counts for Source Stack Logic
-    from collections import Counter
-    # stack_z[src_id] -> current Z (starts at 0.0, decreases)
-    stack_z = Counter()     # This tracks Z-height per source location
-
-    # Component Mapping (Auto-assign fallback)
-    comp_map = {}
-    next_pidx = 1
+    dest_z_offset = 0.0   # accumulates target Z height per stacked layer
     
-    # Lookup Generation
-    for idx, step in enumerate(sequence, 1):
-        cid = step.get("comp", f"unknown_{idx}")
+    for step_idx, (step, (src_tp, src_z_offset)) in enumerate(zip(sequence, pick_offsets), 1):
         thick_val = float(step.get("thickness", 0.0))
-        user_tp = step.get("teachpoint", "")
+        label     = step.get("label", f"Component {step_idx}").strip() or f"Component {step_idx}"
+
+        # Resolve source TP coordinates
+        src_t_data = tps.get(src_tp, tps.get("P1", {"x": 0.0, "y": 0.0, "z": 0.0, "r": 0.0}))
+        src_x = float(src_t_data.get("x", 0.0))
+        src_y = float(src_t_data.get("y", 0.0))
+        src_base_z = float(src_t_data.get("z", 0.0))
+        src_r = float(src_t_data.get("r", 0.0))
         
-        # Determine Source ID (idsrc)
-        src_pidx = 1
-        if user_tp and user_tp.upper().startswith("P"):
-            # User explicit teachpoint: P5 -> 5
-            try:
-                src_pidx = int(user_tp.upper().replace("P", ""))
-            except ValueError:
-                # Fallback if parse fails
-                if cid not in comp_map:
-                    comp_map[cid] = next_pidx
-                    next_pidx += 1
-                src_pidx = comp_map[cid]
+        pick_z = src_base_z + src_z_offset
+
+        # Resolve dest TP coordinates
+        dest_t_data = tps.get(dest_tp_name, {"x": 0.0, "y": 0.0, "z": 0.0, "r": 0.0})
+        dest_x = float(dest_t_data.get("x", 0.0))
+        dest_y = float(dest_t_data.get("y", 0.0))
+        dest_base_z = float(dest_t_data.get("z", 0.0))
+        dest_r = float(dest_t_data.get("r", 0.0))
+        
+        place_z = dest_base_z + dest_z_offset
+
+        cx = f"{clearance_z:g}"
+        sx = f"{src_x:g}"; sy = f"{src_y:g}"; sr = f"{src_r:g}"
+        dx = f"{dest_x:g}"; dy = f"{dest_y:g}"; dr = f"{dest_r:g}"
+        pz = f"{pick_z:g}"
+        plz = f"{place_z:g}"
+        sbz = f"{src_base_z:g}"
+        dbz = f"{dest_base_z:g}"
+
+        lines.append("// ==================================================")
+        if step_idx == 1:
+            lines.append(f"// PICK {step_idx}  (Top component at {src_tp})")
+            lines.append(f"// Base Z = {sbz}")
+            total_comps = sum(1 for tp, _ in pick_offsets if tp == src_tp)
+            if total_comps > 1:
+                lines.append(f"// {total_comps} components \u00d7 {thick_val:g}mm")
+            lines.append(f"// Top Z = {pz}")
+        elif step_idx == len(sequence):
+            lines.append(f"// PICK {step_idx}  (Last component, base Z = {sbz})")
         else:
-            # Auto-map based on component appearance
-            if cid not in comp_map:
-                comp_map[cid] = next_pidx
-                next_pidx += 1
-            src_pidx = comp_map[cid]
-        
-        # Source Stack Ht Calculation (Picking from top down)
-        # 1. Get current Z for this stack
-        current_z = stack_z[src_pidx]
-        
-        # 2. Update Z for next pick (decrement by thickness)
-        # Note: We assume P1 is taught at TOP of stack.
-        # Next pick will be lower.
-        stack_z[src_pidx] -= thick_val
-        
-        prefix = "If" if idx == 1 else "ElseIf"
-        lines.append(f"{prefix} i == {idx} Then")
-        lines.append(f"valth = {thick_val:.3f}")
-        lines.append(f"idsrc = {src_pidx}")
-        # Use simple float format for Z
-        lines.append(f"valsz = {current_z:.3f}")
-    
-    if total_steps > 0:
-        lines.append("EndIf")
-    
-    # Motion Logic
-    lines.extend([
-        "",
-        "valapp = valsz + high",
-        "MOVJ(Pn(idsrc) + Z(safe, 1), speed, acc, dec, cp)",
-        "MOVJ(Pn(idsrc) + Z(valapp, 1), speed, acc, dec, cp)",
-        "MOVJ(Pn(idsrc) + Z(valsz, 1), speed, acc, dec, cp)",
-        "Open(0)",
-        "Open(2)",
-        "Delay(200)",
-        "MOVJ(Pn(idsrc) + Z(valapp, 1), speed, acc, dec, cp)",
-        "MOVJ(Pn(idsrc) + Z(safe, 1), speed, acc, dec, cp)",
-        "",
-        "valapp = valz + high",
-        "MOVJ(Pn(21) + Z(safe, 1), speed, acc, dec, cp)",
-        "MOVJ(Pn(21) + Z(valapp, 1), speed, acc, dec, cp)",
-        "MOVJ(Pn(21) + Z(valz, 1), speed, acc, dec, cp)",
-        "Close(0)",
-        "Close(2)",
-        "Delay(500)",
-        "MOVJ(Pn(21) + Z(valapp, 1), speed, acc, dec, cp)",
-        "MOVJ(Pn(21) + Z(safe, 1), speed, acc, dec, cp)",
-        "",
-        "valz = valz + valth",
-        "Next",
-        "",
-        "MOVJ(Pn(22), speed, acc, dec, cp)",
-        "ProcessEnd"
-    ])
-    
+            lines.append(f"// PICK {step_idx}  (Z = {pz})")
+        lines.append("// ==================================================")
+        lines.append("")
+
+        if step_idx == 1:
+            lines.append(f"// Move above {src_tp} at global clearance height")
+            lines.append(f"MOVL(BuildPoint({sx},{sy},{cx},{sr},1), speed, acc, dec, cp)")
+            lines.append("")
+            lines.append(f"// Descend to top component ({pz})")
+            lines.append(f"MOVL(BuildPoint({sx},{sy},{pz},{sr},1), speed, acc, dec, cp)")
+            lines.append("Delay(1000)")
+            lines.append("")
+            lines.append("// Retract vertically to clearance")
+            lines.append(f"MOVL(BuildPoint({sx},{sy},{cx},{sr},1), speed, acc, dec, cp)")
+            lines.append("")
+            lines.append("")
+        else:
+            lines.append(f"MOVL(BuildPoint({sx},{sy},{cx},{sr},1), speed, acc, dec, cp)")
+            lines.append(f"MOVL(BuildPoint({sx},{sy},{pz},{sr},1), speed, acc, dec, cp)")
+            lines.append("Delay(1000)")
+            lines.append(f"MOVL(BuildPoint({sx},{sy},{cx},{sr},1), speed, acc, dec, cp)")
+            lines.append("")
+            lines.append("")
+
+        if step_idx == 1:
+            lines.append(f"// Place at {dest_tp_name} level 1 (stack base = {dbz})")
+            lines.append(f"MOVL(BuildPoint({dx},{dy},{cx},{dr},1), speed, acc, dec, cp)")
+            lines.append(f"MOVL(BuildPoint({dx},{dy},{plz},{dr},1), speed, acc, dec, cp)")
+            lines.append("Delay(1000)")
+            lines.append(f"MOVL(BuildPoint({dx},{dy},{cx},{dr},1), speed, acc, dec, cp)")
+            lines.append("")
+            lines.append("")
+        else:
+            lines.append(f"// Place level {step_idx} ({plz})")
+            lines.append(f"MOVL(BuildPoint({dx},{dy},{cx},{dr},1), speed, acc, dec, cp)")
+            lines.append(f"MOVL(BuildPoint({dx},{dy},{plz},{dr},1), speed, acc, dec, cp)")
+            lines.append("Delay(1000)")
+            lines.append(f"MOVL(BuildPoint({dx},{dy},{cx},{dr},1), speed, acc, dec, cp)")
+            lines.append("")
+            lines.append("")
+
+        dest_z_offset += thick_val
+
+    # ── Return to home P22 ───────────────────────────────────────────────────
+    lines.append("// --------------------------------------------------")
+    lines.append("// RETURN TO HOME")
+    lines.append("// --------------------------------------------------")
+    lines.append("MOVJ(Pn(22), speed, acc, dec, cp)")
+    lines.append("")
+    lines.append("ProcessEnd")
+
     content = "\r\n".join(lines)
-    
-    # Debug: Save to local file
+
+    # Debug: save a local copy for inspection
     try:
         with open("d:/projects/ags/debug_output.pg", "w") as f:
             f.write(content)

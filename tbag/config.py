@@ -27,8 +27,12 @@ DB_FILE  = ROOT_DIR / "events.db"                    # live DB
 SECRET    = os.getenv("TBAG_SECRET",  "change-this-in-prod")
 DEVICE_ID = os.getenv("TBAG_DEVICE",  "glovebox-pi")
 
+DATA_DIR = ROOT_DIR / "data"
+DATA_DIR.mkdir(exist_ok=True)
+
 __all__ = [
     "PROJECTS",
+    "DATA_DIR",
     "DB_FILE",
     "SECRET",
     "DEVICE_ID",
