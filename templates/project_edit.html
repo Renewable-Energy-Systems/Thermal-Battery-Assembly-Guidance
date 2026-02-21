@@ -277,6 +277,7 @@ function createStepRow(data = { comp: '', label: '', thickness: 0, teachpoint: '
         
         <!-- HIDDEN: Teachpoint Storage -->
         <input type="hidden" name="teachpoint_${idx}" value="${data.teachpoint || ''}" class="teachpoint-input">
+        <input type="hidden" name="manual_${idx}" value="${data.manual ? 'true' : 'false'}" class="manual-input">
 
         <div class="step-fields">
             <div class="form-group">
@@ -389,12 +390,14 @@ function updateSidebar() {
         const select = row.querySelector('select');
         const thicknessInput = row.querySelector('.thickness-input');
         const teachpointInput = row.querySelector('.teachpoint-input');
+        const manualInput = row.querySelector('.manual-input');
         
         if (select && select.value) {
             if (!usedComponents.has(select.value)) {
                  usedComponents.set(select.value, { 
                      thickness: thicknessInput.value,
-                     teachpoint: teachpointInput.value 
+                     teachpoint: teachpointInput.value,
+                     manual: manualInput ? manualInput.value === 'true' : false
                  });
             }
         }
@@ -425,6 +428,12 @@ function updateSidebar() {
         item.innerHTML = `
             <div style="font-weight: 600; font-size: 0.95rem; margin-bottom: 0.5rem; color: var(--primary);">${comp.name}</div>
             
+            <!-- Manual Checkbox -->
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                <input type="checkbox" id="manual_${compId}" class="sidebar-comp-manual" data-comp-id="${compId}" ${data.manual ? 'checked' : ''}>
+                <label for="manual_${compId}" style="font-size: 0.875rem; color: var(--on-surface-variant); cursor: pointer;">Manual Placement Drop</label>
+            </div>
+
             <!-- Thickness -->
             <div class="form-field-filled" style="margin-bottom: 0.5rem;">
                 <input type="number" step="0.001" min="0" 
@@ -437,7 +446,7 @@ function updateSidebar() {
 
             <!-- Teachpoint -->
             <div class="form-field-filled">
-                <select class="form-input sidebar-comp-tp" data-comp-id="${compId}">
+                <select class="form-input sidebar-comp-tp" data-comp-id="${compId}" ${data.manual ? 'disabled' : ''}>
                     ${tpOptions}
                 </select>
                 <label class="form-label">Teachpoint</label>
@@ -488,6 +497,25 @@ function updateSidebar() {
                 }
             });
         });
+
+        // Setup Manual Sync
+        const manualBox = item.querySelector('.sidebar-comp-manual');
+        if (manualBox) {
+            manualBox.addEventListener('change', () => {
+                const isManual = manualBox.checked;
+                tpSelect.disabled = isManual;
+                
+                document.querySelectorAll('.step-row').forEach(row => {
+                    const select = row.querySelector('select');
+                    if (select && select.value === compId) {
+                        const target = row.querySelector('.manual-input');
+                        if (target) {
+                            target.value = isManual ? 'true' : 'false';
+                        }
+                    }
+                });
+            });
+        }
     });
 }
 

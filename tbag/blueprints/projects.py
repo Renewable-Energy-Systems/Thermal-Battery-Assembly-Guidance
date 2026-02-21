@@ -93,13 +93,15 @@ def edit(pid: str):
             label = request.form.get(f"label_{idx}", "").strip()
             thickness = float(request.form.get(f"thickness_{idx}", 0.0))
             teachpoint = request.form.get(f"teachpoint_{idx}", "").strip()
+            is_manual = request.form.get(f"manual_{idx}") == 'true'
             
             if comp_id:                        # skip empty
                 seq.append({
                     "comp": comp_id, 
                     "label": label, 
                     "thickness": thickness,
-                    "teachpoint": teachpoint
+                    "teachpoint": teachpoint,
+                    "manual": is_manual
                 })
             idx += 1
 
@@ -184,6 +186,20 @@ def download_program(pid: str):
     for step_idx, (step, (src_tp, src_z_offset)) in enumerate(zip(sequence, pick_offsets), 1):
         thick_val = float(step.get("thickness", 0.0))
         label     = step.get("label", f"Component {step_idx}").strip() or f"Component {step_idx}"
+        is_manual = step.get("manual", False)
+
+        if is_manual:
+            lines.append("// ==================================================")
+            lines.append(f"// MANUAL COMPONENT {step_idx}: {label}")
+            lines.append("// Go to Home and Wait 2 minutes for human placement")
+            lines.append("// ==================================================")
+            lines.append("")
+            lines.append("MOVJ(Pn(22), speed, acc, dec, cp)")
+            lines.append("Delay(120000)")
+            lines.append("")
+            lines.append("")
+            dest_z_offset += thick_val
+            continue
 
         # Resolve source TP coordinates
         src_t_data = tps.get(src_tp, tps.get("P1", {"x": 0.0, "y": 0.0, "z": 0.0, "r": 0.0}))
