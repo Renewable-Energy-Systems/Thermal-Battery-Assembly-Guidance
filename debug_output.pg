@@ -1,6 +1,6 @@
 Process Main
 
-int speed = 40
+int speed = 100
 int acc = 40
 int dec = 40
 int cp = 0
@@ -17,11 +17,11 @@ MOVJ(Pn(22), speed, acc, dec, cp)
 
 // ==================================================
 // MANUAL COMPONENT 1: Component 1
-// Go to Home and Wait 2 minutes for human placement
+// Go to Home and Wait 1 minute for human placement
 // ==================================================
 
 MOVJ(Pn(22), speed, acc, dec, cp)
-Delay(120000)
+Delay(60000)
 
 
 // ==================================================
@@ -30,6 +30,8 @@ Delay(120000)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-28,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -37,7 +39,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 2 (-33)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-33,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -47,6 +51,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-32,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -54,7 +60,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 3 (-32)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-32,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -64,6 +72,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-30,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -71,7 +81,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 4 (-31)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-31,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -81,6 +93,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-33,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -88,7 +102,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 5 (-30)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-30,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -98,6 +114,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-31,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -105,7 +123,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 6 (-29)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-29,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -115,6 +135,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-34,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -122,7 +144,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 7 (-28)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-28,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -132,6 +156,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,32,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -139,7 +165,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 8 (-27)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-27,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -149,6 +177,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-29,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -156,17 +186,19 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 9 (-26)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-26,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
 // ==================================================
 // MANUAL COMPONENT 10: Component 10
-// Go to Home and Wait 2 minutes for human placement
+// Go to Home and Wait 1 minute for human placement
 // ==================================================
 
 MOVJ(Pn(22), speed, acc, dec, cp)
-Delay(120000)
+Delay(60000)
 
 
 // ==================================================
@@ -175,6 +207,8 @@ Delay(120000)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-1,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -182,7 +216,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 11 (-24)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-24,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -192,6 +228,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-1,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -199,7 +237,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 12 (-23)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-23,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -209,6 +249,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-1,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -216,7 +258,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 13 (-22)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-22,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -226,6 +270,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,31,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -233,7 +279,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 14 (-21)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-21,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -243,6 +291,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-2,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -250,7 +300,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 15 (-20)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-20,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -260,6 +312,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,30,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -267,7 +321,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 16 (-19)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-19,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -277,6 +333,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-2,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -284,7 +342,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 17 (-18)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-18,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -294,6 +354,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-2,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -301,7 +363,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 18 (-17)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-17,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -311,6 +375,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-2,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -318,7 +384,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 19 (-16)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-16,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -328,6 +396,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,29,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -335,7 +405,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 20 (-15)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-15,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -345,6 +417,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-3,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -352,7 +426,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 21 (-14)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-14,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -362,6 +438,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,28,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -369,7 +447,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 22 (-13)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-13,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -379,6 +459,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-3,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -386,7 +468,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 23 (-12)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-12,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -396,6 +480,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-3,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -403,7 +489,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 24 (-11)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-11,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -413,6 +501,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-3,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -420,7 +510,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 25 (-10)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-10,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -430,6 +522,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,27,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -437,7 +531,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 26 (-9)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-9,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -447,6 +543,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-4,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -454,7 +552,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 27 (-8)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-8,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -464,6 +564,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,26,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -471,7 +573,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 28 (-7)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-7,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -481,6 +585,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-4,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -488,7 +594,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 29 (-6)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-6,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -498,6 +606,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-4,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -505,7 +615,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 30 (-5)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-5,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -515,6 +627,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-4,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -522,7 +636,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 31 (-4)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-4,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -532,6 +648,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,25,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -539,7 +657,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 32 (-3)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-3,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -549,6 +669,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-5,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -556,7 +678,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 33 (-2)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-2,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -566,6 +690,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,24,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -573,7 +699,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 34 (-1)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,-1,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -583,6 +711,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-5,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -590,7 +720,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 35 (0)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,0,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -600,6 +732,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-5,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -607,7 +741,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 36 (1)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,1,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -617,6 +753,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-5,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -624,7 +762,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 37 (2)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,2,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -634,6 +774,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,23,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -641,7 +783,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 38 (3)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,3,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -651,6 +795,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-6,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -658,7 +804,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 39 (4)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,4,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -668,6 +816,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,22,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -675,7 +825,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 40 (5)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,5,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -685,6 +837,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-6,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -692,7 +846,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 41 (6)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,6,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -702,6 +858,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-6,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -709,7 +867,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 42 (7)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,7,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -719,6 +879,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-6,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -726,7 +888,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 43 (8)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,8,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -736,6 +900,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,21,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -743,7 +909,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 44 (9)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,9,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -753,6 +921,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-7,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -760,7 +930,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 45 (10)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,10,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -770,6 +942,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,20,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -777,7 +951,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 46 (11)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,11,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -787,6 +963,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-7,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -794,7 +972,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 47 (12)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,12,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -804,6 +984,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-7,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -811,7 +993,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 48 (13)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,13,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -821,6 +1005,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-7,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -828,7 +1014,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 49 (14)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,14,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -838,6 +1026,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,19,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -845,7 +1035,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 50 (15)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,15,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -855,6 +1047,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-8,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -862,7 +1056,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 51 (16)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,16,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -872,6 +1068,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,18,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -879,7 +1077,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 52 (17)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,17,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -889,6 +1089,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-8,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -896,7 +1098,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 53 (18)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,18,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -906,6 +1110,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-8,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -913,7 +1119,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 54 (19)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,19,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -923,6 +1131,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-8,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -930,7 +1140,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 55 (20)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,20,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -940,6 +1152,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,17,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -947,7 +1161,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 56 (21)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,21,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -957,6 +1173,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-9,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -964,7 +1182,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 57 (22)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,22,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -974,6 +1194,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,16,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -981,7 +1203,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 58 (23)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,23,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -991,6 +1215,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-9,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -998,7 +1224,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 59 (24)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,24,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1008,6 +1236,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-9,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1015,7 +1245,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 60 (25)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,25,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1025,6 +1257,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-9,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1032,7 +1266,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 61 (26)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,26,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1042,6 +1278,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,15,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1049,7 +1287,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 62 (27)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,27,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1059,6 +1299,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-10,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1066,7 +1308,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 63 (28)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,28,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1076,6 +1320,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,14,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1083,7 +1329,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 64 (29)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,29,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1093,6 +1341,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-10,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1100,7 +1350,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 65 (30)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,30,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1110,6 +1362,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-10,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1117,7 +1371,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 66 (31)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,31,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1127,6 +1383,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-10,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1134,7 +1392,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 67 (32)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,32,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1144,6 +1404,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,13,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1151,7 +1413,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 68 (33)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,33,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1161,6 +1425,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-11,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1168,7 +1434,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 69 (34)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,34,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1178,6 +1446,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,12,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1185,7 +1455,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 70 (35)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,35,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1195,6 +1467,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-11,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1202,7 +1476,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 71 (36)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,36,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1212,6 +1488,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-11,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1219,7 +1497,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 72 (37)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,37,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1229,6 +1509,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-11,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1236,7 +1518,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 73 (38)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,38,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1246,6 +1530,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,11,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1253,7 +1539,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 74 (39)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1263,6 +1551,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-12,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1270,7 +1560,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 75 (40)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,40,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1280,6 +1572,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,10,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1287,7 +1581,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 76 (41)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,41,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1297,6 +1593,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-12,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1304,7 +1602,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 77 (42)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,42,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1314,6 +1614,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-12,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1321,7 +1623,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 78 (43)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,43,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1331,6 +1635,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-12,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1338,7 +1644,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 79 (44)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,44,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1348,6 +1656,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,9,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1355,7 +1665,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 80 (45)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,45,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1365,6 +1677,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-13,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1372,7 +1686,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 81 (46)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,46,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1382,6 +1698,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-13,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1389,7 +1707,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 82 (47)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,47,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1399,6 +1719,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-13,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1406,7 +1728,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 83 (48)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,48,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1416,6 +1740,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,8,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1423,7 +1749,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 84 (49)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,49,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1433,6 +1761,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-13,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1440,7 +1770,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 85 (50)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,50,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1450,6 +1782,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,7,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1457,7 +1791,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 86 (51)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,51,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1467,6 +1803,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-14,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1474,7 +1812,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 87 (52)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,52,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1484,6 +1824,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-14,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1491,7 +1833,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 88 (53)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,53,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1501,6 +1845,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-14,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1508,7 +1854,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 89 (54)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,54,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1518,6 +1866,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,6,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1525,7 +1875,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 90 (55)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,55,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1535,6 +1887,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-14,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1542,7 +1896,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 91 (56)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,56,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1552,6 +1908,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,5,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1559,7 +1917,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 92 (57)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,57,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1569,6 +1929,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-15,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1576,7 +1938,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 93 (58)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,58,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1586,6 +1950,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-15,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1593,7 +1959,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 94 (59)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,59,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1603,6 +1971,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-15,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1610,7 +1980,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 95 (60)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,60,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1620,6 +1992,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,4,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1627,7 +2001,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 96 (61)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,61,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1637,6 +2013,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-15,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1644,7 +2022,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 97 (62)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,62,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1654,6 +2034,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,3,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1661,7 +2043,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 98 (63)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,63,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1671,6 +2055,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-16,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1678,7 +2064,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 99 (64)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,64,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1688,6 +2076,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-16,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1695,7 +2085,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 100 (65)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,65,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1705,6 +2097,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-16,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1712,7 +2106,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 101 (66)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,66,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1722,6 +2118,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,2,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1729,7 +2127,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 102 (67)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,67,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1739,6 +2139,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-16,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1746,7 +2148,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 103 (68)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,68,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1756,6 +2160,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,1,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1763,7 +2169,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 104 (69)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,69,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1773,6 +2181,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-17,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1780,7 +2190,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 105 (70)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,70,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1790,6 +2202,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-17,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1797,7 +2211,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 106 (71)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,71,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1807,6 +2223,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-17,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1814,7 +2232,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 107 (72)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,72,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1824,6 +2244,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,0,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1831,7 +2253,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 108 (73)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,73,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1841,6 +2265,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-17,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1848,7 +2274,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 109 (74)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,74,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1858,6 +2286,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-1,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1865,17 +2295,19 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 110 (75)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,75,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
 // ==================================================
 // MANUAL COMPONENT 111: Component 111
-// Go to Home and Wait 2 minutes for human placement
+// Go to Home and Wait 1 minute for human placement
 // ==================================================
 
 MOVJ(Pn(22), speed, acc, dec, cp)
-Delay(120000)
+Delay(60000)
 
 
 // ==================================================
@@ -1884,6 +2316,8 @@ Delay(120000)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-18,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1891,7 +2325,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 112 (77)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,77,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1901,6 +2337,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-18,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1908,7 +2346,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 113 (78)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,78,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1918,6 +2358,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-18,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1925,7 +2367,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 114 (79)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,79,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1935,6 +2379,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-2,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1942,7 +2388,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 115 (80)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,80,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1952,6 +2400,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-18,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1959,7 +2409,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 116 (81)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,81,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1969,6 +2421,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-3,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1976,7 +2430,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 117 (82)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,82,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -1986,6 +2442,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-19,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -1993,7 +2451,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 118 (83)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,83,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2003,6 +2463,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-19,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2010,7 +2472,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 119 (84)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,84,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2020,6 +2484,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-19,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2027,7 +2493,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 120 (85)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,85,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2037,6 +2505,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-4,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2044,7 +2514,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 121 (86)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,86,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2054,6 +2526,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-19,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2061,7 +2535,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 122 (87)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,87,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2071,6 +2547,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-5,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2078,7 +2556,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 123 (88)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,88,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2088,6 +2568,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-20,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2095,7 +2577,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 124 (89)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,89,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2105,6 +2589,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-20,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2112,7 +2598,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 125 (90)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,90,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2122,6 +2610,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-20,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2129,7 +2619,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 126 (91)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,91,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2139,6 +2631,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-6,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2146,7 +2640,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 127 (92)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,92,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2156,6 +2652,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-20,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2163,7 +2661,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 128 (93)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,93,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2173,6 +2673,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-7,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2180,7 +2682,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 129 (94)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,94,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2190,6 +2694,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-21,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2197,7 +2703,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 130 (95)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,95,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2207,6 +2715,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-21,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2214,7 +2724,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 131 (96)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,96,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2224,6 +2736,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-21,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2231,7 +2745,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 132 (97)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,97,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2241,6 +2757,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-8,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2248,7 +2766,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 133 (98)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,98,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2258,6 +2778,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-21,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2265,7 +2787,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 134 (99)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,99,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2275,6 +2799,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-9,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2282,7 +2808,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 135 (100)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,100,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2292,6 +2820,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-22,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2299,7 +2829,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 136 (101)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,101,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2309,6 +2841,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-22,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2316,7 +2850,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 137 (102)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,102,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2326,6 +2862,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-22,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2333,7 +2871,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 138 (103)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,103,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2343,6 +2883,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-10,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2350,7 +2892,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 139 (104)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,104,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2360,6 +2904,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-22,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2367,7 +2913,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 140 (105)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,105,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2377,6 +2925,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-11,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2384,7 +2934,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 141 (106)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,106,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2394,6 +2946,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-23,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2401,7 +2955,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 142 (107)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,107,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2411,6 +2967,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-23,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2418,7 +2976,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 143 (108)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,108,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2428,6 +2988,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-23,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2435,7 +2997,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 144 (109)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,109,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2445,6 +3009,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-12,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2452,7 +3018,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 145 (110)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,110,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2462,6 +3030,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-23,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2469,7 +3039,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 146 (111)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,111,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2479,6 +3051,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-13,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2486,7 +3060,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 147 (112)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,112,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2496,6 +3072,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-24,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2503,7 +3081,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 148 (113)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,113,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2513,6 +3093,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-24,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2520,7 +3102,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 149 (114)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,114,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2530,6 +3114,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-24,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2537,7 +3123,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 150 (115)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,115,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2547,6 +3135,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-14,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2554,7 +3144,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 151 (116)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,116,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2564,6 +3156,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-24,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2571,7 +3165,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 152 (117)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,117,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2581,6 +3177,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-15,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2588,7 +3186,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 153 (118)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,118,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2598,6 +3198,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-25,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2605,7 +3207,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 154 (119)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,119,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2615,6 +3219,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-25,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2622,7 +3228,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 155 (120)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,120,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2632,6 +3240,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-25,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2639,7 +3249,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 156 (121)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,121,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2649,6 +3261,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-16,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2656,7 +3270,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 157 (122)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,122,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2666,6 +3282,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-25,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2673,7 +3291,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 158 (123)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,123,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2683,6 +3303,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-17,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2690,7 +3312,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 159 (124)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,124,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2700,6 +3324,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-26,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2707,7 +3333,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 160 (125)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,125,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2717,6 +3345,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-26,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2724,7 +3354,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 161 (126)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,126,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2734,6 +3366,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-26,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2741,7 +3375,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 162 (127)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,127,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2751,6 +3387,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-18,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2758,7 +3396,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 163 (128)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,128,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2768,6 +3408,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-26,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2775,7 +3417,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 164 (129)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,129,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2785,6 +3429,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-19,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2792,7 +3438,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 165 (130)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,130,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2802,6 +3450,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-27,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2809,7 +3459,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 166 (131)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,131,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2819,6 +3471,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-27,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2826,7 +3480,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 167 (132)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,132,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2836,6 +3492,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-27,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2843,7 +3501,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 168 (133)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,133,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2853,6 +3513,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-20,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2860,7 +3522,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 169 (134)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,134,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2870,6 +3534,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-27,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2877,7 +3543,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 170 (135)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,135,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2887,6 +3555,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-21,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2894,7 +3564,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 171 (136)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,136,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2904,6 +3576,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-28,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2911,7 +3585,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 172 (137)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,137,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2921,6 +3597,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-28,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2928,7 +3606,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 173 (138)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,138,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2938,6 +3618,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-28,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2945,7 +3627,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 174 (139)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,139,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2955,6 +3639,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-22,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2962,7 +3648,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 175 (140)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,140,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2972,6 +3660,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-28,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2979,7 +3669,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 176 (141)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,141,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -2989,6 +3681,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-23,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -2996,7 +3690,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 177 (142)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,142,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3006,6 +3702,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-29,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3013,7 +3711,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 178 (143)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,143,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3023,6 +3723,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-29,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3030,7 +3732,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 179 (144)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,144,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3040,6 +3744,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-29,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3047,7 +3753,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 180 (145)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,145,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3057,6 +3765,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-24,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3064,7 +3774,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 181 (146)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,146,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3074,6 +3786,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-29,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3081,7 +3795,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 182 (147)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,147,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3091,6 +3807,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-25,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3098,7 +3816,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 183 (148)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,148,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3108,6 +3828,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-30,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3115,7 +3837,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 184 (149)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,149,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3125,6 +3849,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-30,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3132,7 +3858,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 185 (150)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,150,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3142,6 +3870,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-30,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3149,7 +3879,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 186 (151)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,151,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3159,6 +3891,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-26,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3166,7 +3900,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 187 (152)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,152,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3176,6 +3912,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-30,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3183,7 +3921,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 188 (153)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,153,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3193,6 +3933,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-27,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3200,7 +3942,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 189 (154)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,154,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3210,6 +3954,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-31,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3217,7 +3963,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 190 (155)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,155,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3227,6 +3975,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-31,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3234,7 +3984,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 191 (156)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,156,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3244,6 +3996,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-31,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3251,7 +4005,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 192 (157)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,157,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3261,6 +4017,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-28,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3268,7 +4026,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 193 (158)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,158,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3278,6 +4038,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-31,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3285,7 +4047,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 194 (159)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,159,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3295,6 +4059,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-29,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3302,7 +4068,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 195 (160)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,160,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3312,6 +4080,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-32,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3319,7 +4089,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 196 (161)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,161,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3329,6 +4101,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-32,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3336,7 +4110,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 197 (162)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,162,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3346,6 +4122,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-32,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3353,7 +4131,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 198 (163)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,163,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3363,6 +4143,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-30,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3370,7 +4152,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 199 (164)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,164,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3380,6 +4164,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-32,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3387,7 +4173,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 200 (165)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,165,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3397,6 +4185,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-31,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3404,7 +4194,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 201 (166)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,166,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3414,6 +4206,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-33,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3421,7 +4215,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 202 (167)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,167,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3431,6 +4227,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-33,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3438,7 +4236,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 203 (168)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,168,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3448,6 +4248,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-33,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3455,7 +4257,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 204 (169)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,169,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3465,6 +4269,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-32,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3472,7 +4278,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 205 (170)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,170,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3482,6 +4290,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-33,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3489,7 +4299,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 206 (171)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,171,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3499,6 +4311,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-33,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3506,7 +4320,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 207 (172)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,172,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3516,6 +4332,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-34,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3523,7 +4341,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 208 (173)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,173,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3533,6 +4353,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-34,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3540,7 +4362,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 209 (174)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,174,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3550,6 +4374,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-34,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3557,17 +4383,19 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 210 (175)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,175,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
 // ==================================================
 // MANUAL COMPONENT 211: Component 211
-// Go to Home and Wait 2 minutes for human placement
+// Go to Home and Wait 1 minute for human placement
 // ==================================================
 
 MOVJ(Pn(22), speed, acc, dec, cp)
-Delay(120000)
+Delay(60000)
 
 
 // ==================================================
@@ -3576,6 +4404,8 @@ Delay(120000)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-34,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3583,7 +4413,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 212 (177)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,177,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3593,6 +4425,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-33,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3600,7 +4434,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 213 (178)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,178,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3610,6 +4446,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-32,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3617,7 +4455,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 214 (179)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,179,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3627,6 +4467,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-32,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3634,7 +4476,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 215 (180)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,180,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3644,6 +4488,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-34,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3651,7 +4497,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 216 (181)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,181,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3661,6 +4509,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-33,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3668,7 +4518,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 217 (182)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,182,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3678,6 +4530,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-33,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3685,7 +4539,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 218 (183)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,183,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3695,6 +4551,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-34,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3702,7 +4560,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 219 (184)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,184,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3712,6 +4572,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-34,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3719,7 +4581,9 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 220 (185)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,185,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
@@ -3729,6 +4593,8 @@ MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 MOVL(BuildPoint(360,-400,-34,-6,1), speed, acc, dec, cp)
+Open(0)
+Open(2)
 Delay(1000)
 MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 
@@ -3736,17 +4602,19 @@ MOVL(BuildPoint(360,-400,39,-6,1), speed, acc, dec, cp)
 // Place level 221 (186)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 MOVL(BuildPoint(90,-450,186,-17,1), speed, acc, dec, cp)
-Delay(1000)
+Close(0)
+Close(2)
+Delay(30000)
 MOVL(BuildPoint(90,-450,39,-17,1), speed, acc, dec, cp)
 
 
 // ==================================================
 // MANUAL COMPONENT 222: Component 222
-// Go to Home and Wait 2 minutes for human placement
+// Go to Home and Wait 1 minute for human placement
 // ==================================================
 
 MOVJ(Pn(22), speed, acc, dec, cp)
-Delay(120000)
+Delay(60000)
 
 
 // --------------------------------------------------

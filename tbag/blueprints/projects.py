@@ -164,7 +164,7 @@ def download_program(pid: str):
     lines = [
         "Process Main",
         "",
-        "int speed = 40",
+        "int speed = 100",
         "int acc = 40",
         "int dec = 40",
         "int cp = 0",
@@ -191,11 +191,11 @@ def download_program(pid: str):
         if is_manual:
             lines.append("// ==================================================")
             lines.append(f"// MANUAL COMPONENT {step_idx}: {label}")
-            lines.append("// Go to Home and Wait 2 minutes for human placement")
+            lines.append("// Go to Home and Wait 1 minute for human placement")
             lines.append("// ==================================================")
             lines.append("")
             lines.append("MOVJ(Pn(22), speed, acc, dec, cp)")
-            lines.append("Delay(120000)")
+            lines.append("Delay(60000)")
             lines.append("")
             lines.append("")
             dest_z_offset += thick_val
@@ -248,6 +248,8 @@ def download_program(pid: str):
             lines.append("")
             lines.append(f"// Descend to top component ({pz})")
             lines.append(f"MOVL(BuildPoint({sx},{sy},{pz},{sr},1), speed, acc, dec, cp)")
+            lines.append("Open(0)")
+            lines.append("Open(2)")
             lines.append("Delay(1000)")
             lines.append("")
             lines.append("// Retract vertically to clearance")
@@ -257,6 +259,8 @@ def download_program(pid: str):
         else:
             lines.append(f"MOVL(BuildPoint({sx},{sy},{cx},{sr},1), speed, acc, dec, cp)")
             lines.append(f"MOVL(BuildPoint({sx},{sy},{pz},{sr},1), speed, acc, dec, cp)")
+            lines.append("Open(0)")
+            lines.append("Open(2)")
             lines.append("Delay(1000)")
             lines.append(f"MOVL(BuildPoint({sx},{sy},{cx},{sr},1), speed, acc, dec, cp)")
             lines.append("")
@@ -266,7 +270,9 @@ def download_program(pid: str):
             lines.append(f"// Place at {dest_tp_name} level 1 (stack base = {dbz})")
             lines.append(f"MOVL(BuildPoint({dx},{dy},{cx},{dr},1), speed, acc, dec, cp)")
             lines.append(f"MOVL(BuildPoint({dx},{dy},{plz},{dr},1), speed, acc, dec, cp)")
-            lines.append("Delay(1000)")
+            lines.append("Close(0)")
+            lines.append("Close(2)")
+            lines.append("Delay(30000)")
             lines.append(f"MOVL(BuildPoint({dx},{dy},{cx},{dr},1), speed, acc, dec, cp)")
             lines.append("")
             lines.append("")
@@ -274,7 +280,9 @@ def download_program(pid: str):
             lines.append(f"// Place level {step_idx} ({plz})")
             lines.append(f"MOVL(BuildPoint({dx},{dy},{cx},{dr},1), speed, acc, dec, cp)")
             lines.append(f"MOVL(BuildPoint({dx},{dy},{plz},{dr},1), speed, acc, dec, cp)")
-            lines.append("Delay(1000)")
+            lines.append("Close(0)")
+            lines.append("Close(2)")
+            lines.append("Delay(30000)")
             lines.append(f"MOVL(BuildPoint({dx},{dy},{cx},{dr},1), speed, acc, dec, cp)")
             lines.append("")
             lines.append("")
