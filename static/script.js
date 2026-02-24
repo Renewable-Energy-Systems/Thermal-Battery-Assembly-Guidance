@@ -87,7 +87,7 @@ async function advance() {
   idx++;
   if (idx < seq.length) {
     showStep(idx);
-    await send('next', { component: seq[idx].comp });
+    await send('next', { component: seq[idx].comp, position: seq[idx].teachpoint });
   } else {
     nextBtn.disabled = stopBtn.disabled = true;
     labelEl.textContent = 'Preparing summary…';

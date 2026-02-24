@@ -14,6 +14,7 @@ from ..db     import DB_FILE, log
 from ..gpio   import LED, Button
 from ..helpers.components import ALLOWED_GPIO_PINS, load_component
 from ..helpers.projects    import load_config
+from ..helpers.settings    import load_settings
 
 # gpiod reset (unchanged) ------------------------------------------------
 try:
@@ -131,15 +132,21 @@ def progress():
 
     if act == "next":
         comp_id = data.get("component")
-        if comp_id:
-            comp = load_component(comp_id)
-            if comp and comp.get("gpio") not in (None, ""):
-                try:
-                    _activate_led(int(comp["gpio"]))
-                except ValueError:
-                    print(f"[WARN] non-numeric GPIO in {comp_id}", flush=True)
+        position = data.get("position")  # Teachpoint like 'P1'
+        
+        pin = None
+        if position:
+            settings = load_settings()
+            led_map = settings.get("led_mapping", {})
+            pin = led_map.get(position.upper())
 
-        log("next_pressed", {"session_id": sid, "component": comp_id})
+        if pin is not None:
+            try:
+                _activate_led(int(pin))
+            except (ValueError, TypeError):
+                print(f"[WARN] invalid LED pin for position {position}: {pin}", flush=True)
+
+        log("next_pressed", {"session_id": sid, "component": comp_id, "position": position})
         return jsonify(status="ok")
 
     with sqlite3.connect(DB_FILE) as conn:

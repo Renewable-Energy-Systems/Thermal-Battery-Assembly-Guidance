@@ -102,7 +102,6 @@
                 <th>#</th>
                 <th>ID</th>
                 <th>Name</th>
-                <th>LED Pin</th>
                 <th>Image</th>
                 <th style="text-align:right">Actions</th>
             </tr>
@@ -113,7 +112,6 @@
                 <td>{{ loop.index }}</td>
                 <td>{{ c.id }}</td>
                 <td>{{ c.name }}</td>
-                <td>{{ c.led_label }}</td>
                 <td>
                     {% if c.image %}
                         <img src="/comp_assets/{{ c.id }}/{{ c.image }}" alt="preview" class="thumb">

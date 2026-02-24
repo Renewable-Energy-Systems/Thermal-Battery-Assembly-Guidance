@@ -137,19 +137,6 @@
                step="0.001" min="0" placeholder="0.0">
       </div>
 
-      <!-- LED pin picker -->
-      <div class="form-field">
-        <label for="gpio">LED Pin</label>
-        <select name="gpio" id="gpio" required>
-          <option value="" disabled selected>Select an LED Pin</option>
-          {% for pin, label in gpio_choices %}
-            <option value="{{ pin }}">
-              {{ label|replace('L', 'LED ', 1) }} — GPIO{{ pin }}
-            </option>
-          {% endfor %}
-        </select>
-      </div>
-
       <button class="btn" type="submit">Create Component</button>
     </form>
 

@@ -12,6 +12,7 @@ from flask import Blueprint, abort, jsonify, redirect, render_template, request
 from ..config import DB_FILE
 from ..helpers.projects import load_config, projects_list
 from ..helpers.settings import load_settings, save_settings
+from ..helpers.components import ALLOWED_GPIO_PINS, GPIO_LABELS
 
 bp = Blueprint("admin", __name__, url_prefix="/admin")
 
@@ -23,23 +24,35 @@ def settings():
         # We need to reconstruct the JSON
         current = load_settings()
         tps = current.get("teachpoints", {})
+        led_map = current.get("led_mapping", {})
         
+        # 1. Update teachpoints
         for key in tps.keys():
-            # key = "P1", "P2", ...
             try:
                 tps[key]["x"] = float(request.form.get(f"{key}_x", 0.0))
                 tps[key]["y"] = float(request.form.get(f"{key}_y", 0.0))
                 tps[key]["z"] = float(request.form.get(f"{key}_z", 0.0))
                 tps[key]["r"] = float(request.form.get(f"{key}_r", 0.0))
             except ValueError:
-                pass # keep old value or 0.0
+                pass
         
+        # 2. Update LED mapping
+        for key in led_map.keys():
+            try:
+                val = request.form.get(f"{key}_led")
+                if val:
+                    led_map[key] = int(val)
+            except ValueError:
+                pass
+
         current["teachpoints"] = tps
+        current["led_mapping"] = led_map
         save_settings(current)
         return redirect("/admin/settings")
 
     data = load_settings()
-    return render_template("admin_settings.html", settings=data)
+    gpio_choices = [(pin, GPIO_LABELS[pin]) for pin in ALLOWED_GPIO_PINS]
+    return render_template("admin_settings.html", settings=data, gpio_choices=gpio_choices)
 
 
 # ───────── dashboard (home) ─────────

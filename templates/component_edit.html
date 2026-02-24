@@ -106,21 +106,6 @@
                         </div>
                     </div>
 
-                    <!-- LED pin picker -->
-                    <div class="form-group">
-                        <div class="form-field-filled">
-                            <select name="gpio" id="gpio" required class="form-input">
-                                {% for pin, label in gpio_choices %}
-                                    <option value="{{ pin }}"
-                                            {% if comp and pin == comp.gpio %}selected{% endif %}>
-                                        {{ label|replace('L', 'LED ', 1) }} — GPIO{{ pin }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                            <label for="gpio" class="form-label">LED Pin</label>
-                        </div>
-                    </div>
-
                     <!-- Default Thickness -->
                     <div class="form-group">
                         <div class="form-field-filled">

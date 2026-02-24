@@ -76,17 +76,7 @@ def load_component(cid: str) -> Optional[Dict]:
 def save_component(cid: str, data: Dict) -> None:
     """
     Write `<cid>/config.json` and ensure `images/` exists.
-
-    If a *gpio* field is present it must be an int in ``ALLOWED_GPIO_PINS``.
     """
-    if "gpio" in data:
-        gpio = int(data["gpio"])
-        if gpio not in ALLOWED_GPIO_PINS:
-            raise ValueError(
-                f"GPIO {gpio} not allowed – choose from {ALLOWED_GPIO_PINS}"
-            )
-        data["gpio"] = gpio  # ensure JSON stores an int, not a string
-
     root = COMPONENTS / cid
     (root / "images").mkdir(parents=True, exist_ok=True)
     with (root / "config.json").open("w") as f:

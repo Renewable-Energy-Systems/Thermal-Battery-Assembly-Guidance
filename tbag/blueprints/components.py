@@ -36,11 +36,9 @@ def list_components_route():
         cfg = load_component(p.name)
         if not cfg:
             continue
-        led_lbl = GPIO_LABELS.get(cfg["gpio"], "—")   # numeric → “L” label
         comps.append({
             "id": p.name,
             "name": cfg["name"],
-            "led_label": led_lbl.replace("L", "LED ", 1),
             "image": cfg.get("image"),
             "default_thickness": cfg.get("default_thickness", 0.0),
         })
@@ -70,7 +68,6 @@ def components_json():
 def new_component():
     if request.method == "POST":
         name = request.form["comp_name"].strip()
-        gpio = int(request.form["gpio"])
         default_thickness = float(request.form.get("default_thickness", 0.0))
 
         # duplicate-name check (case-insensitive, None-safe)
@@ -83,7 +80,6 @@ def new_component():
             return render_template(
                 "component_new.html",
                 error=f'Component “{name}” already exists.',
-                gpio_choices=[(pin, GPIO_LABELS[pin]) for pin in ALLOWED_GPIO_PINS],
             )
 
         cid = new_component_slug(name)
@@ -104,16 +100,12 @@ def new_component():
         save_component(cid, {
             "name": name,
             "image": img_name,
-            "gpio": gpio,
             "default_thickness": default_thickness,
         })
         return redirect("/components")
 
     # GET – blank form
-    return render_template(
-        "component_new.html",
-        gpio_choices=[(pin, GPIO_LABELS[pin]) for pin in ALLOWED_GPIO_PINS],
-    )
+    return render_template("component_new.html")
 
 
 # ───────────────────────── edit ────────────────────────────────
@@ -122,13 +114,11 @@ def edit_component(cid):
     cfg = load_component(cid) or {
         "name": cid,
         "image": None,
-        "gpio": ALLOWED_GPIO_PINS[0],
         "default_thickness": 0.0,
     }
 
     if request.method == "POST":
         cfg["name"] = request.form["comp_name"].strip()
-        cfg["gpio"] = int(request.form["gpio"])
         cfg["default_thickness"] = float(request.form.get("default_thickness", 0.0))
 
         # replace image if a new file was chosen
@@ -150,7 +140,6 @@ def edit_component(cid):
         "component_edit.html",
         comp=cfg,
         cid=cid,
-        gpio_choices=[(pin, GPIO_LABELS[pin]) for pin in ALLOWED_GPIO_PINS],
     )
 
 
