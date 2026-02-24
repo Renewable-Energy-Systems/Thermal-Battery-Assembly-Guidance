@@ -73,3 +73,6 @@ instance/
 tbag/projects/
 tbag/components/
 ###############################################################################
+
+# settings data
+data/settings.json
