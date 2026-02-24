@@ -9,6 +9,10 @@ const compNameEl = document.getElementById('compName');
 const labelEl = document.getElementById('stepLabel');
 const statusEl = document.getElementById('stepCounter');
 
+// Manual Placement Elements
+const manualModal = document.getElementById('manualModal');
+const alarmSound = document.getElementById('alarmSound');
+
 // Session state
 let session = null;
 let seq = [];
@@ -77,6 +81,21 @@ function showStep(i) {
   imgEl.hidden = !imgFile;
 
   nextBtn.textContent = (i === seq.length - 1) ? 'Review' : 'Next Step';
+
+  // Handle manual steps
+  if (step.manual) {
+    if (manualModal) manualModal.classList.add('active');
+    if (alarmSound) {
+      alarmSound.currentTime = 0;
+      alarmSound.play().catch(e => console.error("Audio play failed:", e));
+    }
+  } else {
+    if (manualModal) manualModal.classList.remove('active');
+    if (alarmSound) {
+      alarmSound.pause();
+      alarmSound.currentTime = 0;
+    }
+  }
 }
 
 function send(action, extra = {}) {
@@ -89,6 +108,13 @@ async function advance() {
     showStep(idx);
     await send('next', { component: seq[idx].comp, position: seq[idx].teachpoint });
   } else {
+    // Ensure modal/sound are turned off at the end
+    if (manualModal) manualModal.classList.remove('active');
+    if (alarmSound) {
+      alarmSound.pause();
+      alarmSound.currentTime = 0;
+    }
+
     nextBtn.disabled = stopBtn.disabled = true;
     labelEl.textContent = 'Preparing summary…';
     await send('finish');
@@ -99,6 +125,13 @@ async function advance() {
 
 async function abort() {
   if (!confirm('Interrupt this assembly?')) return;
+  // Ensure modal/sound are turned off on abort
+  if (manualModal) manualModal.classList.remove('active');
+  if (alarmSound) {
+    alarmSound.pause();
+    alarmSound.currentTime = 0;
+  }
+
   nextBtn.disabled = stopBtn.disabled = true;
   labelEl.textContent = 'Aborting…';
   await send('abort', { step: idx });

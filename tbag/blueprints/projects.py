@@ -196,6 +196,7 @@ def download_program(pid: str):
             lines.append("")
             lines.append("MOVJ(Pn(22), speed, acc, dec, cp)")
             lines.append("Delay(60000)")
+            lines.append("Open(2)")
             lines.append("")
             lines.append("")
             dest_z_offset += thick_val

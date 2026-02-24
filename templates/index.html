@@ -143,6 +143,17 @@
     
     .ripple { position: absolute; border-radius: 50%; transform: scale(0); animation: ripple .6s linear; }
     @keyframes ripple { to { transform: scale(4); opacity: 0; } }
+
+    /* ========== 6. Manual Placement Modal ============================== */
+    #manualModal {
+        display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;
+        flex-direction: column; text-align: center; color: white;
+    }
+    #manualModal.active { display: flex; }
+    #manualModal h2 { font-size: 4rem; color: #FF3B30; margin-bottom: 2rem; animation: blink 1s infinite alternate; }
+    #manualModal p { font-size: 2rem; margin-bottom: 3rem; }
+    @keyframes blink { from { opacity: 1; } to { opacity: 0.5; } }
 </style>
 </head>
 <body>
@@ -186,6 +197,19 @@
         </div>
     </section>
 </main>
+
+<!-- Manual Placement Modal -->
+<div id="manualModal">
+    <h2>MANUAL PLACEMENT</h2>
+    <p>Place the component in the Assembly jig.</p>
+    <button class="btn btn-primary" onclick="if(nextBtn && !nextBtn.disabled && !nextBtn.hidden) nextBtn.click();" style="font-size: 2rem; padding: 1.5rem 3rem;">Acknowledge & Continue</button>
+</div>
+
+<!-- Alarm Sound -->
+<audio id="alarmSound" loop preload="auto">
+    <!-- Base64 encoded simple beep sound (short, small) -->
+    <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=" type="audio/wav">
+</audio>
 
 <script>
     function addRipple(btn) { /* Ripple effect JS unchanged */ }
