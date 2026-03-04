@@ -164,7 +164,7 @@ def download_program(pid: str):
     lines = [
         "Process Main",
         "",
-        "int speed = 150",
+        "int speed = 40",
         "int acc = 40",
         "int dec = 40",
         "int cp = 0",
@@ -191,11 +191,11 @@ def download_program(pid: str):
         if is_manual:
             lines.append("// ==================================================")
             lines.append(f"// MANUAL COMPONENT {step_idx}: {label}")
-            lines.append("// Go to Home and Wait 15 seconds for human placement")
+            lines.append("// Go to Home and Wait 10 seconds for human placement")
             lines.append("// ==================================================")
             lines.append("")
             lines.append("MOVJ(Pn(22), speed, acc, dec, cp)")
-            lines.append("Delay(15000)")
+            lines.append("Delay(10000)")
             lines.append("Open(2)")
             lines.append("")
             lines.append("")
@@ -273,7 +273,7 @@ def download_program(pid: str):
             lines.append(f"MOVL(BuildPoint({dx},{dy},{plz},{dr},1), speed, acc, dec, cp)")
             lines.append("Close(0)")
             lines.append("Close(2)")
-            lines.append("Delay(5000)")
+            lines.append("Delay(1000)")
             lines.append(f"MOVL(BuildPoint({dx},{dy},{cx},{dr},1), speed, acc, dec, cp)")
             lines.append("")
             lines.append("")
@@ -283,7 +283,7 @@ def download_program(pid: str):
             lines.append(f"MOVL(BuildPoint({dx},{dy},{plz},{dr},1), speed, acc, dec, cp)")
             lines.append("Close(0)")
             lines.append("Close(2)")
-            lines.append("Delay(5000)")
+            lines.append("Delay(1000)")
             lines.append(f"MOVL(BuildPoint({dx},{dy},{cx},{dr},1), speed, acc, dec, cp)")
             lines.append("")
             lines.append("")
